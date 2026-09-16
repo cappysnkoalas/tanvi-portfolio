@@ -100,37 +100,188 @@
   line-height:1;
 }
 
-/* ---- featured stop (long story + photo collage) ---- */
-/* Heading and marker share the top row; the story then runs the full width
-   with the collage floated into it, so the copy wraps around the pictures
-   instead of stacking below them in a column of its own.  */
-/* This stop's marker sits hard left instead of on the zigzag, so the ribbon
-   can run straight down the margin and the copy gets the full width beside
-   it — the story is far too long to sit in a half-width column. */
+/* ---- featured stop: title, blob, photos, video on one row ---- */
+/* Copy leads on the far left and the blob sits just after it, so the trail
+   drops in beside the title instead of running down the page margin. */
 .journey-feature{
-  grid-template-columns: 15% minmax(0,1fr) auto;
-  align-items:start;
+  /* Title column is capped so the blob (and the road through it) stays near
+     the copy; any spare width goes to the video in the last column. */
+  grid-template-columns: minmax(0,390px) auto auto minmax(0,1fr);
+  align-items:center;
+  column-gap: clamp(18px,2.2vw,36px);
   position:relative;
 }
-.journey-feature .j-media{ grid-column:1; grid-row:1; justify-self:start; margin-left:2%; }
-.journey-feature .j-head{ grid-column:2; grid-row:1; text-align:left; }
+.journey-feature .j-head{ grid-column:1; grid-row:1; text-align:left; }
+.journey-feature .j-media{ grid-column:2; grid-row:1; justify-self:center; margin:0 0 0 -14px; }
 .journey-feature .j-wall{ grid-column:3; grid-row:1; }
-/* Two text columns: the story is long, and a single column this wide would
-   run to well over a hundred characters a line. */
-.journey-feature .j-story{
-  grid-column:2 / -1; grid-row:2;
-  margin-top: clamp(14px,2vw,26px);
-  columns:2;
-  column-gap: clamp(30px,3.4vw,56px);
+.journey-feature .j-reel{ grid-column:4; grid-row:1; }
+
+/* Title also opens the story, styled as plain heading text. */
+.j-feature-toggle{
+  all:unset;
+  cursor:pointer;
+  font:inherit; letter-spacing:inherit; color:inherit;
+  transition: color .2s;
 }
-/* The rotated tag would hang off the page from this hard-left marker. */
-.journey-feature .j-label{
-  right:auto; left:-10px;
-  transform: rotate(38deg);
-  transform-origin: left center;
+.j-feature-toggle:hover{ color:var(--pink); }
+.j-feature-toggle:focus-visible,
+.j-read-more:focus-visible{ outline:2px solid var(--rose); outline-offset:5px; }
+
+/* CTA: a torn scrap of the same notebook paper, so it pops off the dark
+   page and previews the sheet it opens. */
+.j-read-more{
+  all:unset;
+  position:relative;
+  cursor:pointer;
+  display:inline-flex; align-items:center; gap:12px;
+  margin-top:22px;
+  padding: 17px 32px 17px 44px;
+  font-family:'Poppins', sans-serif;
+  font-size:17px; font-weight:800; font-style:italic;
+  letter-spacing:0.01em;
+  color:var(--burgundy);
+  background-image:
+    linear-gradient(100deg, rgba(58,22,32,0.1) 0%, transparent 14%),
+    url('../assets/paper-texture.jpg');
+  background-size: cover, 420px auto;
+  background-position: 0 0, -26px -190px;
+  clip-path: polygon(
+    0% 6%, 8% 1%, 17% 5%, 28% 0%, 39% 4%, 50% 1%, 62% 5%, 73% 0%, 84% 4%, 93% 1%, 100% 5%,
+    99% 50%, 100% 95%, 91% 100%, 80% 96%, 68% 100%, 57% 95%, 45% 99%, 33% 95%, 21% 100%, 10% 96%, 0% 100%, 1% 50%
+  );
+  transform: rotate(-2deg);
+  transition: transform .25s ease;
 }
-/* Zero-width rail the trail follows past this stop. */
-.j-guide{ position:absolute; left:6%; top:26%; bottom:2%; width:0; pointer-events:none; }
+.j-read-more-shadow{ display:inline-block; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.5)); }
+.j-read-more:hover{ transform: rotate(0deg) scale(1.04); }
+.j-read-arrow{
+  display:inline-block;
+  font-style:normal;
+  color:#8B3A44;
+  transition: transform .25s ease;
+}
+.j-read-more:hover .j-read-arrow{ transform: translateX(4px); }
+
+/* ---- story popup: a notebook sheet like the "about me" note ---- */
+.j-sheet-layer{ position:fixed; inset:0; z-index:1000; display:grid; place-items:center; padding:20px; }
+.j-sheet-backdrop{
+  all:unset;
+  position:absolute; inset:0;
+  background: rgba(8,3,4,0.74);
+  backdrop-filter: blur(3px);
+  cursor:pointer;
+}
+.j-sheet-wrap{
+  position:relative;
+  width: min(760px, 100%);
+  filter: drop-shadow(0 30px 50px rgba(0,0,0,0.6));
+  transform: rotate(-1.2deg);
+  animation: j-sheet-in .3s ease;
+}
+@keyframes j-sheet-in{
+  from{ opacity:0; transform: rotate(-4deg) translateY(24px) scale(0.97); }
+  to{ opacity:1; transform: rotate(-1.2deg); }
+}
+@media (prefers-reduced-motion: reduce){ .j-sheet-wrap{ animation:none; } }
+.j-sheet{
+  position:relative;
+  clip-path: polygon(
+    0% 1%, 6% 0.3%, 13% 1.6%, 21% 0.4%, 30% 1.8%, 38% 0.2%, 47% 1.4%, 56% 0.3%, 65% 1.7%,
+    74% 0.5%, 83% 1.5%, 91% 0.2%, 100% 1.2%,
+    100% 98.8%, 93% 99.7%, 85% 98.4%, 76% 99.6%, 67% 98.3%, 58% 99.8%, 49% 98.5%, 40% 99.6%,
+    31% 98.2%, 22% 99.7%, 13% 98.6%, 6% 99.8%, 0% 98.9%
+  );
+}
+.j-sheet-surface{
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(100deg, rgba(58,22,32,0.12) 0%, transparent 10%),
+    url('../assets/paper-texture.jpg');
+  background-size: cover, 100% auto;
+  background-repeat: no-repeat, repeat-y;
+}
+.j-sheet-body{
+  position:relative;
+  max-height: min(82vh, 760px);
+  overflow-y:auto;
+  padding: clamp(40px,5vw,56px) clamp(26px,4.5vw,56px) clamp(36px,4vw,48px) calc(10.5% + clamp(16px,2.4vw,30px));
+  font-family:'Poppins', sans-serif;
+  color:var(--ink);
+  scrollbar-width:thin;
+  scrollbar-color: rgba(74,20,32,0.45) transparent;
+}
+.j-sheet-kicker{
+  font-weight:800; font-style:italic;
+  font-size: clamp(14px,1.5vw,17px);
+  color:#8B3A44;
+}
+.j-sheet-title{
+  font-family:'Poppins', sans-serif;
+  font-weight:800;
+  font-size: clamp(26px,3.4vw,38px);
+  letter-spacing:-0.01em;
+  color:var(--burgundy);
+  line-height:1.1;
+  margin: 2px 0 18px;
+  text-decoration: underline;
+  text-decoration-color: var(--rose);
+  text-decoration-thickness: 4px;
+  text-underline-offset: 6px;
+}
+.j-sheet-body p{
+  font-size: clamp(14px,1.35vw,15.5px);
+  line-height:1.65;
+  font-weight:500;
+  margin-bottom:14px;
+}
+.j-sheet-sign{
+  font-family:'Caveat', cursive !important;
+  font-size: clamp(24px,2.6vw,30px) !important;
+  font-weight:700 !important;
+  color:#8B3A44;
+  text-align:right;
+  transform: rotate(-3deg);
+  margin: 6px 0 0 !important;
+}
+/* Clip sits on the sheet's top-left corner, same as the landing-page note. */
+.j-sheet-wrap .paper-clip{ left: clamp(34px,6%,52px); top:-18px; }
+.j-sheet-close{
+  all:unset;
+  position:absolute;
+  top:18px; right:18px;
+  z-index:5;
+  width:36px; height:36px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  font-size:22px; line-height:1;
+  color:var(--burgundy);
+  background: rgba(58,22,32,0.1);
+  cursor:pointer;
+  transition: background .2s;
+}
+.j-sheet-close:hover{ background: rgba(58,22,32,0.2); }
+.j-sheet-close:focus-visible{ outline:2px solid var(--burgundy); outline-offset:2px; }
+
+/* ---- video, pinned beside the collage like another print ---- */
+.j-reel{
+  width:100%;
+  max-width:480px;
+  justify-self:center;
+  display:flex; flex-direction:column; align-items:center;
+}
+.j-video{
+  display:block;
+  width:100%;
+  border-radius:6px;
+  background:#000;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.55);
+}
+
+/* Same torn notebook scrap as "read the story", tipped the other way. */
+.j-visit-shadow{ margin-top:26px; }
+.j-visit{ margin-top:0; transform: rotate(2deg); }
+.j-ig-icon{ width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:2.1; }
+.j-ig-icon .j-ig-dot{ fill:currentColor; stroke:none; }
 
 .j-feature-name{
   display:flex;
@@ -139,12 +290,13 @@
 }
 .j-feature-logo{
   flex:none;
-  width: clamp(66px,7vw,96px);
+  width: clamp(60px,5.6vw,84px);
   height:auto;
 }
 .j-feature-title{
+  white-space:nowrap;
   font-family:'Playfair Display',serif;
-  font-size: clamp(26px,3vw,40px);
+  font-size: clamp(26px,2.6vw,38px);
   font-weight:700; letter-spacing:0.05em;
   color:var(--ivory);
   line-height:1.1;
@@ -159,38 +311,58 @@
 }
 .j-feature-ig:hover{ color:var(--pink); border-color:var(--pink); }
 .j-feature-roles{
+  white-space:pre-line;
   margin-top:16px;
   font-size:15px; line-height:1.6; font-weight:500;
   color:var(--rose-dim);
   max-width:56ch;
 }
-.j-story p{
-  font-size: clamp(13.5px,1vw,14.5px);
-  line-height:1.72;
-  color:var(--ivory-dim);
-  margin-bottom:13px;
-}
-
 /* ---- photo collage ---- */
-.j-wall{ width: clamp(230px, 22vw, 292px); }
-/* Prints pinned over each other at loose angles. Positions are percentages of
-   the box, so the whole pile scales as one when the column narrows. */
-.collage{ position:relative; width:100%; aspect-ratio: 360 / 295; }
+.j-wall{ width: clamp(250px, 24vw, 345px); }
+/* Prints pinned at loose angles with just a sliver of overlap. Positions are
+   percentages of the box, so the whole pile scales as one when it narrows. */
+/* Four prints taped up in a loose zig-zag: certificate top-left, stage photo
+   top-right, children's home bottom-left, second certificate bottom-right. */
+.collage{ position:relative; width:100%; aspect-ratio: 345 / 390; }
 .col-pic{
+  --r: 0deg;
   position:absolute;
   display:block;
+  margin:0;
   border:5px solid #FCF8F1;
   border-radius:2px;
-  background:#E7DECE;
+  background:#FCF8F1;
   box-shadow: 0 10px 22px rgba(0,0,0,0.5);
+  transform: rotate(var(--r));
   transition: transform .3s ease, box-shadow .3s ease;
 }
-.col-pic.pic-0{ left:0;   top:0;   width:33%; transform:rotate(-5deg);  z-index:2; }
-.col-pic.pic-1{ left:29%; top:3%;  width:32%; transform:rotate(4deg);   z-index:1; }
-.col-pic.pic-2{ left:2%;  top:47%; width:47%; transform:rotate(-3deg);  z-index:3; }
-.col-pic.pic-3{ left:46%; top:39%; width:51%; transform:rotate(3.5deg); z-index:4; }
+.col-pic img{ display:block; width:100%; height:auto; }
+/* Strip of masking tape across the top edge, torn at both ends. */
+.col-pic::before{
+  content:'';
+  position:absolute;
+  z-index:2;
+  left:50%; top:-12px;
+  width:48%; height:22px;
+  transform: translateX(-50%) rotate(-4deg);
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 3px, transparent 3px 8px),
+    rgba(169,139,201,0.88);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  clip-path: polygon(3% 0%, 97% 0%, 100% 18%, 96% 38%, 100% 58%, 96% 80%, 98% 100%, 2% 100%, 0% 78%, 4% 58%, 0% 38%, 4% 18%);
+  pointer-events:none;
+}
+.col-pic.pic-1::before{ transform: translateX(-50%) rotate(5deg); }
+.col-pic.pic-2::before{ transform: translateX(-50%) rotate(3deg); width:40%; }
+.col-pic.pic-3::before{ transform: translateX(-50%) rotate(3deg); width:40%; }
+
+/* Certificates run bigger than the photos so the text on them is legible. */
+.col-pic.pic-0{ --r:-6deg;  left:0%;  top:2%;  width:50%; z-index:1; }
+.col-pic.pic-2{ --r:5deg;   left:54%; top:6%;  width:34%; z-index:2; }
+.col-pic.pic-3{ --r:-8deg;  left:4%;  top:66%; width:36%; z-index:3; }
+.col-pic.pic-1{ --r:-4deg;  left:50%; top:52%; width:46%; z-index:4; }
 .col-pic:hover{
-  transform: rotate(0deg) scale(1.1);
+  transform: rotate(0deg) scale(1.08);
   box-shadow: 0 16px 34px rgba(0,0,0,0.6);
   z-index:9;
 }
@@ -221,6 +393,13 @@
   transform-origin: left center;
 }
 
+/* Too narrow for title, photos and video side by side: tuck the video under
+   the collage so the copy column doesn't get squeezed. */
+@media (max-width: 1380px) and (min-width: 861px){
+  .journey-feature{ grid-template-columns: minmax(0,1fr) auto auto; }
+  .journey-feature .j-reel{ grid-column:3; grid-row:2; justify-self:center; margin-top:16px; width:clamp(250px,28vw,340px); }
+}
+
 @media (max-width: 860px){
   .journey-item{
     grid-template-columns:1fr;
@@ -244,7 +423,8 @@
   .j-feature-name{ justify-content:center; }
   .journey-feature .j-media{ grid-column:1; grid-row:1; justify-self:center; }
   .journey-feature .j-wall{ grid-column:1; grid-row:3; width:min(330px,100%); justify-self:center; }
-  .journey-feature .j-story{ grid-column:1; grid-row:4; columns:1; text-align:left; }
+  .journey-feature .j-reel{ grid-column:1; grid-row:4; width:min(330px,100%); justify-self:center; margin-top:10px; }
+  .j-sheet-body{ padding-left: calc(10.5% + 18px); }
   .j-blurb,
   .journey-item:nth-child(even) .j-blurb{ margin-left:auto; margin-right:auto; }
   /* The rotated tag hangs below the blob; keep it off the copy underneath. */

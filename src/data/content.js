@@ -27,13 +27,14 @@ export const journey = [
     label: 'THE START',
     title: 'Anokha NGO, VIT',
     blurb:
-      'Junior Core Member, then PR & Editorial Head, then Vice Chairperson — three years of teaching, leading, and learning what impact actually looks like.',
+      'Junior Core. PR Head. Vice Chairperson.\nFrom Day 1 to leading a team. Learning, creating, and making an impact!',
     album: {
       name: 'ANOKHA NGO',
       logo: asset('anokha/anokha-logo.png'),
-      instagram: 'https://www.instagram.com/ngoanokha',
+      instagram: 'https://www.instagram.com/ngoanokha?stkn=MTNuN2pzeGNwNzhoMg==',
       handle: '@ngoanokha',
       note: 'more than just a club xx',
+      video: asset('anokha/anokha-video.mp4'),
       story: [
         "I started my journey with Anokha NGO at VIT as a Junior Core Member in the Education Department, with a simple belief that even small efforts can create meaningful change. What began with teaching and volunteering at orphanages and children's homes slowly became much more than a college activity. It became a space where I could contribute, learn, lead, and, most importantly, see the impact of our work on the people we were trying to serve.",
         "In my second year, I became the Public Relations and Editorial Head, where I took ownership of Anokha's social media, communications, and editorial work. I got the opportunity to explore writing, marketing, hosting, content creation, editing, and digital communication, while discovering a creative side of myself that I hadn't explored before. It was incredibly rewarding to see the work we put into communicating Anokha's initiatives translate into greater outreach, and our efforts that year were recognised with the Best Outreach Club Award at VIT.",

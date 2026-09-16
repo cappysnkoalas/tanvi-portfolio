@@ -33,11 +33,19 @@ export function buildRibbon(centres, trackHeight) {
   // Run the ribbon off the top and bottom edges so it reads as passing
   // through the section rather than starting and stopping at a blob.
   const overshoot = Math.max(first.y, trackHeight - last.y) + 40;
-  const knots = [{ x: first.x + (first.x - centres[1].x) * 0.12, y: first.y - overshoot }];
+  // Enter from the top-left on a diagonal that steepens into the first blob,
+  // then drop almost straight down before sweeping across to the next stop.
+  const knots = [
+    { x: first.x * 0.2, y: -first.y * 0.4 },
+    { x: first.x - 80, y: first.y * 0.5 },
+  ];
   centres.forEach((centre, i) => {
     knots.push(centre);
     const next = centres[i + 1];
     if (!next) return;
+    if (i === 0) {
+      knots.push({ x: centre.x - 22, y: centre.y + (next.y - centre.y) * 0.5 });
+    }
     // A tall stop (the Anokha feature) leaves a long run between blobs. Left
     // to itself the curve drifts diagonally straight through the story text,
     // so pin it to the gutter between the two columns for the descent.

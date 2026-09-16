@@ -1,7 +1,9 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { journey } from '../data/content';
 import { BLOB_PATHS, BLOB_COLORS } from './blobShapes';
 import { buildRibbon } from './trailRibbon';
+import PaperClip from './PaperClip';
 import './Journey.css';
 
 // The ribbon is drawn through wherever the blobs actually land, so stops of
@@ -55,7 +57,7 @@ function Marker({ index, label }) {
         </svg>
         <span className="j-num">{index + 1}</span>
       </div>
-      <span className="j-label">{label} ·</span>
+      {label && <span className="j-label">{label} ·</span>}
     </div>
   );
 }
@@ -64,20 +66,60 @@ function Collage({ photos }) {
   return (
     <div className="collage">
       {photos.map((photo, n) => (
-        <img
-          className={`col-pic pic-${n}`}
-          key={photo.src}
-          src={photo.src}
-          alt={photo.alt}
-          loading="lazy"
-        />
+        <figure className={`col-pic pic-${n}`} key={photo.src}>
+          <img src={photo.src} alt={photo.alt} loading="lazy" />
+        </figure>
       ))}
     </div>
   );
 }
 
+// The full story opens on a sheet of the same lined notebook paper as the
+// "about me" note up top, so the two read as pages from one notebook.
+function StorySheet({ album, id, onClose }) {
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div className="j-sheet-layer">
+      <button type="button" className="j-sheet-backdrop" aria-label="Close the story" onClick={onClose} />
+      <div className="j-sheet-wrap" role="dialog" aria-modal="true" aria-labelledby={`${id}-title`}>
+        <div className="j-sheet">
+          <div className="j-sheet-surface" />
+          <div className="j-sheet-body">
+            <div className="j-sheet-kicker">the story behind</div>
+            <h3 className="j-sheet-title" id={`${id}-title`}>{album.name}</h3>
+            {album.story.map((paragraph, n) => (
+              <p key={n}>{paragraph}</p>
+            ))}
+            <p className="j-sheet-sign">{album.note}</p>
+          </div>
+        </div>
+        <PaperClip />
+        <button type="button" className="j-sheet-close" aria-label="Close the story" onClick={onClose}>
+          ×
+        </button>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 function FeatureStop({ item, index }) {
   const { album } = item;
+  const [open, setOpen] = useState(false);
+  const close = useCallback(() => setOpen(false), []);
+  const storyId = `j-story-${index}`;
   return (
     <li className="journey-item journey-feature">
       <div className="j-head">
@@ -85,31 +127,67 @@ function FeatureStop({ item, index }) {
         <div className="j-feature-name">
           <img className="j-feature-logo" src={album.logo} alt={`${album.name} logo`} />
           <div>
-            <h3 className="j-feature-title">{album.name}</h3>
+            <h3 className="j-feature-title">
+              <button
+                type="button"
+                className="j-feature-toggle"
+                onClick={() => setOpen(true)}
+                aria-haspopup="dialog"
+              >
+                {album.name}
+              </button>
+            </h3>
             <a className="j-feature-ig" href={album.instagram} target="_blank" rel="noreferrer">
               {album.handle}
             </a>
           </div>
         </div>
         <p className="j-feature-roles">{item.blurb}</p>
+        <span className="j-read-more-shadow">
+          <button
+            type="button"
+            className="j-read-more"
+            onClick={() => setOpen(true)}
+            aria-haspopup="dialog"
+          >
+            read the story
+            <span className="j-read-arrow" aria-hidden="true">→</span>
+          </button>
+        </span>
       </div>
+      {open && <StorySheet album={album} id={storyId} onClose={close} />}
 
       <div className="j-media">
-        <Marker index={index} label={item.label} />
+        <Marker index={index} />
       </div>
 
       <div className="j-wall">
         <Collage photos={album.photos} />
-        <p className="j-note">{album.note}</p>
       </div>
 
-      <div className="j-story">
-        {album.story.map((paragraph, n) => (
-          <p key={n}>{paragraph}</p>
-        ))}
-      </div>
+      {album.video && (
+        <div className="j-reel">
+          <video
+            className="j-video"
+            src={album.video}
+            controls
+            playsInline
+            preload="metadata"
+          />
+          <span className="j-read-more-shadow j-visit-shadow">
+            <a className="j-read-more j-visit" href={album.instagram} target="_blank" rel="noreferrer">
+              <svg className="j-ig-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4.2" />
+                <circle cx="17.3" cy="6.7" r="0.9" className="j-ig-dot" />
+              </svg>
+              visit anokha
+              <span className="j-read-arrow" aria-hidden="true">→</span>
+            </a>
+          </span>
+        </div>
+      )}
 
-      <span className="j-guide" aria-hidden="true" />
     </li>
   );
 }
