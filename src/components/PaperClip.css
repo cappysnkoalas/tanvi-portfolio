@@ -1,0 +1,41 @@
+/* ---------- PAPERCLIP ----------
+   A Gem paperclip gripping the paper's top-left corner. Two copies share the
+   exact same position/size/rotation: the inner arm sits behind .paper-shape
+   (z-index:-1) so it vanishes where it tucks under the sheet, and the outer
+   loop sits in front (z-index:4). Both live in .about-box, so they inherit
+   the paper's -2.4deg tilt for free. */
+
+.paper-clip{
+  position:absolute;
+  /* .about-box bleeds 60px past the viewport's left edge, so 88px here
+     lands the clip ~28px in from the screen edge, on the paper's corner. */
+  left: 88px;
+  top: -16px;
+  /* 40:100 to match the viewBox, so the wire never distorts. */
+  width: clamp(26px,2.64vw,36px);
+  height: clamp(65px,6.6vw,90px);
+  overflow: visible;
+  pointer-events:none;
+  /* Tipped off-square so it looks clipped on by hand, not placed by a grid. */
+  transform: rotate(-13deg);
+  transform-origin: center;
+  opacity: 0.95;
+}
+
+.paper-clip--front{
+  z-index:4;
+  /* Tight contact shadow + a softer cast shadow on the paper below it.
+     Kept light — heavy shadow reads as a sticker floating over the page. */
+  filter:
+    drop-shadow(0 1px 1px rgba(0,0,0,0.3))
+    drop-shadow(1px 2px 4px rgba(0,0,0,0.22));
+}
+
+.paper-clip--back{
+  z-index:-1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.28));
+}
+
+@media (max-width: 860px){
+  .paper-clip{ left: 72px; top: -12px; }
+}

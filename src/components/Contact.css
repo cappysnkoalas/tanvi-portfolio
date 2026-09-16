@@ -1,0 +1,9 @@
+.contact{ background:var(--bg-2); text-align:center; }
+.contact .section-title{ margin:0 auto 20px; }
+.contact p{ color:var(--ivory-dim); max-width:44ch; margin:0 auto 34px; font-size:15.5px; }
+.contact-btn{
+  display:inline-block; padding:16px 40px; border:1.5px solid var(--rose); border-radius:40px;
+  font-size:13px; letter-spacing:0.08em; color:var(--rose); transition: all .25s;
+}
+.contact-btn:hover{ background:var(--rose); color:var(--bg); }
+footer{ text-align:center; padding:30px; font-size:12px; letter-spacing:0.04em; color:var(--ivory-dim); background:var(--bg); }

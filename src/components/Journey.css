@@ -1,0 +1,253 @@
+/* ---------- JOURNEY ----------
+   Five milestones alternating left/right down the page, threaded by a
+   winding trail. Rough layout for now: the circles are placeholders, and
+   the copy lives in data/content.js. */
+
+.journey{ background:var(--bg); }
+
+.journey-track{
+  position:relative;
+  margin-top: clamp(40px,6vw,72px);
+}
+
+/* The winding ribbon sits behind everything, spanning the whole track.
+   It's a filled shape whose width swells and thins along its length, so it
+   reads as a drawn ribbon rather than a plotted line. */
+.j-trail{
+  position:absolute;
+  inset:0;
+  width:100%; height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+.j-trail path{
+  fill: var(--trail-yellow);
+  stroke:none;
+  opacity:0.9;
+}
+
+.journey-list{ list-style:none; position:relative; z-index:1; }
+
+.journey-item{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  align-items:center;
+  gap: clamp(20px,4vw,72px);
+  /* Generous vertical spacing isn't only for air: the ribbon's turns get
+     their roundness from the distance between milestones. Tighten these
+     rows much and the bends start to pinch. */
+  padding: clamp(40px,6vw,76px) 0;
+}
+/* Odd stops: copy left, circle right. Even stops mirror it — which is what
+   makes the eye zig-zag down the trail. The inset margins pull each circle
+   onto the ribbon's swing (x=66 / x=34) so the trail threads through it. */
+.j-text{ grid-column:1; text-align:right; }
+.j-media{ grid-column:2; justify-self:start; margin-left:14.5%; }
+.journey-item:nth-child(even) .j-text{ grid-column:2; text-align:left; }
+.journey-item:nth-child(even) .j-media{
+  grid-column:1;
+  justify-self:end;
+  margin-left:0;
+  margin-right:14.5%;
+}
+
+.j-year{
+  font-size:13px; letter-spacing:0.14em; font-weight:500;
+  color:var(--rose);
+  margin-bottom:8px;
+}
+.j-title{
+  font-family:'Playfair Display',serif;
+  font-size: clamp(19px,2.1vw,26px);
+  font-weight:600; line-height:1.2;
+  color:var(--ivory);
+  margin-bottom:10px;
+}
+.j-blurb{
+  font-size:14px; line-height:1.65;
+  color:var(--ivory-dim);
+  max-width:38ch;
+  margin-left:auto;   /* hugs the centre line on right-aligned (odd) stops */
+}
+.journey-item:nth-child(even) .j-blurb{ margin-left:0; margin-right:auto; }
+
+/* ---- number blob ---- */
+/* The marker keeps the blob hugged tight so the rotated label still hangs off
+   the blob's edge once an album card sits alongside it. */
+.j-media{ display:flex; align-items:center; gap: clamp(16px,2.2vw,34px); }
+.j-marker{ position:relative; flex:none; }
+
+.j-blob{
+  position:relative;
+  z-index:1;
+  width: clamp(78px,8.5vw,112px);
+  aspect-ratio:1;
+  display:grid; place-items:center;
+}
+.j-blob-shape{
+  position:absolute;
+  inset:0;
+  width:100%; height:100%;
+  overflow:visible;
+}
+.j-num{
+  position:relative;
+  z-index:1;
+  font-family:'Playfair Display',serif;
+  font-size: clamp(22px,2.4vw,32px);
+  font-weight:700;
+  color:var(--ink);
+  line-height:1;
+}
+
+/* ---- featured stop (long story + photo collage) ---- */
+/* Heading and marker share the top row; the story then runs the full width
+   with the collage floated into it, so the copy wraps around the pictures
+   instead of stacking below them in a column of its own.  */
+/* This stop's marker sits hard left instead of on the zigzag, so the ribbon
+   can run straight down the margin and the copy gets the full width beside
+   it — the story is far too long to sit in a half-width column. */
+.journey-feature{
+  grid-template-columns: 15% minmax(0,1fr) auto;
+  align-items:start;
+  position:relative;
+}
+.journey-feature .j-media{ grid-column:1; grid-row:1; justify-self:start; margin-left:2%; }
+.journey-feature .j-head{ grid-column:2; grid-row:1; text-align:left; }
+.journey-feature .j-wall{ grid-column:3; grid-row:1; }
+/* Two text columns: the story is long, and a single column this wide would
+   run to well over a hundred characters a line. */
+.journey-feature .j-story{
+  grid-column:2 / -1; grid-row:2;
+  margin-top: clamp(14px,2vw,26px);
+  columns:2;
+  column-gap: clamp(30px,3.4vw,56px);
+}
+/* The rotated tag would hang off the page from this hard-left marker. */
+.journey-feature .j-label{
+  right:auto; left:-10px;
+  transform: rotate(38deg);
+  transform-origin: left center;
+}
+/* Zero-width rail the trail follows past this stop. */
+.j-guide{ position:absolute; left:6%; top:26%; bottom:2%; width:0; pointer-events:none; }
+
+.j-feature-name{
+  display:flex;
+  align-items:center;
+  gap: clamp(14px,1.6vw,22px);
+}
+.j-feature-logo{
+  flex:none;
+  width: clamp(66px,7vw,96px);
+  height:auto;
+}
+.j-feature-title{
+  font-family:'Playfair Display',serif;
+  font-size: clamp(26px,3vw,40px);
+  font-weight:700; letter-spacing:0.05em;
+  color:var(--ivory);
+  line-height:1.1;
+}
+.j-feature-ig{
+  display:inline-block;
+  margin-top:8px;
+  font-size:13px; letter-spacing:0.1em; font-weight:600;
+  color:var(--rose);
+  border-bottom:1.5px solid rgba(206,156,161,0.4);
+  transition: color .2s, border-color .2s;
+}
+.j-feature-ig:hover{ color:var(--pink); border-color:var(--pink); }
+.j-feature-roles{
+  margin-top:16px;
+  font-size:15px; line-height:1.6; font-weight:500;
+  color:var(--rose-dim);
+  max-width:56ch;
+}
+.j-story p{
+  font-size: clamp(13.5px,1vw,14.5px);
+  line-height:1.72;
+  color:var(--ivory-dim);
+  margin-bottom:13px;
+}
+
+/* ---- photo collage ---- */
+.j-wall{ width: clamp(230px, 22vw, 292px); }
+/* Prints pinned over each other at loose angles. Positions are percentages of
+   the box, so the whole pile scales as one when the column narrows. */
+.collage{ position:relative; width:100%; aspect-ratio: 360 / 295; }
+.col-pic{
+  position:absolute;
+  display:block;
+  border:5px solid #FCF8F1;
+  border-radius:2px;
+  background:#E7DECE;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.5);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.col-pic.pic-0{ left:0;   top:0;   width:33%; transform:rotate(-5deg);  z-index:2; }
+.col-pic.pic-1{ left:29%; top:3%;  width:32%; transform:rotate(4deg);   z-index:1; }
+.col-pic.pic-2{ left:2%;  top:47%; width:47%; transform:rotate(-3deg);  z-index:3; }
+.col-pic.pic-3{ left:46%; top:39%; width:51%; transform:rotate(3.5deg); z-index:4; }
+.col-pic:hover{
+  transform: rotate(0deg) scale(1.1);
+  box-shadow: 0 16px 34px rgba(0,0,0,0.6);
+  z-index:9;
+}
+.j-note{
+  margin-top:10px;
+  font-family:'Caveat',cursive;
+  font-size: clamp(21px,2.1vw,28px);
+  line-height:1.15;
+  color:var(--rose);
+  text-align:center;
+  transform: rotate(-3deg);
+}
+
+/* Curved-looking tag riding the circle's edge. */
+.j-label{
+  position:absolute;
+  z-index:2;
+  right:-10px; bottom:12%;
+  transform: rotate(-38deg);
+  transform-origin: right center;
+  font-size:11px; letter-spacing:0.18em; font-weight:600;
+  color:var(--rose);
+  white-space:nowrap;
+}
+.journey-item:nth-child(even) .j-label{
+  right:auto; left:-10px;
+  transform: rotate(38deg);
+  transform-origin: left center;
+}
+
+@media (max-width: 860px){
+  .journey-item{
+    grid-template-columns:1fr;
+    gap:18px;
+    justify-items:center;
+    text-align:center;
+    padding: 26px 0;
+  }
+  .j-text,
+  .journey-item:nth-child(even) .j-text{ grid-column:1; grid-row:2; text-align:center; }
+  .j-media,
+  .journey-item:nth-child(even) .j-media{
+    grid-column:1; grid-row:1;
+    justify-self:center;
+    margin-left:0; margin-right:0;
+    flex-direction:column;
+    gap:22px;
+  }
+  .journey-feature{ grid-template-columns:1fr; }
+  .journey-feature .j-head{ grid-column:1; grid-row:2; text-align:center; }
+  .j-feature-name{ justify-content:center; }
+  .journey-feature .j-media{ grid-column:1; grid-row:1; justify-self:center; }
+  .journey-feature .j-wall{ grid-column:1; grid-row:3; width:min(330px,100%); justify-self:center; }
+  .journey-feature .j-story{ grid-column:1; grid-row:4; columns:1; text-align:left; }
+  .j-blurb,
+  .journey-item:nth-child(even) .j-blurb{ margin-left:auto; margin-right:auto; }
+  /* The rotated tag hangs below the blob; keep it off the copy underneath. */
+  .j-marker{ margin-bottom:14px; }
+  .j-trail{ display:none; }
+}

@@ -1,0 +1,138 @@
+/* ---------- HERO + ABOUT (combined so photo bottom = box bottom) ---------- */
+.hero-about{
+  position:relative;
+  padding: clamp(10px,1.6vw,18px) 0 clamp(14px,2vw,22px);
+}
+.hero-about .wrap{ max-width:none; }
+.hero-about-grid{ display:grid; grid-template-columns: 1.15fr 1fr; gap:clamp(28px,4vw,52px); align-items:stretch; }
+
+.left-col{ display:flex; flex-direction:column; position:relative; }
+.eyebrow{ font-size:11.5px; letter-spacing:0.14em; color:var(--ivory-dim); margin-bottom:6px; }
+
+.name-block{ margin-bottom: clamp(8px,1.4vw,16px); }
+.big-name{
+  font-family:'Playfair Display',serif;
+  font-weight:900;
+  color:var(--rose);
+  font-size: clamp(42px, 6.2vw, 92px);
+  line-height:0.92;
+  letter-spacing:0.005em;
+}
+.name-sub{
+  display:flex; align-items:center; gap:12px;
+  margin-top:14px;
+  font-size: clamp(12px,1.1vw,14px);
+  letter-spacing:0.22em; font-weight:500;
+  color:var(--ivory);
+}
+.name-sub .rule{ width:36px; height:1.5px; background:var(--olive); }
+
+.about-box{
+  position:relative;
+  margin-left: calc(-1 * var(--pad-x) - 60px);
+  margin-top: auto;
+  margin-bottom: auto;
+  width: calc(100% + var(--pad-x) + 120px);
+  transform: rotate(-2.4deg);
+  transform-origin: left center;
+}
+/* The torn-paper shape lives on its own layer so clip-path only clips the
+   paper itself — MagicSparkle sits in .about-box (same rotation/coordinate
+   space) but outside .paper-shape, so its flight path isn't cut off when it
+   swings above/past the paper's edges. */
+.paper-shape{
+  position:relative;
+  display:flex; flex-direction:column;
+  box-shadow: 0 30px 58px rgba(0,0,0,0.55);
+  clip-path: polygon(
+    0% 1.5%, 5% 0.4%, 9% 2.6%, 16% 0.8%, 23% 3.1%, 27% 1%, 34% 0%, 41% 2.2%, 49% 0.6%, 57% 2.8%,
+    63% 0.9%, 70% 2%, 77% 0.3%, 84% 2.4%, 90% 1.1%, 96% 0.5%, 100% 1.8%,
+    100% 98.3%, 94% 99.5%, 88% 97.6%, 82% 99.2%, 75% 98%, 68% 99.6%, 61% 97.9%, 55% 99%,
+    47% 98.4%, 40% 99.7%, 33% 98%, 26% 99.3%, 20% 97.7%, 14% 99.4%, 8% 98.6%, 3% 99.8%, 0% 98.5%
+  );
+}
+.paper-surface{
+  position:absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(100deg, rgba(58,22,32,0.12) 0%, transparent 10%),
+    url('../assets/paper-texture.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index:1;
+}
+.about-content{
+  position:relative;
+  z-index:2;
+  display:flex; flex-direction:column; justify-content:center;
+  padding: clamp(30px,4vw,48px) clamp(34px,4.5vw,60px) clamp(30px,4vw,48px) calc(var(--pad-x) + 92px);
+}
+.about-kicker{
+  font-family:'Poppins', sans-serif;
+  font-weight:800;
+  font-style:italic;
+  font-size: clamp(17px,1.9vw,24px);
+  color:var(--burgundy);
+  margin-bottom:10px;
+  letter-spacing:-0.01em;
+}
+
+.intro-body{ font-family:'Poppins', sans-serif; }
+.intro-body p{
+  font-size: clamp(15px,1.55vw,18px); line-height:1.35; color:var(--ink);
+  margin-bottom:8px;
+  font-weight:500;
+}
+.intro-body p.emph{ font-weight:800; color:var(--burgundy); font-size: clamp(16px,1.7vw,20px); }
+.intro-body b{ font-weight:800; color:var(--burgundy); }
+.intro-body u{ text-decoration-color: var(--olive); text-decoration-thickness:3px; text-underline-offset:4px; }
+.intro-body em{ font-style:italic; color:#8B3A44; }
+.chip{
+  display:inline-block;
+  font-weight:800;
+  letter-spacing:0.02em;
+  color:var(--burgundy);
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+}
+.chip-rose{ text-decoration-color: var(--rose); }
+.chip-olive{ text-decoration-color: var(--olive); }
+.chip-gold{ text-decoration-color: var(--gold); }
+.chip-burgundy2{ text-decoration-color: var(--burgundy-2); }
+.intro-triad{
+  margin-top: 16px;
+  font-family:'Poppins', sans-serif;
+  font-size: clamp(13.5px,1.4vw,16px); line-height:1.6;
+  letter-spacing:0.005em;
+}
+.intro-triad .lead{
+  font-weight:700; font-style:italic; color:var(--burgundy);
+  display:block; margin-bottom:12px;
+  font-size: clamp(15px,1.6vw,18px);
+  line-height:1.45;
+}
+.intro-triad div:not(.lead){ color:var(--ink); font-weight:600; margin-bottom:4px; }
+.intro-triad div:not(.lead):last-child{ margin-bottom:0; }
+.intro-triad div:not(.lead) b{ color:#8B3A44; font-weight:800; }
+
+.photo-col{ position:relative; }
+.hero-photo{
+  position:relative;
+  width:100%; height:100%;
+  border-radius:4px 4px 0 0;
+  overflow:hidden;
+  -webkit-mask-image: linear-gradient(to left, black 82%, transparent 100%);
+  mask-image: linear-gradient(to left, black 82%, transparent 100%);
+  filter: saturate(0.92) contrast(1.03);
+}
+.hero-photo img{ width:100%; height:100%; object-fit:cover; object-position: center 20%; display:block; }
+.dd-star{ position:absolute; width:clamp(48px,6vw,66px); height:auto; right:-16px; top:-16px; opacity:0.95; z-index:6; }
+
+@media (max-width: 860px){
+  .hero-about-grid{ grid-template-columns:1fr; height:auto; }
+  .photo-col{ height: 340px; order:-1; }
+  .name-block{ margin-top: 22px; }
+  .dd-star{ display:none; }
+  .hero-photo{ -webkit-mask-image:none; mask-image:none; }
+}

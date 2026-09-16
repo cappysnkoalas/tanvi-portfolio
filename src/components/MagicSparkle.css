@@ -1,0 +1,159 @@
+/* ---------- MAGIC SPARKLE ----------
+   A bright little star that travels back and forth -- up and down, over
+   and over -- along ONE hand-drawn curvy path hugging the empty right-hand
+   margin of the paper: a small hook above the top edge, a wavy descent,
+   a little coiled loop about two-thirds down, and a matching hook below
+   the bottom edge. Kept tight to the right edge, well clear of any text.
+   A thin dotted line traces the same path so the route is visible. Both
+   live in .about-box (outside the clipped .paper-shape) so neither gets
+   cut off as they spill past the paper's top/bottom edges -- and
+   pointer-events are off throughout, so nothing here is ever clickable. */
+
+.magic-guide-wrap{
+  position:absolute;
+  left:0; width:100%;
+  top:-8%; height:116%;
+  z-index:2;
+  pointer-events:none;
+}
+.magic-guide-wrap svg{ display:block; width:100%; height:100%; overflow:visible; }
+.magic-guide{
+  fill:none;
+  stroke: var(--rose-dim);
+  stroke-width:0.6;
+  stroke-linecap:round;
+  stroke-dasharray: 0.4 2;
+  opacity:0.5;
+}
+
+.magic-star{
+  position:absolute;
+  top:0; left:0;
+  z-index:3;
+  display:block;
+  width: clamp(16px,2vw,24px);
+  height: clamp(16px,2vw,24px);
+  color: var(--bright-yellow);
+  filter:
+    drop-shadow(0 0 3px var(--bright-yellow))
+    drop-shadow(0 0 8px rgba(255,214,0,0.75))
+    drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+  pointer-events:none;
+  /* Samples are spaced evenly by DISTANCE along the curve (not by curve
+     parameter), so with linear timing every step covers the same ground
+     in the same time -- constant speed, not faster-through-straights /
+     slower-through-the-loop. "alternate" sends it back the same route. */
+  animation:
+    sparkle-path 13s linear infinite alternate,
+    star-twinkle 13s linear infinite;
+}
+
+@keyframes sparkle-path{
+  0%     { top:-6.00%; left:104.50%; }
+  1.124% { top:-5.49%; left:102.30%; }
+  2.247% { top:-4.99%; left:100.09%; }
+  3.371% { top:-4.32%; left:97.93%; }
+  4.494% { top:-3.09%; left:96.06%; }
+  5.618% { top:-0.91%; left:95.67%; }
+  6.742% { top:1.30%; left:96.14%; }
+  7.865% { top:3.38%; left:97.01%; }
+  8.989% { top:5.28%; left:98.24%; }
+  10.112%{ top:6.38%; left:100.20%; }
+  11.236%{ top:7.08%; left:102.35%; }
+  12.36% { top:8.04%; left:104.39%; }
+  13.483%{ top:10.08%; left:104.86%; }
+  14.607%{ top:12.04%; left:103.74%; }
+  15.73% { top:13.87%; left:102.41%; }
+  16.854%{ top:15.77%; left:101.19%; }
+  17.978%{ top:17.91%; left:100.50%; }
+  19.101%{ top:20.06%; left:101.12%; }
+  20.225%{ top:21.93%; left:102.38%; }
+  21.348%{ top:23.75%; left:103.73%; }
+  22.472%{ top:25.73%; left:104.81%; }
+  23.596%{ top:27.94%; left:104.79%; }
+  24.719%{ top:29.87%; left:103.62%; }
+  25.843%{ top:31.58%; left:102.14%; }
+  26.966%{ top:33.31%; left:100.68%; }
+  28.09% { top:35.29%; left:99.61%; }
+  29.213%{ top:37.49%; left:99.83%; }
+  30.337%{ top:39.41%; left:101.02%; }
+  31.461%{ top:41.17%; left:102.44%; }
+  32.584%{ top:42.99%; left:103.78%; }
+  33.708%{ top:45.11%; left:104.50%; }
+  34.831%{ top:47.22%; left:103.77%; }
+  35.955%{ top:49.02%; left:102.40%; }
+  37.079%{ top:50.77%; left:100.97%; }
+  38.202%{ top:52.80%; left:100.02%; }
+  39.326%{ top:54.96%; left:100.57%; }
+  40.449%{ top:56.80%; left:101.87%; }
+  41.573%{ top:58.58%; left:103.27%; }
+  42.697%{ top:60.65%; left:104.08%; }
+  43.82% { top:62.77%; left:103.35%; }
+  44.944%{ top:64.89%; left:102.68%; }
+  46.067%{ top:67.09%; left:103.18%; }
+  47.191%{ top:69.32%; left:103.49%; }
+  48.315%{ top:71.56%; left:103.24%; }
+  49.438%{ top:73.72%; left:102.58%; }
+  50.562%{ top:75.53%; left:101.25%; }
+  51.685%{ top:75.76%; left:99.12%; }
+  52.809%{ top:74.11%; left:97.63%; }
+  53.933%{ top:72.00%; left:96.84%; }
+  55.056%{ top:69.76%; left:96.53%; }
+  56.18% { top:67.50%; left:96.58%; }
+  57.303%{ top:65.29%; left:97.05%; }
+  58.427%{ top:63.25%; left:98.02%; }
+  59.551%{ top:62.01%; left:99.83%; }
+  60.674%{ top:62.98%; left:101.79%; }
+  61.798%{ top:64.69%; left:103.24%; }
+  62.921%{ top:66.92%; left:103.21%; }
+  64.045%{ top:69.01%; left:102.36%; }
+  65.169%{ top:71.04%; left:101.35%; }
+  66.292%{ top:73.07%; left:100.36%; }
+  67.416%{ top:75.17%; left:99.52%; }
+  68.539%{ top:77.37%; left:99.02%; }
+  69.663%{ top:79.59%; left:99.34%; }
+  70.787%{ top:81.58%; left:100.40%; }
+  71.91% { top:83.42%; left:101.72%; }
+  73.034%{ top:85.28%; left:103.01%; }
+  74.157%{ top:87.34%; left:103.92%; }
+  75.281%{ top:89.56%; left:103.70%; }
+  76.404%{ top:91.53%; left:102.60%; }
+  77.528%{ top:93.35%; left:101.25%; }
+  78.652%{ top:95.23%; left:100.00%; }
+  79.775%{ top:97.40%; left:99.55%; }
+  80.899%{ top:99.36%; left:100.63%; }
+  82.022%{ top:100.96%; left:102.23%; }
+  83.146%{ top:102.59%; left:103.80%; }
+  84.27% { top:104.67%; left:104.58%; }
+  85.393%{ top:106.91%; left:104.34%; }
+  86.517%{ top:109.02%; left:103.53%; }
+  87.64% { top:110.83%; left:102.19%; }
+  88.764%{ top:112.07%; left:100.31%; }
+  89.888%{ top:112.89%; left:98.20%; }
+  91.011%{ top:113.31%; left:95.98%; }
+  92.135%{ top:112.88%; left:93.80%; }
+  93.258%{ top:111.12%; left:92.41%; }
+  94.382%{ top:109.03%; left:91.55%; }
+  95.506%{ top:106.82%; left:91.04%; }
+  96.629%{ top:104.58%; left:91.11%; }
+  97.753%{ top:102.77%; left:92.42%; }
+  98.876%{ top:101.35%; left:94.18%; }
+  100%   { top:100.00%; left:96.00%; }
+}
+
+/* Continuous spin + gentle scale pulse, independent of travel direction. */
+@keyframes star-twinkle{
+  0%     { transform: translate(-50%,-50%) rotate(0deg)   scale(1); }
+  25%    { transform: translate(-50%,-50%) rotate(90deg)  scale(1.08); }
+  50%    { transform: translate(-50%,-50%) rotate(180deg) scale(0.94); }
+  75%    { transform: translate(-50%,-50%) rotate(270deg) scale(1.08); }
+  100%   { transform: translate(-50%,-50%) rotate(360deg) scale(1); }
+}
+
+@media (max-width: 860px){
+  .magic-guide-wrap, .magic-star{ display:none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .magic-star{ animation:none; }
+}
