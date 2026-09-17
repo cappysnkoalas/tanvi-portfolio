@@ -1,0 +1,58 @@
+/* Marginalia around a stop's title. Light green is the Kshatriya Electric
+   green off the goo button, so the drawings read as part of that stop rather
+   than as stray clip art. */
+.doodle{
+  /* Held back from the copy: these fill space, they don't compete with it. */
+  color:#9AE863;
+  opacity:0.55;
+  pointer-events:none;
+  display:block;
+  height:auto;
+  flex:none;
+  /* Hairlines rather than the marker weight they are drawn at, so they sit
+     behind the text in the reading order. */
+  stroke-width:2.4;
+}
+/* Placed around the stop's title. Tilted a few degrees so they read as
+   sketched in the margin rather than set on a grid. */
+
+/* Neither drawing may sit in the flex flow: as a flow item the buggy overflowed
+   the row, the nowrap title shrank to absorb it, and the name spilled straight
+   over the drawing. The heading is the frame for the buggy and the logo for the
+   gear — both hug their content, where the row spans the whole column. */
+.j-feature-title{ position:relative; }
+
+/* Buggy: lifted clear above the name and set at its far end, overlapping the
+   last letters horizontally. There is only ~54px between the name and the page
+   edge at narrow widths, so sitting fully clear of the text to the right would
+   either overflow the page or shrink the drawing to nothing — riding above it
+   buys the room back. The lift is tuned to leave the cap line untouched. */
+.doodle--atv{
+  position:absolute;
+  /* Bigger, so it is pulled further left over the name's tail to keep its
+     right edge inside the page, and lifted further to clear the cap line. */
+  left: calc(100% - clamp(26px,2.6vw,44px));
+  top: clamp(-80px,-6vw,-52px);
+  width: clamp(58px,5.5vw,82px);
+  transform: rotate(8deg);
+}
+/* Gear: in the gap between the trail and the logo, riding a little higher.
+   Taken out of the flow so it cannot widen the title row at all. */
+.doodle--idea{
+  position:absolute;
+  right: calc(100% + clamp(6px,0.8vw,12px));
+  top: clamp(-20px,-1.5vw,-7px);
+  width: clamp(40px,4.2vw,60px);
+  transform: rotate(-8deg);
+}
+/* Anchor for the gear, and the logo's own box. */
+.j-logo-wrap{ position:relative; display:block; flex:none; }
+
+@media (max-width: 900px){
+  /* The title row is already tight once the stop stacks into one column, and
+     these are decoration — drop them rather than crowd the name. */
+  .doodle{ display:none; }
+}
+@media (prefers-reduced-motion: no-preference){
+  .doodle{ transition: opacity 200ms ease; }
+}

@@ -106,15 +106,86 @@
 .journey-feature{
   /* Title column is capped so the blob (and the road through it) stays near
      the copy; any spare width goes to the video in the last column. */
-  grid-template-columns: minmax(0,390px) auto auto minmax(0,1fr);
+  grid-template-columns: 410px auto auto minmax(0,1fr);
   align-items:center;
   column-gap: clamp(18px,2.2vw,36px);
+  /* .journey-item's `gap` sets rows too; left at that, the caption floats far
+     above the media it belongs to. */
+  row-gap:6px;
   position:relative;
 }
-.journey-feature .j-head{ grid-column:1; grid-row:1; text-align:left; }
-.journey-feature .j-media{ grid-column:2; grid-row:1; justify-self:center; margin:0 0 0 -14px; }
-.journey-feature .j-wall{ grid-column:3; grid-row:1; }
-.journey-feature .j-reel{ grid-column:4; grid-row:1; }
+/* The caption gets its own short row above the collage and video, sitting on
+   that row's bottom edge so it reads as attached to them. The copy and blob
+   stay in the media row so they keep centring against the collage. */
+.journey-feature .j-glimpse{ grid-column:3 / span 2; grid-row:1; align-self:end; }
+.journey-feature .j-head{ grid-column:1; grid-row:2; text-align:left; }
+.journey-feature .j-media{ grid-column:2; grid-row:2; justify-self:center; margin:0 0 0 -14px; }
+.journey-feature .j-wall{ grid-column:3; grid-row:2; }
+.journey-feature .j-reel{ grid-column:4; grid-row:2; }
+
+/* Mirrored stop: photos lead on the left, the trail runs between, and the copy
+   sits to its right. Same parts as above, read right-to-left. */
+.journey-feature.is-flipped{
+  grid-template-columns: auto auto minmax(0,1fr);
+  /* One source of truth for the photo column: the line above the photos has to
+     be capped to the same width, or — the column being auto-sized — its text
+     stretches the column and squeezes the copy until the name overflows. */
+  --wall-w: clamp(320px,41vw,600px);
+}
+.journey-feature.is-flipped .j-glimpse{
+  grid-column:1; grid-row:1;
+  max-width: var(--wall-w);
+}
+/* Wider than the default pile: the photos lead this stop, and widening the
+   column is also what pushes the trail (the next column along) to the right. */
+.journey-feature.is-flipped .j-wall{ grid-column:1; grid-row:2; width: var(--wall-w); }
+/* This stop's name is half again as long as the first one's, and its column is
+   narrower — so it gets its own ceiling rather than overflowing the page. */
+.journey-feature.is-flipped .j-feature-title{ font-size: clamp(22px,2.4vw,34px); }
+.journey-feature.is-flipped .j-feature-logo{ width: clamp(50px,4.6vw,68px); }
+/* Nudged off the photos as well, to carry the trail further right than the
+   column edge alone would put it. */
+.journey-feature.is-flipped .j-media{
+  grid-column:2; grid-row:2;
+  justify-self:center;
+  margin:0 0 0 clamp(16px,4vw,78px);
+}
+/* Rides the top of the row rather than centring against the tall photo pile,
+   so the copy sits up in the corner instead of spreading down the stop. The
+   inset clears the trail, which swings widest just above the blob — right
+   where this stop's year line sits. */
+.journey-feature.is-flipped .j-head{
+  grid-column:3; grid-row:2;
+  align-self:start;
+  text-align:left;
+  padding-left: clamp(14px,2.6vw,40px);
+  padding-top: clamp(8px,1.6vw,26px);
+}
+
+/* A small handwritten aside over the media — deliberately light, so it reads
+   as a note rather than a second heading. */
+.j-glimpse{
+  justify-self:center;
+  margin:0 0 12px;
+  text-align:center;
+  font-family:'Caveat', cursive;
+  font-size: clamp(20px,1.9vw,27px);
+  line-height:1.2;
+  color:var(--rose);
+}
+/* Green variant: set in the bold italic sans rather than the handwriting, so a
+   line about mud and grind reads sporting rather than dainty. */
+.j-glimpse--green{
+  max-width:100%;
+  font-family:'Poppins', sans-serif;
+  font-style:italic;
+  font-weight:700;
+  font-size: clamp(14px,1.35vw,19px);
+  letter-spacing:0.012em;
+  line-height:1.4;
+  color:#8CFF5C;
+  text-shadow: 0 0 18px rgba(140,255,92,0.28);
+}
 
 /* Title also opens the story, styled as plain heading text. */
 .j-feature-toggle{
@@ -124,43 +195,66 @@
   transition: color .2s;
 }
 .j-feature-toggle:hover{ color:var(--pink); }
-.j-feature-toggle:focus-visible,
-.j-read-more:focus-visible{ outline:2px solid var(--rose); outline-offset:5px; }
+.j-feature-toggle:focus-visible{ outline:2px solid var(--rose); outline-offset:5px; }
 
-/* CTA: a torn scrap of the same notebook paper, so it pops off the dark
-   page and previews the sheet it opens. */
-.j-read-more{
-  all:unset;
-  position:relative;
-  cursor:pointer;
-  display:inline-flex; align-items:center; gap:12px;
-  margin-top:22px;
-  padding: 17px 32px 17px 44px;
+/* CTA to the Instagram page: a dark capsule inside a bright orange ring, with
+   the mark held in its own ringed badge on the left. Keyed to the same orange
+   as the story button so the two CTAs read as a pair. */
+.ig-btn{
+  --ig-ring:#F87316;
+  --ig-ring-hi:#FFB061;
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  /* Long and low: the min-width is what stretches it out, and the label takes
+     the slack so the text stays centred as it grows. */
+  min-width:min(360px, 100%);
+  margin-top:26px;
+  padding:4px 22px 4px 4px;
+  border-radius:999px;
+  border:2.5px solid var(--ig-ring);
+  background: linear-gradient(168deg, #3A1620 0%, #240D14 58%, #170609 100%);
+  /* Thin dark rim outside the ring, so the orange reads as a band rather than
+     bleeding into the page behind it. */
+  box-shadow:
+    0 0 0 2.5px rgba(10,3,5,0.85),
+    0 14px 28px rgba(0,0,0,0.55);
+  text-decoration:none;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.ig-btn-badge{
+  flex:none;
+  width:36px; height:36px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  border:2px solid var(--ig-ring);
+  background: radial-gradient(circle at 34% 28%, rgba(248,115,22,0.22), transparent 70%);
+}
+.ig-btn-glyph{
+  width:19px; height:19px;
+  fill:none;
+  stroke:var(--ig-ring-hi);
+  stroke-width:2;
+}
+.ig-btn-glyph .ig-btn-dot{ fill:var(--ig-ring-hi); stroke:none; }
+.ig-btn-label{
+  flex:1;
+  text-align:center;
+  white-space:nowrap;   /* one line, whatever the width */
   font-family:'Poppins', sans-serif;
-  font-size:17px; font-weight:800; font-style:italic;
-  letter-spacing:0.01em;
-  color:var(--burgundy);
-  background-image:
-    linear-gradient(100deg, rgba(58,22,32,0.1) 0%, transparent 14%),
-    url('../assets/paper-texture.jpg');
-  background-size: cover, 420px auto;
-  background-position: 0 0, -26px -190px;
-  clip-path: polygon(
-    0% 6%, 8% 1%, 17% 5%, 28% 0%, 39% 4%, 50% 1%, 62% 5%, 73% 0%, 84% 4%, 93% 1%, 100% 5%,
-    99% 50%, 100% 95%, 91% 100%, 80% 96%, 68% 100%, 57% 95%, 45% 99%, 33% 95%, 21% 100%, 10% 96%, 0% 100%, 1% 50%
-  );
-  transform: rotate(-2deg);
-  transition: transform .25s ease;
+  font-size:16px; font-weight:600;
+  letter-spacing:0.035em;
+  color:var(--ivory);
 }
-.j-read-more-shadow{ display:inline-block; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.5)); }
-.j-read-more:hover{ transform: rotate(0deg) scale(1.04); }
-.j-read-arrow{
-  display:inline-block;
-  font-style:normal;
-  color:#8B3A44;
-  transition: transform .25s ease;
+.ig-btn:hover{
+  transform: translateY(-2px) scale(1.03);
+  border-color: var(--ig-ring-hi);
+  box-shadow:
+    0 0 0 2.5px rgba(10,3,5,0.85),
+    0 18px 34px rgba(0,0,0,0.62);
 }
-.j-read-more:hover .j-read-arrow{ transform: translateX(4px); }
+.ig-btn:focus-visible{ outline:2px solid var(--ig-ring-hi); outline-offset:4px; }
+@media (prefers-reduced-motion: reduce){ .ig-btn{ transition:none; } }
 
 /* ---- story popup: a notebook sheet like the "about me" note ---- */
 .j-sheet-layer{ position:fixed; inset:0; z-index:1000; display:grid; place-items:center; padding:20px; }
@@ -234,15 +328,6 @@
   font-weight:500;
   margin-bottom:14px;
 }
-.j-sheet-sign{
-  font-family:'Caveat', cursive !important;
-  font-size: clamp(24px,2.6vw,30px) !important;
-  font-weight:700 !important;
-  color:#8B3A44;
-  text-align:right;
-  transform: rotate(-3deg);
-  margin: 6px 0 0 !important;
-}
 /* Clip sits on the sheet's top-left corner, same as the landing-page note. */
 .j-sheet-wrap .paper-clip{ left: clamp(34px,6%,52px); top:-18px; }
 .j-sheet-close{
@@ -278,52 +363,49 @@
 }
 
 /* Same torn notebook scrap as "read the story", tipped the other way. */
-.j-visit-shadow{ margin-top:26px; }
-.j-visit{ margin-top:0; transform: rotate(2deg); }
-.j-ig-icon{ width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:2.1; }
-.j-ig-icon .j-ig-dot{ fill:currentColor; stroke:none; }
 
 .j-feature-name{
   display:flex;
   align-items:center;
-  gap: clamp(14px,1.6vw,22px);
+  gap: clamp(8px,0.9vw,13px);
 }
 .j-feature-logo{
   flex:none;
   width: clamp(60px,5.6vw,84px);
   height:auto;
 }
+/* Capped so the name stays inside the title column — any wider and it runs
+   under the trail that passes just to its right. */
 .j-feature-title{
   white-space:nowrap;
   font-family:'Playfair Display',serif;
   font-size: clamp(26px,2.6vw,38px);
-  font-weight:700; letter-spacing:0.05em;
+  font-weight:900; letter-spacing:0.03em;
   color:var(--ivory);
-  line-height:1.1;
+  line-height:1.05;
 }
-.j-feature-ig{
-  display:inline-block;
-  margin-top:8px;
-  font-size:13px; letter-spacing:0.1em; font-weight:600;
-  color:var(--rose);
-  border-bottom:1.5px solid rgba(206,156,161,0.4);
-  transition: color .2s, border-color .2s;
-}
-.j-feature-ig:hover{ color:var(--pink); border-color:var(--pink); }
 .j-feature-roles{
-  white-space:pre-line;
   margin-top:16px;
-  font-size:15px; line-height:1.6; font-weight:500;
-  color:var(--rose-dim);
+  font-family:'Poppins', sans-serif;
+  font-size:16.5px; line-height:1.55; font-weight:500;
+  letter-spacing:0.01em;
+  color:var(--ivory);
   max-width:56ch;
 }
+/* Each role line is its own block, so the copy breaks where it is written
+   rather than wherever the column happens to run out. */
+.j-feature-roles span{ display:block; }
+.j-feature-roles .j-role-strong{ font-weight:800; }
 /* ---- photo collage ---- */
 .j-wall{ width: clamp(250px, 24vw, 345px); }
 /* Prints pinned at loose angles with just a sliver of overlap. Positions are
    percentages of the box, so the whole pile scales as one when it narrows. */
 /* Four prints taped up in a loose zig-zag: certificate top-left, stage photo
    top-right, children's home bottom-left, second certificate bottom-right. */
-.collage{ position:relative; width:100%; aspect-ratio: 345 / 390; }
+.collage{ position:relative; width:100%; }
+.collage.count-4{ aspect-ratio: 345 / 390; }
+/* Mosaic proportions from the reference layout. */
+.collage.count-5{ aspect-ratio: 100 / 78; }
 .col-pic{
   --r: 0deg;
   position:absolute;
@@ -357,15 +439,131 @@
 .col-pic.pic-3::before{ transform: translateX(-50%) rotate(3deg); width:40%; }
 
 /* Certificates run bigger than the photos so the text on them is legible. */
-.col-pic.pic-0{ --r:-6deg;  left:0%;  top:2%;  width:50%; z-index:1; }
-.col-pic.pic-2{ --r:5deg;   left:54%; top:6%;  width:34%; z-index:2; }
-.col-pic.pic-3{ --r:-8deg;  left:4%;  top:66%; width:36%; z-index:3; }
-.col-pic.pic-1{ --r:-4deg;  left:50%; top:52%; width:46%; z-index:4; }
-.col-pic:hover{
-  transform: rotate(0deg) scale(1.08);
-  box-shadow: 0 16px 34px rgba(0,0,0,0.6);
-  z-index:9;
+.count-4 .col-pic.pic-0{ --r:-6deg;  left:0%;  top:2%;  width:50%; z-index:1; }
+.count-4 .col-pic.pic-2{ --r:5deg;   left:54%; top:24%; width:39%; z-index:2; }
+.count-4 .col-pic.pic-3{ --r:-8deg;  left:4%;  top:66%; width:41%; z-index:3; }
+.count-4 .col-pic.pic-1{ --r:6deg;   left:45%; top:50%; width:52%; z-index:4; }
+
+/* A mosaic of five: sizes vary, a few corners overlap, and the tilts run from
+   dead straight to a few degrees. Only widths are set — each print's height
+   follows its own photo, so the wide slots take the landscape shots and the
+   tall ones the portraits. */
+.count-5 .col-pic.pic-0{ --r:0deg;  left:20%; top:8%;  width:38%; z-index:2; } /* CAD, landscape */
+.count-5 .col-pic.pic-1{ --r:4deg;  left:0%;  top:2%;  width:22%; z-index:1; } /* E86, portrait */
+.count-5 .col-pic.pic-2{ --r:-1deg; left:57%; top:4%;  width:26%; z-index:3; } /* H18, portrait */
+.count-5 .col-pic.pic-3{ --r:5deg;  left:4%;  top:47%; width:28%; z-index:4; } /* crew, portrait */
+.count-5 .col-pic.pic-4{ --r:-3deg; left:31%; top:53%; width:43%; z-index:5; } /* award, landscape */
+
+/* Lift the hovered print clear of every other one. This has to out-rank the
+   per-print rules above: those carry three classes, so a plain `.col-pic:hover`
+   loses to them on specificity and the enlarged photo stays buried under its
+   neighbours however high its z-index is set. */
+.collage .col-pic:hover,
+.collage .col-pic:focus-visible,
+.collage .col-pic:focus-within{ z-index:40; }
+
+/* The prints on this pile's left edge sit against the page margin, so growing
+   from their centre would push half the photo off-screen, where the page's
+   overflow rule clips it. Grow them inward instead. */
+.count-5 .col-pic.pic-1,
+.count-5 .col-pic.pic-3{ transform-origin: left center; }
+
+/* Event badge, dropped into the empty pocket bottom-right of the pile, with an
+   arrow climbing from it back to the photos. */
+/* Both are placed in the collage's own coordinates, and both need a z-index
+   above the prints — those carry 1-5, and a positioned element without one
+   paints underneath them however late it comes in the markup. */
+.col-badge{
+  position:absolute;
+  /* Clear of the prints on its left: the tilt swings the flag corner out, so
+     the badge needs more room than its upright box suggests. */
+  left:81%; top:56%;
+  width:29%;
+  z-index:10;
+  display:block;
+  height:auto;
+  transform: rotate(-14deg);
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.55));
+  pointer-events:none;
 }
+/* Sits in the clear dark pocket to the right of the prints, not over them, so
+   the whole curve reads — tucked in among the photos most of it was hidden. */
+.col-badge-arrow{
+  position:absolute;
+  left:86%; top:26%;
+  width:15%;
+  height:auto;
+  z-index:10;
+  color: var(--trail-yellow);
+  opacity:0.9;
+  pointer-events:none;
+}
+
+/* Empty slot, so the pile reads correctly before the photos land. */
+.col-empty{
+  display:grid;
+  place-items:center;
+  aspect-ratio: 4 / 3;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(58,22,32,0.13) 0 7px,
+    rgba(58,22,32,0.05) 7px 14px
+  );
+}
+.col-empty::after{
+  content:'photo';
+  font-family:'Poppins', sans-serif;
+  font-size:10px; font-weight:700;
+  letter-spacing:0.16em; text-transform:uppercase;
+  color: rgba(58,22,32,0.5);
+}
+/* Hovering lifts a print off the pile and blows it up big enough to actually
+   read the certificate text. It straightens at the same time, so the type is
+   level rather than read at an angle. Keyboard users get the same on focus. */
+.col-pic:hover,
+.col-pic:focus-visible{
+  transform: rotate(0deg) scale(2.15);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.75);
+  z-index:20;
+  outline:none;
+}
+/* The tape would blow up with the print and sit over the image, so drop it. */
+.col-pic:hover::before,
+.col-pic:focus-visible::before{ opacity:0; }
+.col-pic::before{ transition: opacity .2s ease; }
+.col-pic{ cursor: zoom-in; }
+
+/* Note that opens above the stage print. It sits in the collage rather than
+   inside the figure, so the hover zoom doesn't blow the text up with the photo.
+   Right-anchored and capped at 44% wide: centred on the print it grew back
+   across the certificate to its left, which read as sitting ON the photos.
+   That keeps it inside the empty band above the print, clear of everything. */
+.col-note{
+  /* Above even a hovered print, so an open note is never buried. */
+  position:absolute;
+  z-index:50;
+  right:2%;
+  max-width:44%;
+  transform: translateY(-100%);
+  margin-top:-12px;
+  padding:6px 11px;
+  border-radius:13px;
+  background: rgba(20,6,8,0.95);
+  border:1px solid rgba(248,115,22,0.6);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.55);
+  font-family:'Poppins', sans-serif;
+  font-size:11px; font-weight:600;
+  line-height:1.35;
+  color:var(--ivory);
+  text-align:center;
+  pointer-events:none;
+}
+.collage[data-open="2"] .col-note{ top:24%; }
+
+/* The enlarged print needs to sit above the video and copy beside it, which
+   only works if nothing between here and the section makes its own stacking
+   context — so the collage itself must not be given a z-index. */
+.collage{ z-index:auto; }
 .j-note{
   margin-top:10px;
   font-family:'Caveat',cursive;
@@ -397,7 +595,10 @@
    the collage so the copy column doesn't get squeezed. */
 @media (max-width: 1380px) and (min-width: 861px){
   .journey-feature{ grid-template-columns: minmax(0,1fr) auto auto; }
-  .journey-feature .j-reel{ grid-column:3; grid-row:2; justify-self:center; margin-top:16px; width:clamp(250px,28vw,340px); }
+  /* Collage and video stack here, so the caption sits above both. */
+  .journey-feature .j-glimpse{ grid-column:3; grid-row:1; }
+  .journey-feature .j-wall{ grid-column:3; grid-row:2; }
+  .journey-feature .j-reel{ grid-column:3; grid-row:3; justify-self:center; margin-top:16px; width:clamp(250px,28vw,340px); }
 }
 
 @media (max-width: 860px){
@@ -422,8 +623,19 @@
   .journey-feature .j-head{ grid-column:1; grid-row:2; text-align:center; }
   .j-feature-name{ justify-content:center; }
   .journey-feature .j-media{ grid-column:1; grid-row:1; justify-self:center; }
-  .journey-feature .j-wall{ grid-column:1; grid-row:3; width:min(330px,100%); justify-self:center; }
-  .journey-feature .j-reel{ grid-column:1; grid-row:4; width:min(330px,100%); justify-self:center; margin-top:10px; }
+  .journey-feature .j-glimpse{ grid-column:1; grid-row:3; }
+  .journey-feature .j-wall{ grid-column:1; grid-row:4; width:min(330px,100%); justify-self:center; }
+  .journey-feature .j-reel{ grid-column:1; grid-row:5; width:min(330px,100%); justify-self:center; margin-top:10px; }
+  /* The flipped rules above are more specific than these single-column ones,
+     so a mirrored stop needs its own collapse or it keeps three columns. */
+  .journey-feature.is-flipped{ grid-template-columns:1fr; }
+  .journey-feature.is-flipped .j-media{ grid-column:1; grid-row:1; justify-self:center; }
+  .journey-feature.is-flipped .j-head{ grid-column:1; grid-row:2; text-align:center; }
+  .journey-feature.is-flipped .j-glimpse{ grid-column:1; grid-row:3; }
+  .journey-feature.is-flipped .j-wall{
+    grid-column:1; grid-row:4;
+    width:min(330px,100%); justify-self:center;
+  }
   .j-sheet-body{ padding-left: calc(10.5% + 18px); }
   .j-blurb,
   .journey-item:nth-child(even) .j-blurb{ margin-left:auto; margin-right:auto; }

@@ -26,14 +26,18 @@ export const journey = [
     year: '2023 — 2026',
     label: 'THE START',
     title: 'Anokha NGO, VIT',
-    blurb:
-      'Junior Core. PR Head. Vice Chairperson.\nFrom Day 1 to leading a team. Learning, creating, and making an impact!',
+    // One entry per line; `strong` is the roles line, which carries the weight.
+    roles: [
+      { text: 'VICE CHAIRPERSON', strong: true },
+      { text: 'Junior Core. PR Head. Vice Chairperson.', strong: true },
+      { text: 'From Day 1 to leading a team.' },
+      { text: 'Learning, creating, and making an impact!' },
+    ],
     album: {
       name: 'ANOKHA NGO',
       logo: asset('anokha/anokha-logo.png'),
-      instagram: 'https://www.instagram.com/ngoanokha?stkn=MTNuN2pzeGNwNzhoMg==',
-      handle: '@ngoanokha',
-      note: 'more than just a club xx',
+      instagram: 'https://www.instagram.com/ngoanokha/',
+      glimpse: 'a little glimpse into who are we and what we do :)!',
       video: asset('anokha/anokha-video.mp4'),
       story: [
         "I started my journey with Anokha NGO at VIT as a Junior Core Member in the Education Department, with a simple belief that even small efforts can create meaningful change. What began with teaching and volunteering at orphanages and children's homes slowly became much more than a college activity. It became a space where I could contribute, learn, lead, and, most importantly, see the impact of our work on the people we were trying to serve.",
@@ -53,9 +57,11 @@ export const journey = [
           caption: 'Best Club Award, Outreach — VIT, 2024–25',
         },
         {
-          src: asset('anokha/kalaa-team.jpg'),
-          alt: 'The Anokha team on stage at Kalaa 3.0 during Riviera',
-          caption: 'On stage at Kalaa 3.0, Riviera',
+          src: asset('anokha/stage-performance.jpg'),
+          alt: 'A singer performing on stage at Kalaa 3.0, Anokha’s flagship event',
+          caption: 'On stage at Kalaa 3.0',
+          // Only photo with a `note`, so only this one opens a label on click.
+          note: 'organised Kalaa 3.0, our flagship event <3',
         },
         {
           src: asset('anokha/childrens-home.jpg'),
@@ -66,10 +72,65 @@ export const journey = [
     },
   },
   {
-    year: '[Year]',
+    year: '2023 — 2026',
     label: 'THE BUILD',
-    title: '[Experience — e.g. Team Kshatriya, BAJA SAE]',
-    blurb: 'A line or two on what you did and what it taught you.',
+    title: 'Team Kshatriya',
+    roles: [
+      { text: 'CAD & ANSYS Engineer.', strong: true },
+      { text: 'Nothing beats the rush of watching pixels turn into an actual fully built ATV.' },
+      { text: 'My time with Team Kshatriya built the foundation of how I engineer today.' },
+    ],
+    album: {
+      name: 'TEAM KSHATRIYA',
+      logo: asset('kshatriya/kshatriya-logo.jpg'),
+      // Mirrors the stop: photos on the left of the trail, copy on the right.
+      flip: true,
+      cta: 'Where the engineering journey began',
+      // This stop's accent colour, used by both the CTA and the line above the
+      // photos so the green reads as the stop's own rather than a one-off.
+      accent: 'green',
+      glimpse:
+        'Designed on screens, tested in the mud: the dirt, sweat, and grind of BAJA SAE 2026!',
+      // Sits in the empty pocket bottom-right of the pile, with an arrow drawn
+      // from it up to the photos.
+      badge: {
+        src: asset('kshatriya/baja-logo.png'),
+        alt: 'BAJA SAEINDIA 2026 logo',
+      },
+      // Line-art buggy and bulb, filling the space under the copy on this stop.
+      doodles: true,
+      story: [
+        'From CAD models on a screen to a fully built ATV, my time with Team Kshatriya gave me one of my strongest foundations in engineering. Working across eBAJA and hBAJA, I gained hands on experience in vehicle design, 3D modelling, FEA, DFM and manufacturing, using SolidWorks, CATIA, ANSYS and HyperMesh. It taught me how engineering decisions translate into real world performance.',
+        'A significant part of my role was designing the roll cage, working within the BAJA SAEINDIA rulebook while balancing structural strength, weight, ergonomics and manufacturability. Seeing the design progress from CAD to a fabricated structure on the vehicle made this one of the most rewarding parts of my experience.',
+        'The experience also gave me exposure beyond design, including vendor sourcing, procurement, lead time planning and inbound logistics, along with first hand learning in lean manufacturing, process optimisation, cost reduction and DFM on the factory floor. Being involved in fabrication, machining, assembly, testing and troubleshooting helped me understand how a product moves from concept to a finished product.',
+        'Working through a demanding competition season, with tight deadlines and constant iterations, strengthened my problem solving, teamwork, adaptability and attention to detail. More than learning to design a vehicle, I learnt to think about the entire lifecycle of a product, how it is designed, made, sourced, assembled and ultimately performs in the real world.',
+        'It was more than learning to design a vehicle, it was learning how engineering works in the real world.',
+      ],
+      // Order matters: the collage sizes each slot to suit the shape of the
+      // photo in it — landscapes wide, portraits tall.
+      photos: [
+        {
+          src: asset('kshatriya/cad-model.jpg'),
+          alt: 'SolidWorks model of the BAJA ATV showing the roll cage, driver position and suspension',
+        },
+        {
+          src: asset('kshatriya/ebaja-e86.jpg'),
+          alt: 'The eBAJA car, E86, at the static event pit',
+        },
+        {
+          src: asset('kshatriya/hbaja-h18.jpg'),
+          alt: 'The hBAJA car, H18, on the course below the BAJA 2026 hill sign',
+        },
+        {
+          src: asset('kshatriya/team-crew.jpg'),
+          alt: 'Part of the Team Kshatriya crew at the BAJA SAEINDIA event',
+        },
+        {
+          src: asset('kshatriya/acceleration-award.jpg'),
+          alt: 'Team Kshatriya with the winner cheque for the Acceleration Award at BAJA SAEINDIA',
+        },
+      ],
+    },
   },
   {
     year: '[Year]',

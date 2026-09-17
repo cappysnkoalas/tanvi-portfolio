@@ -27,7 +27,9 @@ function catmullRom(p0, p1, p2, p3, t) {
   };
 }
 
-export function buildRibbon(centres, trackHeight) {
+// `keepOutX`/`keepOutY` are the point the lead-in has to clear — the right edge
+// and bottom of the first stop's title — measured from the live DOM by caller.
+export function buildRibbon(centres, trackHeight, keepOutX = 0, keepOutY = 0) {
   const first = centres[0];
   const last = centres[centres.length - 1];
   // Run the ribbon off the top and bottom edges so it reads as passing
@@ -35,16 +37,32 @@ export function buildRibbon(centres, trackHeight) {
   const overshoot = Math.max(first.y, trackHeight - last.y) + 40;
   // Enter from the top-left on a diagonal that steepens into the first blob,
   // then drop almost straight down before sweeping across to the next stop.
+  // The ribbon only has to be clear of the title at the height the title
+  // actually sits at. So aim it through that one point and run the entry back
+  // up the same line: above the title it is free to swing far left, giving the
+  // long diagonal, and it is already past the title by the time it gets there.
+  // Holding the whole lead-in right of the title instead would force a near
+  // vertical drop at every width. Never push past the blob, or the ribbon
+  // arrives from the wrong side.
+  const guard = Math.min(keepOutX, first.x);
+  const passY = keepOutY || first.y * 0.5;
+  const slope = (first.x - guard) / Math.max(first.y - passY, 1);
+  const entryY = -first.y * 0.45;
+  const entryX = Math.max(0, guard - (passY - entryY) * slope);
   const knots = [
-    { x: first.x * 0.2, y: -first.y * 0.4 },
-    { x: first.x - 80, y: first.y * 0.5 },
+    { x: entryX, y: entryY },
+    { x: guard, y: passY },
   ];
   centres.forEach((centre, i) => {
     knots.push(centre);
     const next = centres[i + 1];
     if (!next) return;
     if (i === 0) {
-      knots.push({ x: centre.x - 22, y: centre.y + (next.y - centre.y) * 0.5 });
+      // Bow out to the right leaving the first blob, so the ribbon sweeps away
+      // from the copy rather than hugging back over it. This has to sit above
+      // the gutter knots pushed below: knots are splined in array order, so one
+      // placed lower than the next kinks the ribbon back on itself.
+      knots.push({ x: centre.x + 46, y: centre.y + (next.y - centre.y) * 0.14 });
     }
     // A tall stop (the Anokha feature) leaves a long run between blobs. Left
     // to itself the curve drifts diagonally straight through the story text,
@@ -52,8 +70,12 @@ export function buildRibbon(centres, trackHeight) {
     const drop = next.y - centre.y;
     if (drop > LONG_RUN) {
       const gutterX = (centre.x + next.x) / 2;
-      knots.push({ x: gutterX, y: centre.y + drop * 0.28 });
-      knots.push({ x: gutterX, y: centre.y + drop * 0.75 });
+      // Bow the descent out to the right and let it ease back in. Pinning both
+      // knots to the same x draws a ruler-straight run between the stops,
+      // which reads as a rail rather than a road.
+      const bow = Math.min(58, Math.abs(next.x - centre.x) * 0.35 + 34);
+      knots.push({ x: gutterX + bow, y: centre.y + drop * 0.3 });
+      knots.push({ x: gutterX + bow * 0.28, y: centre.y + drop * 0.72 });
     }
   });
   knots.push({

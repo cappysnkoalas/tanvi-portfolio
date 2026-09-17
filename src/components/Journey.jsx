@@ -4,7 +4,17 @@ import { journey } from '../data/content';
 import { BLOB_PATHS, BLOB_COLORS } from './blobShapes';
 import { buildRibbon } from './trailRibbon';
 import PaperClip from './PaperClip';
+import GooButton, { GooFilterDefs } from './GooButton';
+import { AtvDoodle, IdeaDoodle } from './Doodles';
 import './Journey.css';
+
+// Gap left between the feature title and the ribbon passing it: enough for the
+// ribbon's own half-width at full swell (~17px) plus breathing room.
+const TITLE_CLEARANCE = 38;
+
+// The ribbon's half-width at full swell. Its edge reaches this far beyond the
+// centreline, so the clearance point is aimed this far above the title.
+const RIBBON_REACH = 24;
 
 // The ribbon is drawn through wherever the blobs actually land, so stops of
 // very different heights (the Anokha feature is many times taller than a
@@ -32,17 +42,49 @@ function useMeasuredTrail(trackRef) {
         }
       });
       if (centres.length < 2 || !trackBox.width) return;
+      // How far the feature title actually reaches, so the ribbon's lead-in can
+      // be held clear of it instead of relying on a tuned constant.
+      // Only the first unflipped title matters. The lead-in is the one stretch
+      // of ribbon that passes a title, and on a flipped stop the copy sits to
+      // the right of the trail — measuring that one would shove the entry
+      // clear across the page to avoid something it never touches.
+      let keepOutX = 0;
+      let keepOutY = 0;
+      const leadTitle = track.querySelector(
+        '.journey-feature:not(.is-flipped) .j-feature-title'
+      );
+      [leadTitle].filter(Boolean).forEach((node) => {
+        const box = node.getBoundingClientRect();
+        const right = box.right - trackBox.left + TITLE_CLEARANCE;
+        if (right > keepOutX) {
+          keepOutX = right;
+          // The ribbon descends left-to-right, so within the title's band it
+          // sits furthest left at the title's TOP — aiming at the bottom lets
+          // the diagonal clip the top-right corner. Aim a little ABOVE the top
+          // as well: the ribbon is a band, not a line, and where it runs
+          // shallow its lower edge reaches back up to a half-width above the
+          // centreline, dragging that edge left across the title.
+          keepOutY = box.top - trackBox.top - RIBBON_REACH;
+        }
+      });
       setTrail({
         width: trackBox.width,
         height: trackBox.height,
-        path: buildRibbon(centres, trackBox.height),
+        path: buildRibbon(centres, trackBox.height, keepOutX, keepOutY),
       });
     };
 
+    let live = true;
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(track);
-    return () => observer.disconnect();
+    // The title is set in a webfont, so its width changes when that swaps in;
+    // measuring only before then leaves the ribbon clearing a narrower title.
+    document.fonts?.ready.then(() => live && measure()).catch(() => {});
+    return () => {
+      live = false;
+      observer.disconnect();
+    };
   }, [trackRef]);
 
   return trail;
@@ -62,14 +104,77 @@ function Marker({ index, label }) {
   );
 }
 
-function Collage({ photos }) {
+// Hand-drawn arrow running from the badge up to the photo pile: a curve that
+// eases left as it climbs, with the head opened at the top end.
+function BadgeArrow() {
   return (
-    <div className="collage">
+    <svg
+      className="col-badge-arrow"
+      viewBox="0 0 100 200"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="6.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {/* One stroke: the tail runs down far enough to meet the badge, then up
+          round the kink and away to the head. */}
+      <path d="M66 196 C67 158 69 114 59 91 C51 82 38 85 38 95 C38 104 51 105 57 95 C65 83 69 71 65 57 C60 41 46 26 25 14" />
+      <path d="M25 14 L45 18 M25 14 L30 34" />
+    </svg>
+  );
+}
+
+function Collage({ photos, badge }) {
+  // Only a print given a `note` in the data is clickable — the rest are just
+  // photos, and stay plain.
+  const [open, setOpen] = useState(null);
+  const toggle = (n) => setOpen((current) => (current === n ? null : n));
+
+  return (
+    <div
+      className={`collage count-${photos.length}`}
+      data-open={open === null ? undefined : open}
+    >
       {photos.map((photo, n) => (
-        <figure className={`col-pic pic-${n}`} key={photo.src}>
-          <img src={photo.src} alt={photo.alt} loading="lazy" />
+        <figure
+          className={`col-pic pic-${n}`}
+          key={photo.src || n}
+          tabIndex={0}
+          {...(photo.note
+            ? {
+                role: 'button',
+                'aria-pressed': open === n,
+                onClick: () => toggle(n),
+                onKeyDown: (event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    toggle(n);
+                  }
+                },
+              }
+            : null)}
+        >
+          {photo.src ? (
+            <img src={photo.src} alt={photo.alt} loading="lazy" />
+          ) : (
+            // Slot held open until the photo arrives; an <img> with no src
+            // would render as a broken image instead.
+            <span className="col-empty" role="img" aria-label="Photo coming soon" />
+          )}
         </figure>
       ))}
+      {open !== null && photos[open].note && (
+        <p className="col-note">{photos[open].note}</p>
+      )}
+      {badge && (
+        <>
+          <BadgeArrow />
+          <img className="col-badge" src={badge.src} alt={badge.alt} loading="lazy" />
+        </>
+      )}
     </div>
   );
 }
@@ -97,12 +202,11 @@ function StorySheet({ album, id, onClose }) {
         <div className="j-sheet">
           <div className="j-sheet-surface" />
           <div className="j-sheet-body">
-            <div className="j-sheet-kicker">the story behind</div>
+            <div className="j-sheet-kicker">my journey at</div>
             <h3 className="j-sheet-title" id={`${id}-title`}>{album.name}</h3>
             {album.story.map((paragraph, n) => (
               <p key={n}>{paragraph}</p>
             ))}
-            <p className="j-sheet-sign">{album.note}</p>
           </div>
         </div>
         <PaperClip />
@@ -121,39 +225,46 @@ function FeatureStop({ item, index }) {
   const close = useCallback(() => setOpen(false), []);
   const storyId = `j-story-${index}`;
   return (
-    <li className="journey-item journey-feature">
+    <li className={`journey-item journey-feature${album.flip ? ' is-flipped' : ''}`}>
       <div className="j-head">
         <div className="j-year">{item.year}</div>
         <div className="j-feature-name">
-          <img className="j-feature-logo" src={album.logo} alt={`${album.name} logo`} />
-          <div>
-            <h3 className="j-feature-title">
-              <button
-                type="button"
-                className="j-feature-toggle"
-                onClick={() => setOpen(true)}
-                aria-haspopup="dialog"
-              >
-                {album.name}
-              </button>
-            </h3>
-            <a className="j-feature-ig" href={album.instagram} target="_blank" rel="noreferrer">
-              {album.handle}
-            </a>
-          </div>
+          {/* The gear rides just above the logo, out of the flex flow so it
+              cannot widen the title row. */}
+          <span className="j-logo-wrap">
+            {album.doodles && <IdeaDoodle className="j-doodle-gear" />}
+            <img className="j-feature-logo" src={album.logo} alt={`${album.name} logo`} />
+          </span>
+          <h3 className="j-feature-title">
+            <button
+              type="button"
+              className="j-feature-toggle"
+              onClick={() => setOpen(true)}
+              aria-haspopup="dialog"
+            >
+              {album.name}
+            </button>
+            {/* Inside the heading on purpose: the heading is only as wide as
+                the name, so anchoring here puts the buggy at the end of the
+                text. The row around it spans the whole column. */}
+            {album.doodles && <AtvDoodle className="j-doodle-atv" />}
+          </h3>
         </div>
-        <p className="j-feature-roles">{item.blurb}</p>
-        <span className="j-read-more-shadow">
-          <button
-            type="button"
-            className="j-read-more"
-            onClick={() => setOpen(true)}
-            aria-haspopup="dialog"
-          >
-            read the story
-            <span className="j-read-arrow" aria-hidden="true">→</span>
-          </button>
-        </span>
+        <p className="j-feature-roles">
+          {item.roles.map((line, n) => (
+            <span key={n} className={line.strong ? 'j-role-strong' : undefined}>
+              {line.text}
+            </span>
+          ))}
+        </p>
+        <GooButton
+          className={album.accent === 'green' ? 'goo-btn--green' : ''}
+          onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+        >
+          {album.cta || 'so what did i do?'}
+          <span className="goo-btn-arrow" aria-hidden="true">→</span>
+        </GooButton>
       </div>
       {open && <StorySheet album={album} id={storyId} onClose={close} />}
 
@@ -161,8 +272,14 @@ function FeatureStop({ item, index }) {
         <Marker index={index} />
       </div>
 
+      {album.glimpse && (
+        <p className={`j-glimpse${album.accent === 'green' ? ' j-glimpse--green' : ''}`}>
+          {album.glimpse}
+        </p>
+      )}
+
       <div className="j-wall">
-        <Collage photos={album.photos} />
+        <Collage photos={album.photos} badge={album.badge} />
       </div>
 
       {album.video && (
@@ -174,17 +291,16 @@ function FeatureStop({ item, index }) {
             playsInline
             preload="metadata"
           />
-          <span className="j-read-more-shadow j-visit-shadow">
-            <a className="j-read-more j-visit" href={album.instagram} target="_blank" rel="noreferrer">
-              <svg className="j-ig-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="3" y="3" width="18" height="18" rx="5" />
-                <circle cx="12" cy="12" r="4.2" />
-                <circle cx="17.3" cy="6.7" r="0.9" className="j-ig-dot" />
+          <a className="ig-btn" href={album.instagram} target="_blank" rel="noreferrer">
+            <span className="ig-btn-badge" aria-hidden="true">
+              <svg className="ig-btn-glyph" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="5.2" />
+                <circle cx="12" cy="12" r="4.3" />
+                <circle cx="17.4" cy="6.6" r="1.15" className="ig-btn-dot" />
               </svg>
-              visit anokha
-              <span className="j-read-arrow" aria-hidden="true">→</span>
-            </a>
-          </span>
+            </span>
+            <span className="ig-btn-label">visit Anokhas page :)</span>
+          </a>
         </div>
       )}
 
@@ -214,6 +330,7 @@ export default function Journey() {
 
   return (
     <section className="journey section-pad" id="journey">
+      <GooFilterDefs />
       <div className="wrap">
         <div className="kicker">Experience &amp; journey</div>
         <h2 className="section-title">Five stops on the way <em>here</em>.</h2>

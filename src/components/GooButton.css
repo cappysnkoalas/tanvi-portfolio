@@ -1,0 +1,99 @@
+/* Orange keyed off --blob-orange so the button sits with the trail blobs:
+   a lit amber top-left falling away to burnt shadow bottom-right. */
+.goo-btn{
+  --goo-hi:#FFB061;
+  --goo-mid:#F87316;
+  --goo-deep:#C2450A;
+  --goo-shade: rgba(90,26,2,0.55);
+  --goo-pad: 17px 36px;
+  /* Pointer offset from centre, and how far out the follower has grown. */
+  --bx:0px;
+  --by:0px;
+  --bs:0;
+
+  all:unset;
+  position:relative;
+  display:inline-grid;
+  place-items:center;
+  cursor:pointer;
+  margin-top:22px;
+  /* Room for the bulge to leave the pill without being clipped. */
+  padding: 30px 26px;
+  isolation:isolate;
+}
+/* Green variant, keyed to the Kshatriya Electric logo, and a shade thinner. */
+.goo-btn--green{
+  --goo-hi:#9AE863;
+  --goo-mid:#4BC63A;
+  --goo-deep:#1C7A1B;
+  --goo-shade: rgba(10,58,8,0.6);
+  --goo-pad: 12px 34px;
+}
+
+.goo-defs{ position:absolute; width:0; height:0; overflow:hidden; }
+
+/* Only this layer is filtered — pill and follower fuse here. */
+.goo-btn-shapes{
+  position:absolute;
+  inset:0;
+  display:block;
+  filter: url(#goo-paint) drop-shadow(0 10px 16px rgba(0,0,0,0.5));
+  pointer-events:none;
+}
+.goo-btn-pill{
+  position:absolute;
+  left:26px; right:26px; top:30px; bottom:30px;
+  border-radius:999px;
+  background:
+    radial-gradient(118% 150% at 20% 8%, rgba(255,214,150,0.9) 0%, rgba(255,160,70,0.4) 36%, transparent 64%),
+    radial-gradient(130% 160% at 92% 98%, rgba(140,48,6,0.62) 0%, transparent 58%),
+    linear-gradient(166deg, var(--goo-hi) 0%, var(--goo-mid) 52%, var(--goo-deep) 100%);
+  transition: transform .3s cubic-bezier(.2,.9,.25,1.2);
+}
+/* The follower. Sized off the pill's height so the lump stays in proportion. */
+.goo-btn-blob{
+  position:absolute;
+  left:50%; top:50%;
+  width:60px; height:60px;
+  margin:-30px 0 0 -30px;
+  border-radius:50%;
+  background: radial-gradient(circle at 34% 28%, var(--goo-hi) 0%, var(--goo-mid) 58%, var(--goo-deep) 100%);
+  transform: translate(var(--bx), var(--by)) scale(var(--bs));
+  /* Slight overshoot going out, so it settles rather than stops. */
+  transition: transform .26s cubic-bezier(.22,.9,.26,1.35);
+}
+
+/* The label's padding is what gives the pill its size: the grid content box is
+   this element, and the pill is pinned to it. */
+.goo-btn-label{
+  position:relative;
+  z-index:1;
+  display:inline-flex; align-items:center; gap:11px;
+  padding: var(--goo-pad);
+  font-family:'Poppins', sans-serif;
+  font-size:17px; font-weight:800;
+  letter-spacing:0.02em;
+  color:#FFF3E4;
+  filter: url(#goo-flock) drop-shadow(0 1px 1px var(--goo-shade));
+  transition: transform .3s cubic-bezier(.2,.9,.25,1.2);
+}
+.goo-btn-arrow{
+  display:inline-block;
+  transition: transform .25s ease;
+}
+.goo-btn:hover .goo-btn-arrow{ transform: translateX(4px); }
+
+/* Press: the whole body gives a little, like squeezing felt. */
+.goo-btn:active .goo-btn-pill{ transform: scale(0.97); }
+.goo-btn:active .goo-btn-label{ transform: scale(0.97); }
+
+.goo-btn:focus-visible{ outline:2px solid var(--rose); outline-offset:2px; border-radius:999px; }
+
+/* Touch and keyboard users never move a pointer over it, so the pill has to
+   stand on its own — it does, the follower is simply never grown. */
+@media (prefers-reduced-motion: reduce){
+  .goo-btn-blob{ display:none; }
+  .goo-btn-pill,
+  .goo-btn-label,
+  .goo-btn-arrow{ transition:none; }
+}
