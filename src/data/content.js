@@ -28,8 +28,7 @@ export const journey = [
     title: 'Anokha NGO, VIT',
     // One entry per line; `strong` is the roles line, which carries the weight.
     roles: [
-      { text: 'VICE CHAIRPERSON', strong: true },
-      { text: 'Junior Core. PR Head. Vice Chairperson.', strong: true },
+      { text: 'Junior Core. PR Head. VICE CHAIRPERSON.', strong: true },
       { text: 'From Day 1 to leading a team.' },
       { text: 'Learning, creating, and making an impact!' },
     ],
