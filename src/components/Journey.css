@@ -162,6 +162,28 @@
   padding-top: clamp(8px,1.6vw,26px);
 }
 
+/* The company's site, sitting under its name in the copy block. */
+.j-site{
+  display:inline-block;
+  margin-top:8px;
+  font-family:'Poppins', sans-serif;
+  font-size:13.5px; font-weight:600;
+  letter-spacing:0.05em;
+  color:var(--rose);
+  border-bottom:1.5px solid rgba(206,156,161,0.4);
+  transition: color .2s, border-color .2s;
+}
+.j-site:hover,
+.j-site:focus-visible{ color:var(--pink); border-color:var(--pink); }
+
+/* Three prints rather than four or five, so the pile gets its own spread. */
+/* Portrait print leads down the centre, with a landscape tucked under each
+   shoulder — one low on the left, one high on the right. */
+.collage.count-3{ aspect-ratio: 100 / 58; }
+.count-3 .col-pic.pic-0{ --r:-4deg; left:0%;  top:46%; width:40%; z-index:1; } /* eCargo, lower left */
+.count-3 .col-pic.pic-1{ --r:3deg;  left:63%; top:14%; width:40%; z-index:2; } /* manual, upper right */
+.count-3 .col-pic.pic-2{ --r:-2deg; left:34%; top:0%;  width:28%; z-index:3; } /* certificate, centre */
+
 /* A small handwritten aside over the media — deliberately light, so it reads
    as a note rather than a second heading. */
 .j-glimpse{
@@ -482,8 +504,11 @@
   /* Sized so the tail reaches back to where the note begins, with the offset
      bringing the tip down to just short of the tile — the tip rides ~26% up
      from the box's floor, so the two have to move together. */
-  margin-bottom:-13px;
-  width: clamp(92px,8.8vw,140px);
+  margin-bottom:-2px;
+  width: clamp(84px,8vw,128px);
+  /* Tilted anticlockwise so the head swings up and away from the tile it
+     points at, instead of running along its top edge. */
+  transform: rotate(-12deg);
   height:auto;
   color: var(--trail-yellow);
   opacity:0.9;
@@ -565,12 +590,18 @@
   opacity:0.8;
 }
 
-/* A stop with a green accent tapes its prints in green rather than the default
-   lavender, so the pile reads with the rest of that stop. */
-.collage--green .col-pic::before{
+/* A stop can tape its prints in its own colour rather than the default
+   lavender, so each pile reads with the rest of its stop. */
+.collage--tape-green .col-pic::before{
   background:
     repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 3px, transparent 3px 8px),
     rgba(126,199,105,0.88);
+}
+/* The stripe flips dark here — a white highlight over white tape is invisible. */
+.collage--tape-white .col-pic::before{
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.055) 0 3px, transparent 3px 8px),
+    rgba(244,242,237,0.88);
 }
 
 /* Certificates run bigger than the photos so the text on them is legible. */

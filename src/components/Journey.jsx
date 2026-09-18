@@ -127,7 +127,7 @@ function BadgeArrow() {
   );
 }
 
-function Collage({ photos, badge, accent }) {
+function Collage({ photos, badge, tape }) {
   // Only a print given a `note` in the data is clickable — the rest are just
   // photos, and stay plain.
   const [open, setOpen] = useState(null);
@@ -135,9 +135,7 @@ function Collage({ photos, badge, accent }) {
 
   return (
     <div
-      className={`collage count-${photos.length}${
-        accent === 'green' ? ' collage--green' : ''
-      }`}
+      className={`collage count-${photos.length}${tape ? ` collage--tape-${tape}` : ''}`}
       data-open={open === null ? undefined : open}
     >
       {photos.map((photo, n) => (
@@ -256,6 +254,11 @@ function FeatureStop({ item, index }) {
             {album.doodles && <AtvDoodle className="j-doodle-atv" />}
           </h3>
         </div>
+        {album.site && (
+          <a className="j-site" href={album.site} target="_blank" rel="noreferrer">
+            {album.siteLabel || album.site}
+          </a>
+        )}
         <p className="j-feature-roles">
           {item.roles.map((line, n) => (
             <span key={n} className={line.strong ? 'j-role-strong' : undefined}>
@@ -286,7 +289,7 @@ function FeatureStop({ item, index }) {
 
       {album.photos && (
         <div className="j-wall">
-          <Collage photos={album.photos} badge={album.badge} accent={album.accent} />
+          <Collage photos={album.photos} badge={album.badge} tape={album.tape} />
         </div>
       )}
 

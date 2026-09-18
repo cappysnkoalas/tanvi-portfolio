@@ -85,6 +85,7 @@ export const journey = [
       // Mirrors the stop: photos on the left of the trail, copy on the right.
       flip: true,
       cta: 'Where the engineering journey began',
+      tape: 'green',
       // This stop's accent colour, used by both the CTA and the line above the
       // photos so the green reads as the stop's own rather than a one-off.
       accent: 'green',
@@ -180,10 +181,46 @@ export const journey = [
     },
   },
   {
-    year: '[Year]',
+    year: 'June 2026 — July 2026',
     label: 'THE STRETCH',
-    title: '[Experience — e.g. leadership or speaking role]',
-    blurb: 'Something that pushed you outside the comfortable lane.',
+    title: 'Zero21 Autos',
+    roles: [
+      { text: 'Industrial Intern', strong: true },
+      {
+        text: 'There is nothing quite like diving into active shop floor operations while applying lean manufacturing and building the documentation systems that keep assembly moving.',
+      },
+      {
+        text: 'My time at Zero21 Autos shaped how I analyze engineering workflows, document complex processes, and understand real world factory environments today!',
+      },
+    ],
+    album: {
+      name: 'ZERO21 AUTOS',
+      logo: asset('zero21/zero21-logo.png'),
+      // Photos left of the trail, copy right.
+      flip: true,
+      cta: 'What I learnt on the floor',
+      site: 'https://zero21.autos/',
+      siteLabel: 'zero21.autos',
+      tape: 'white',
+      story: [
+        'During my industrial internship at Zero21 Autos, I gained direct, hands on exposure to active factory floor operations supporting EV three wheeler assembly, NPI (New Product Introduction), and conversion kit production lines. Working directly on the shop floor transformed my understanding of real world industrial environments beyond theoretical coursework. I learned firsthand how lean manufacturing principles, such as optimizing takt time, streamlining material flow, and eliminating assembly bottlenecks, are applied to balance lines and maintain consistent throughput in a fast paced production setting.',
+        'Beyond line level workflows, I contributed to analyzing EV powertrain dynamics, examining power flow across battery packs, motor controllers, and electric drive subsystems to troubleshoot integration challenges. Alongside this technical analysis, a major focus of my role was developing comprehensive process documentation, Standard Operating Procedures (SOPs), and user manuals across multiple EV vehicle models. This experience taught me that rigorous technical documentation is not just administrative; it is the vital backbone that ensures assembly repeatability, enforces quality control, and bridges engineering specifications with precise floor execution.',
+      ],
+      photos: [
+        {
+          src: asset('zero21/ecargo.jpg'),
+          alt: 'The Zero21 eCargo electric three wheeler',
+        },
+        {
+          src: asset('zero21/user-manual.jpg'),
+          alt: 'Cover of the Zero21 user manual, showing the eCargo, Teer, Chalo Passenger and Chalo Loader models',
+        },
+        {
+          src: asset('zero21/internship-certificate.jpg'),
+          alt: 'Zero21 internship completion certificate, June to July 2026',
+        },
+      ],
+    },
   },
   {
     year: '[Year]',
