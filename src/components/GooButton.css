@@ -21,6 +21,15 @@
   padding: 30px 26px;
   isolation:isolate;
 }
+/* Greyish amber: the warmth pulled back towards stone, so it reads as a muted
+   metal rather than the saturated orange of the first stop. */
+.goo-btn--amber{
+  --goo-hi:#DCC7A0;
+  --goo-mid:#AE9269;
+  --goo-deep:#6A5539;
+  --goo-shade: rgba(46,34,20,0.55);
+}
+
 /* Green variant, keyed to the Kshatriya Electric logo, and a shade thinner. */
 .goo-btn--green{
   --goo-hi:#9AE863;

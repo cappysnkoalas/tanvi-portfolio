@@ -132,10 +132,34 @@ export const journey = [
     },
   },
   {
-    year: '[Year]',
+    year: '2024 — 2025',
     label: 'THE PIVOT',
-    title: '[Experience — e.g. design or content work]',
-    blurb: 'The moment something shifted — what changed and why.',
+    title: 'Range of View Studios',
+    roles: [
+      { text: 'Operations Head', strong: true },
+      {
+        text: 'There’s nothing quite like transforming brand identities and social channels while building the day to day systems that keep a whole studio moving.',
+      },
+      {
+        text: 'My time at ROV built the foundation of how I design, organize, and lead projects today!',
+      },
+    ],
+    album: {
+      name: 'RANGE OF VIEW STUDIOS',
+      logo: asset('rov/rov-logo.png'),
+      cta: 'Read My Journey',
+      accent: 'amber',
+      // Reel column holds a placeholder until the video lands.
+      videoSoon: true,
+      story: [
+        'When a few of my close friends started Range of View Studios, an Atlanta based creative production agency specializing in custom web development, brand identity, video production, and AI automation solutions, I watched from the sidelines at first. I officially joined the startup a little later in 2024. Stepping into the team felt like diving straight into a fast moving creative space where we were building everything from the ground up.',
+        'Beyond the work itself, this opportunity forced me out of my shell. It pushed me to socialize, communicate openly, and collaborate directly with a diverse group of talented artists from around the world.',
+        'My very first experience with client work happened with Aysegul Ikna, a Turkish designer. I was in charge of her social media branding and redesigning her website too. Managing that project from start to finish taught me how to handle client communication, turn feedback into action, and translate someone’s personal identity into a clean digital footprint.',
+        'That experience set the stage for our work with Bando ATL. For Bando, I led the redesign of their website, focusing heavily on updating their online menu section. By streamlining how customers browsed and ordered, the redesigned website directly increased their online revenue by 100%.',
+        'As the startup grew, the biggest challenge was not just doing the creative work, it was managing how it all came together. Working closely with friends meant we needed real systems to keep things from falling through the cracks. This is where I really developed my management and organizational skills. I took charge of creating schedules, organizing our day to day workflow, and coordinating resources across concurrent client projects to stop bottlenecks before they happened. I also implemented quality control checkpoints for all content and branding deliverables, making sure everything was reviewed thoroughly before any final handoff.',
+        'Transitioning into this role completely changed how I look at creative work. Designing something that looks good is only half the battle; real growth comes from pairing that creativity with strong organization, smart scheduling, and reliable management.',
+      ],
+    },
   },
   {
     year: '[Year]',

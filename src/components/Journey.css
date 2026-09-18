@@ -375,9 +375,11 @@
   height:auto;
 }
 /* Capped so the name stays inside the title column — any wider and it runs
-   under the trail that passes just to its right. */
+   under the trail that passes just to its right. Long names wrap onto a second
+   line rather than being held on one: "RANGE OF VIEW STUDIOS" is twice the
+   length of "ANOKHA NGO" and on one line would overrun the column entirely.
+   Short names still fit on one line and are unaffected. */
 .j-feature-title{
-  white-space:nowrap;
   font-family:'Playfair Display',serif;
   font-size: clamp(26px,2.6vw,38px);
   font-weight:900; letter-spacing:0.03em;
@@ -437,6 +439,52 @@
 .col-pic.pic-1::before{ transform: translateX(-50%) rotate(5deg); }
 .col-pic.pic-2::before{ transform: translateX(-50%) rotate(3deg); width:40%; }
 .col-pic.pic-3::before{ transform: translateX(-50%) rotate(3deg); width:40%; }
+
+/* With no photo pile the collage column collapses, which drops the reel back
+   into the space the trail descends through. Hold it against the right edge so
+   the trail passes clear to its left, as it does when a pile is present. */
+.journey-feature.no-wall .j-reel{ justify-self:end; }
+
+/* Stands in for a reel that has not been shot yet, so the column reads as
+   reserved rather than broken. */
+.j-video-soon{
+  width:min(100%, 520px);
+  aspect-ratio: 16 / 9;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  border-radius:14px;
+  border:2px dashed rgba(206,156,161,0.4);
+  /* Opaque, so the trail passes behind it the way it does behind the photo
+     piles rather than showing through the panel. */
+  background: linear-gradient(150deg, #3A1620, #1C0A0E);
+  color:var(--rose);
+}
+.j-video-soon svg{
+  width:46px; height:46px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.5;
+  opacity:0.85;
+}
+.j-video-soon svg path{ fill:currentColor; stroke:none; }
+.j-video-soon span{
+  font-family:'Poppins', sans-serif;
+  font-size:12.5px; font-weight:600;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  opacity:0.8;
+}
+
+/* A stop with a green accent tapes its prints in green rather than the default
+   lavender, so the pile reads with the rest of that stop. */
+.collage--green .col-pic::before{
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 3px, transparent 3px 8px),
+    rgba(126,199,105,0.88);
+}
 
 /* Certificates run bigger than the photos so the text on them is legible. */
 .count-4 .col-pic.pic-0{ --r:-6deg;  left:0%;  top:2%;  width:50%; z-index:1; }

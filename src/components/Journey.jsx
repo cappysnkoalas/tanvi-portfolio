@@ -127,7 +127,7 @@ function BadgeArrow() {
   );
 }
 
-function Collage({ photos, badge }) {
+function Collage({ photos, badge, accent }) {
   // Only a print given a `note` in the data is clickable — the rest are just
   // photos, and stay plain.
   const [open, setOpen] = useState(null);
@@ -135,7 +135,9 @@ function Collage({ photos, badge }) {
 
   return (
     <div
-      className={`collage count-${photos.length}`}
+      className={`collage count-${photos.length}${
+        accent === 'green' ? ' collage--green' : ''
+      }`}
       data-open={open === null ? undefined : open}
     >
       {photos.map((photo, n) => (
@@ -225,7 +227,11 @@ function FeatureStop({ item, index }) {
   const close = useCallback(() => setOpen(false), []);
   const storyId = `j-story-${index}`;
   return (
-    <li className={`journey-item journey-feature${album.flip ? ' is-flipped' : ''}`}>
+    <li
+      className={`journey-item journey-feature${album.flip ? ' is-flipped' : ''}${
+        album.photos ? '' : ' no-wall'
+      }`}
+    >
       <div className="j-head">
         <div className="j-year">{item.year}</div>
         <div className="j-feature-name">
@@ -258,7 +264,7 @@ function FeatureStop({ item, index }) {
           ))}
         </p>
         <GooButton
-          className={album.accent === 'green' ? 'goo-btn--green' : ''}
+          className={album.accent ? `goo-btn--${album.accent}` : ''}
           onClick={() => setOpen(true)}
           aria-haspopup="dialog"
         >
@@ -278,9 +284,23 @@ function FeatureStop({ item, index }) {
         </p>
       )}
 
-      <div className="j-wall">
-        <Collage photos={album.photos} badge={album.badge} />
-      </div>
+      {album.photos && (
+        <div className="j-wall">
+          <Collage photos={album.photos} badge={album.badge} accent={album.accent} />
+        </div>
+      )}
+
+      {album.videoSoon && (
+        <div className="j-reel">
+          <div className="j-video-soon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="9.2" />
+              <path d="M10 8.4 16 12l-6 3.6z" />
+            </svg>
+            <span>video coming soon</span>
+          </div>
+        </div>
+      )}
 
       {album.video && (
         <div className="j-reel">
