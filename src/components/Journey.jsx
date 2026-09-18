@@ -290,14 +290,56 @@ function FeatureStop({ item, index }) {
         </div>
       )}
 
-      {album.videoSoon && (
-        <div className="j-reel">
-          <div className="j-video-soon">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <circle cx="12" cy="12" r="9.2" />
-              <path d="M10 8.4 16 12l-6 3.6z" />
-            </svg>
-            <span>video coming soon</span>
+      {(album.links || album.videoSoon) && (
+        // Everything here sits inside the reel: the note and arrow have to be
+        // siblings of the tiles, not of the grid row above, or the taller copy
+        // block on the left sets where they land and they float far too high.
+        <div className={`j-reel${album.links ? ' j-reel--links' : ''}`}>
+          {album.links && (
+            <>
+              {/* Both float above the row rather than sharing a line with each
+                  other: side by side, the arrow's width leaves too little for
+                  the note and it wraps. */}
+              <svg
+                className="j-links-arrow"
+                viewBox="0 0 140 78"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                {/* In from the right, round the loop, then down to the left
+                    with the head opened over the first tile. */}
+                <path d="M133 13 C108 12 90 15 80 23 C68 32 63 45 73 50 C84 55 91 43 84 33 C74 19 54 28 38 44 L26 58" />
+                <path d="M26 58 L49 55 M26 58 L34 38" />
+              </svg>
+              {album.linksNote && <p className="j-links-note">{album.linksNote}</p>}
+            </>
+          )}
+          <div className="j-links-row">
+          {album.links && (
+            <ul className="j-links">
+              {album.links.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} target="_blank" rel="noreferrer" title={link.label}>
+                    <img src={link.logo} alt={link.label} loading="lazy" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          {album.videoSoon && (
+            <div className="j-video-soon">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="9.2" />
+                <path d="M10 8.4 16 12l-6 3.6z" />
+              </svg>
+              <span>video coming soon</span>
+            </div>
+          )}
           </div>
         </div>
       )}

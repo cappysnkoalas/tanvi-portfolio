@@ -440,15 +440,102 @@
 .col-pic.pic-2::before{ transform: translateX(-50%) rotate(3deg); width:40%; }
 .col-pic.pic-3::before{ transform: translateX(-50%) rotate(3deg); width:40%; }
 
-/* With no photo pile the collage column collapses, which drops the reel back
-   into the space the trail descends through. Hold it against the right edge so
-   the trail passes clear to its left, as it does when a pile is present. */
-.journey-feature.no-wall .j-reel{ justify-self:end; }
+/* Brand tiles linking out to the work, sitting in the column the collage would
+   otherwise fill — between the trail and the reel. */
+/* Tiles and reel side by side, stretched to a common height, so the first tile
+   tops out level with the video and the last bottoms out level with it. */
+/* `.j-reel` is a centred column capped at 480px; the cap has to go or the
+   video cannot fill the space. The note stacks above, and the tiles sit beside
+   the video in their own row. */
+.j-reel--links{
+  position:relative;
+  align-items:stretch;
+  max-width:none;
+  justify-self:stretch;
+  gap:0;
+}
+.j-links-row{
+  display:flex;
+  align-items:stretch;
+  gap: clamp(12px,1.4vw,24px);
+}
+.j-links-row .j-video-soon{ flex:1; }
+/* Its own line above the tiles, anchored right so a long line grows leftwards
+   over the empty gutter rather than off the page. Sharing a row with the arrow
+   left it far too little width and it wrapped. */
+.j-links-note{
+  position:absolute;
+  right:0; bottom:100%;
+  margin-bottom:40px;
+  white-space:nowrap;
+  font-family:'Caveat', cursive;
+  font-size: clamp(20px,1.95vw,28px);
+  line-height:1.15;
+  color:var(--rose);
+}
+/* Sits above the row rather than across it, with only the tip dipping onto the
+   first tile. Anchoring by its bottom edge keeps that true at any size: pinned
+   by the top, the drawing grows downwards and swallows the tile. */
+.j-links-arrow{
+  position:absolute;
+  left:0; bottom:100%;
+  /* Sized so the tail reaches back to where the note begins, with the offset
+     bringing the tip down to just short of the tile — the tip rides ~26% up
+     from the box's floor, so the two have to move together. */
+  margin-bottom:-13px;
+  width: clamp(92px,8.8vw,140px);
+  height:auto;
+  color: var(--trail-yellow);
+  opacity:0.9;
+  z-index:1;
+  pointer-events:none;
+}
+.j-links{
+  flex:none;
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  /* Spread over the shared height: first tile at the reel's top edge, last at
+     its bottom. */
+  justify-content:space-between;
+}
+.j-links a{
+  display:block;
+  width: clamp(54px,5.4vw,72px);
+  aspect-ratio:1;
+  border-radius:16px;
+  overflow:hidden;
+  border:2px solid rgba(206,156,161,0.45);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.j-links img{
+  display:block;
+  width:100%; height:100%;
+  /* Each brand keeps its own backdrop, so the tiles read as their marks
+     rather than as cut-outs floating on the page. */
+  object-fit:cover;
+}
+.j-links a:hover,
+.j-links a:focus-visible{
+  transform: translateY(-3px) scale(1.06);
+  border-color: var(--pink);
+  box-shadow: 0 14px 26px rgba(0,0,0,0.6);
+  outline:none;
+}
+@media (prefers-reduced-motion: reduce){ .j-links a{ transition:none; } }
+
+/* With no photo pile the collage column would collapse to nothing, putting the
+   reel — and the tiles now standing at its left — straight into the space the
+   trail descends through. Hold that column open as a gutter instead. */
+.journey-feature.no-wall{
+  grid-template-columns: 410px auto minmax(130px,auto) minmax(0,1fr);
+}
 
 /* Stands in for a reel that has not been shot yet, so the column reads as
    reserved rather than broken. */
 .j-video-soon{
-  width:min(100%, 520px);
+  width:100%;
   aspect-ratio: 16 / 9;
   display:flex;
   flex-direction:column;

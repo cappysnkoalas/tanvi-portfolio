@@ -151,6 +151,24 @@ export const journey = [
       accent: 'amber',
       // Reel column holds a placeholder until the video lands.
       videoSoon: true,
+      linksNote: 'click here to check out our projects firsthand!',
+      links: [
+        {
+          href: 'https://www.rovstudios.com/',
+          label: 'Range of View Studios',
+          logo: asset('rov/link-rov.png'),
+        },
+        {
+          href: 'https://www.thebandoatl.com/',
+          label: 'The Bando ATL',
+          logo: asset('rov/link-bando.png'),
+        },
+        {
+          href: 'https://www.aysegulikna.com/',
+          label: 'Aysegul Ikna',
+          logo: asset('rov/link-aysegul.png'),
+        },
+      ],
       story: [
         'When a few of my close friends started Range of View Studios, an Atlanta based creative production agency specializing in custom web development, brand identity, video production, and AI automation solutions, I watched from the sidelines at first. I officially joined the startup a little later in 2024. Stepping into the team felt like diving straight into a fast moving creative space where we were building everything from the ground up.',
         'Beyond the work itself, this opportunity forced me out of my shell. It pushed me to socialize, communicate openly, and collaborate directly with a diverse group of talented artists from around the world.',
