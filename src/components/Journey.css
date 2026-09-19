@@ -482,12 +482,12 @@
   gap: clamp(12px,1.4vw,24px);
 }
 .j-links-row .j-video-soon{ flex:1; }
-/* Its own line above the tiles, anchored right so a long line grows leftwards
-   over the empty gutter rather than off the page. Sharing a row with the arrow
-   left it far too little width and it wrapped. */
+/* Its own line above the tiles, set just past the arrow so the two read as one
+   gesture. Anchored from the left for that reason; it stays on a single line, so
+   there is no wrap to guard against. */
 .j-links-note{
   position:absolute;
-  right:0; bottom:100%;
+  left: clamp(96px,9vw,144px); bottom:100%;
   margin-bottom:40px;
   white-space:nowrap;
   font-family:'Caveat', cursive;
@@ -520,9 +520,10 @@
   list-style:none;
   display:flex;
   flex-direction:column;
-  /* Spread over the shared height: first tile at the reel's top edge, last at
-     its bottom. */
-  justify-content:space-between;
+  /* Grouped as one stack in the middle of the shared height. Spread over the
+     full height the tiles read as three unrelated marks. */
+  justify-content:center;
+  gap: clamp(10px,1vw,16px);
 }
 .j-links a{
   display:block;
