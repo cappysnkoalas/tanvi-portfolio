@@ -30,6 +30,23 @@
   --goo-shade: rgba(46,34,20,0.55);
 }
 
+/* Pink variant, keyed to the page's own --pink and --rose. */
+.goo-btn--pink{
+  --goo-hi:#F6DCE0;
+  --goo-mid:#D98FA0;
+  --goo-deep:#9C4E63;
+  --goo-shade: rgba(74,26,38,0.55);
+}
+/* The pill lays two warm overlays over the gradient, and those are written in
+   fixed orange rather than off the variables — left alone they would push the
+   pink back towards amber, so this variant restates them in its own colour. */
+.goo-btn--pink .goo-btn-pill{
+  background:
+    radial-gradient(118% 150% at 20% 8%, rgba(255,233,238,0.9) 0%, rgba(241,182,196,0.4) 36%, transparent 64%),
+    radial-gradient(130% 160% at 92% 98%, rgba(118,38,58,0.62) 0%, transparent 58%),
+    linear-gradient(166deg, var(--goo-hi) 0%, var(--goo-mid) 52%, var(--goo-deep) 100%);
+}
+
 /* Green variant, keyed to the Kshatriya Electric logo, and a shade thinner. */
 .goo-btn--green{
   --goo-hi:#9AE863;

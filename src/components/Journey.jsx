@@ -237,7 +237,11 @@ function FeatureStop({ item, index }) {
               cannot widen the title row. */}
           <span className="j-logo-wrap">
             {album.doodles && <IdeaDoodle className="j-doodle-gear" />}
-            <img className="j-feature-logo" src={album.logo} alt={`${album.name} logo`} />
+            {/* A stop for something with no mark of its own — a project rather
+                than an organisation — carries no logo, so the name stands alone. */}
+            {album.logo && (
+              <img className="j-feature-logo" src={album.logo} alt={`${album.name} logo`} />
+            )}
           </span>
           <h3 className="j-feature-title">
             <button
@@ -288,7 +292,7 @@ function FeatureStop({ item, index }) {
       )}
 
       {album.photos && (
-        <div className="j-wall">
+        <div className={`j-wall${album.wall ? ` j-wall--${album.wall}` : ''}`}>
           <Collage photos={album.photos} badge={album.badge} tape={album.tape} />
         </div>
       )}

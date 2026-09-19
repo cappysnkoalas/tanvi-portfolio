@@ -605,11 +605,85 @@
     rgba(244,242,237,0.88);
 }
 
+/* Rose pink, deep enough to hold against the cream edges of the slides it is
+   taped across. Its stripe runs dark for the same reason the white tape's
+   does — a white highlight over a pale tape is invisible. */
+.collage--tape-pink .col-pic::before{
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.055) 0 3px, transparent 3px 8px),
+    rgba(223,163,172,0.88);
+}
+
 /* Certificates run bigger than the photos so the text on them is legible. */
 .count-4 .col-pic.pic-0{ --r:-6deg;  left:0%;  top:2%;  width:50%; z-index:1; }
 .count-4 .col-pic.pic-2{ --r:5deg;   left:54%; top:24%; width:39%; z-index:2; }
 .count-4 .col-pic.pic-3{ --r:-8deg;  left:4%;  top:66%; width:41%; z-index:3; }
 .count-4 .col-pic.pic-1{ --r:6deg;   left:45%; top:50%; width:52%; z-index:4; }
+
+/* Slides, not prints: wide, text-heavy captures that need far more width than
+   a photo pile before the type on them reads. A stop with no reel beside the
+   wall leaves the last column empty, so the pile takes that room and settles
+   against the right edge of the row. Below 1380px the wall is restacked into
+   its own column anyway, and those rules win on specificity. */
+/* Qualified by .journey-feature to outrank the `grid-column:3` that pins every
+   other wall to its own column — without that the span below is dropped and
+   the pile stops short of the empty last column. */
+.journey-feature .j-wall--slides{
+  grid-column: 3 / -1;
+  /* Centred across the two columns, not pinned to either edge: the last column
+     is empty on this stop, so anchoring right threw the pile against the page
+     edge and left the hole on the other side instead. */
+  justify-self: center;
+  width: clamp(320px, 42vw, 660px);
+}
+/* Landscape captures stack shorter than portrait prints, so the box is wider
+   than the four-print default or it ends in a band of dead space. */
+.j-wall--slides .collage.count-4{ aspect-ratio: 100 / 80; }
+/* Two loose columns rather than a single cascade: the problem and the strip
+   down the left, the objectives and the workflow down the right, each pair
+   overlapping its neighbour by a corner only. Stacked any tighter and the
+   widest slide buries the two behind it. */
+.j-wall--slides .count-4 .col-pic.pic-0{ --r:-4deg; left:2%;  top:0%;  width:58%; z-index:1; }
+.j-wall--slides .count-4 .col-pic.pic-2{ --r:2deg;  left:46%; top:18%; width:52%; z-index:2; }
+/* Lifted clear of the workflow card's top edge and stacked over it, so the
+   strip reads as laid on top of the pile rather than slipped behind it. */
+.j-wall--slides .count-4 .col-pic.pic-3{ --r:-5deg; left:0%;  top:45%; width:48%; z-index:5; }
+/* The workflow canvas is the one worth reading, so it runs widest and sits on
+   top of the pile. */
+.j-wall--slides .count-4 .col-pic.pic-1{ --r:3deg;  left:32%; top:56%; width:66%; z-index:4; }
+
+/* An opened slide is held clear of the pile for as long as it stays open —
+   the hover lift lasts only while the pointer is on it, so moving away used to
+   drop the slide back under its neighbours. Straightened and enlarged like a
+   hover, but at a gentler scale: these are already the widest prints on the
+   pile, and a hover's 2.15 would throw them across the copy beside them.
+   Ranked above the per-print rules, which carry the same weight, by sitting
+   after them; below .col-note's 50 so the caption still reads. */
+/* The lift that frees a hovered print has to be restated for this pile. It is
+   written as `.collage .col-pic:hover` further down — three classes, which the
+   per-print rules above beat here because they carry a fourth. Without this the
+   blown-up slide stays pinned at its pile z-index and its neighbours draw over
+   the top of it. */
+.j-wall--slides .count-4 .col-pic:hover,
+.j-wall--slides .count-4 .col-pic:focus-visible,
+.j-wall--slides .count-4 .col-pic:focus-within{ z-index:40; }
+
+/* The pile fades as well as lifts here, so opacity joins the transition. */
+.j-wall--slides .col-pic{
+  transition: transform .3s ease, box-shadow .3s ease, opacity .25s ease;
+}
+.j-wall--slides .count-4 .col-pic[aria-pressed="true"]{
+  /* Same scale the hover lift uses, so clicking a slide that is already blown
+     up holds it at that size instead of shrinking it under the pointer. */
+  transform: rotate(0deg) scale(2.15);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.75);
+  z-index:45;
+}
+.j-wall--slides .count-4 .col-pic[aria-pressed="true"]::before{ opacity:0; }
+/* The rest of the pile recedes, so the open slide is read on its own. */
+.j-wall--slides .collage[data-open] .col-pic:not([aria-pressed="true"]){
+  opacity:0.15;
+}
 
 /* A mosaic of five: sizes vary, a few corners overlap, and the tilts run from
    dead straight to a few degrees. Only widths are set — each print's height

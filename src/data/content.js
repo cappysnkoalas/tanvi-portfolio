@@ -223,10 +223,51 @@ export const journey = [
     },
   },
   {
-    year: '[Year]',
+    year: '2026 — ongoing',
     label: 'RIGHT NOW',
-    title: '[Experience — e.g. AI & agentic systems]',
-    blurb: 'What you\'re in the middle of, and where it\'s heading.',
+    title: 'Agentic AI for ESG Compliance in Supply Chains',
+    roles: [
+      { text: 'Ongoing project', strong: true },
+      {
+        text: 'Rooted in mechanical engineering but driven by modern tech, I refuse to stay in a traditional lane. As industry rapidly evolves, I am channeling my engineering mindset into building autonomous, agentic AI systems that solve real world operational challenges.',
+      },
+    ],
+    album: {
+      name: 'AGENTIC AI FOR ESG COMPLIANCE',
+      cta: 'What I am building',
+      accent: 'pink',
+      story: [
+        'While my academic roots lie in mechanical engineering, I have never wanted to stay confined to a traditional mechanical path. Industry demands are rapidly evolving, and my passion centers on staying ahead of emerging technical curves by actively mastering how to design and build autonomous, agentic AI systems. Rather than restricting myself to conventional domain boundaries, I am expanding my software engineering toolkit to bridge physical operations with modern intelligence. I am actively working with and learning tools like n8n for orchestration, Claude Code for AI accelerated development, Supabase for scalable database backends, GitHub for version control, Docker for containerization, and Cursor for intelligent coding workflows.',
+        'This technical foundation drives my ongoing project, Agentic AI for ESG Compliance in Supply Chains. The initiative targets modern procurement and sourcing challenges by embedding Environmental, Social, and Governance benchmarks directly into autonomous agent workflows. By integrating live APIs, the system automates supplier onboarding, risk screening, and sustainability scoring across complex operations. Using n8n and Supabase alongside custom logic, the agent actively screens suppliers against public sanctions or deforestation watchlists, flags single region supply concentration risks, and parses compliance paperwork before certificates expire.',
+        'Looking across the broader supply chain pipeline, the architecture is structured to expand through five sequential phases: Sourcing and Procurement, Supplier Onboarding and Contracting, Production and Manufacturing, Logistics and Distribution, and ongoing Reporting and Monitoring. Currently focused on the procurement stage, the agent powers automated decision audit trails, generates sustainability ready tender criteria, and calculates dynamic supplier scorecards. By turning public disclosures and enterprise records into real time intelligence, this project reflects my broader mission to engineer scalable AI architectures that modernize industrial and operational workflows.',
+      ],
+      tape: 'pink',
+      wall: 'slides',
+      // Slides rather than photographs, so each carries a note: at pile size
+      // the type is too small to read, and the caption says what it shows.
+      photos: [
+        {
+          src: asset('esg/the-problem.png'),
+          alt: 'Project slide titled The Problem, listing the blind spots left by spreadsheet-based procurement',
+          note: 'The problem: procurement run on disconnected spreadsheets',
+        },
+        {
+          src: asset('esg/workflow-as-built.png'),
+          alt: 'The n8n workflow as built, showing the trigger, gather and AI read, judge, block and chase branches, and the fail-safe path',
+          note: 'The n8n workflow as built, end to end',
+        },
+        {
+          src: asset('esg/objectives.png'),
+          alt: 'Project slide titled Objectives, setting out three goals: automate the checks, screen every supplier, bring every insight into one score',
+          note: 'Three goals, one scorecard',
+        },
+        {
+          src: asset('esg/stage-flow.png'),
+          alt: 'Supply chain stage flow across five phases, with sourcing and procurement in focus',
+          note: 'Five phases, with sourcing and procurement in focus',
+        },
+      ],
+    },
   },
 ];
 
