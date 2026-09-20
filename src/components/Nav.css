@@ -8,7 +8,10 @@
 .nav-name{ font-family:'Playfair Display',serif; font-weight:600; font-size:19px; letter-spacing:0.01em; color:var(--ivory); display:flex; align-items:center; gap:9px; }
 .nav-name .dot{ width:7px; height:7px; border-radius:50%; background:var(--gold); }
 .nav-links{ display:flex; gap:clamp(20px,3vw,42px); font-size:16px; font-weight:700; letter-spacing:0.03em; }
-.nav-links a{ color:var(--ivory); transition:color .2s; }
+/* Set in caps here rather than in the label data, so the words stay in normal
+   case for anything reading the markup. Caps need a little more air between
+   letters than the mixed case did. */
+.nav-links a{ color:var(--ivory); text-transform:uppercase; letter-spacing:0.07em; transition:color .2s; }
 .nav-links a:hover{ color:var(--rose); }
 @media (max-width:860px){ .nav-links{ display:none; } }
 

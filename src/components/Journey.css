@@ -527,6 +527,9 @@
      full height the tiles read as three unrelated marks. */
   justify-content:center;
   gap: clamp(10px,1vw,16px);
+  /* Nudged up off dead centre. A transform rather than a margin so the row's
+     height, and the reel stretched to match it, are left alone. */
+  transform: translateY(-16px);
 }
 .j-links a{
   display:block;
