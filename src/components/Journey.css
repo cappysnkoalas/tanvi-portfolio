@@ -481,7 +481,7 @@
   align-items:stretch;
   gap: clamp(12px,1.4vw,24px);
 }
-.j-links-row .j-video-soon{ flex:1; }
+.j-links-row .j-reel-player{ flex:1; min-width:0; }
 /* Its own line above the tiles, set just past the arrow so the two read as one
    gesture. Anchored from the left for that reason; it stays on a single line, so
    there is no wrap to guard against. */
@@ -558,37 +558,88 @@
   grid-template-columns: 410px auto minmax(130px,auto) minmax(0,1fr);
 }
 
-/* Stands in for a reel that has not been shot yet, so the column reads as
-   reserved rather than broken. */
-.j-video-soon{
-  width:100%;
-  aspect-ratio: 16 / 9;
+/* The three site walkthroughs, played as one reel. Relative so the arrow can
+   sit on the video without the dots underneath moving. */
+.j-reel-player{
+  position:relative;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
-  gap:12px;
-  border-radius:14px;
-  border:2px dashed rgba(206,156,161,0.4);
-  /* Opaque, so the trail passes behind it the way it does behind the photo
-     piles rather than showing through the panel. */
-  background: linear-gradient(150deg, #3A1620, #1C0A0E);
-  color:var(--rose);
 }
-.j-video-soon svg{
-  width:46px; height:46px;
+.j-reel-video{
+  width:100%;
+  aspect-ratio: 16 / 9;
+  border-radius:14px;
+  /* Same panel the placeholder used, so an unloaded clip still reads as part
+     of the page rather than a black hole. */
+  background: linear-gradient(150deg, #3A1620, #1C0A0E);
+  object-fit:cover;
+}
+/* Vertically centred, so it clears the native control bar along the bottom. */
+.j-reel-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:42px; height:42px;
+  display:flex; align-items:center; justify-content:center;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:rgba(28,10,14,0.62);
+  color:var(--rose);
+  cursor:pointer;
+  /* The controls fade up when the panel is hovered or keyed into; left solid
+     they sit on top of the walkthrough the whole way through. */
+  opacity:0;
+  transition: opacity 180ms ease, background 180ms ease, transform 180ms ease;
+}
+.j-reel-next{ right:14px; }
+.j-reel-prev{ left:14px; }
+.j-reel-player:hover .j-reel-arrow,
+.j-reel-arrow:focus-visible{ opacity:1; }
+.j-reel-arrow:hover{ background:rgba(28,10,14,0.85); transform:translateY(-50%) scale(1.08); }
+.j-reel-arrow:focus-visible{ outline:2px solid var(--rose); outline-offset:3px; }
+.j-reel-arrow svg{
+  width:22px; height:22px;
   fill:none;
   stroke:currentColor;
-  stroke-width:1.5;
-  opacity:0.85;
+  stroke-width:2.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
 }
-.j-video-soon svg path{ fill:currentColor; stroke:none; }
-.j-video-soon span{
+/* Under the video rather than over it: across the bottom edge they would land
+   on the scrubber the moment the native controls appear. */
+.j-reel-dots{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-top:13px;
+}
+.j-reel-dot{
+  width:9px; height:9px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:rgba(206,156,161,0.32);
+  cursor:pointer;
+  transition: background 180ms ease, transform 180ms ease;
+}
+.j-reel-dot:hover{ background:rgba(206,156,161,0.6); }
+.j-reel-dot.is-on{
+  background:var(--rose);
+  /* Widened rather than enlarged, so the row keeps its baseline. */
+  width:22px;
+  border-radius:5px;
+}
+.j-reel-dot:focus-visible{ outline:2px solid var(--rose); outline-offset:3px; }
+.j-reel-caption{
+  margin:7px 0 0;
   font-family:'Poppins', sans-serif;
-  font-size:12.5px; font-weight:600;
+  font-size:11.5px; font-weight:600;
   letter-spacing:0.14em;
   text-transform:uppercase;
-  opacity:0.8;
+  color:var(--rose);
+  opacity:0.72;
 }
 
 /* A stop can tape its prints in its own colour rather than the default

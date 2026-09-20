@@ -150,8 +150,25 @@ export const journey = [
       logo: asset('rov/rov-logo.png'),
       cta: 'Read My Journey',
       accent: 'amber',
-      // Reel column holds a placeholder until the video lands.
-      videoSoon: true,
+      // The three site walkthroughs play as one reel: it rolls straight into
+      // the next clip on its own, and the arrow and dots let you steer.
+      reel: [
+        {
+          label: 'Range of View Studios',
+          src: asset('rov/reel/rovstudios.mp4'),
+          poster: asset('rov/reel/rovstudios.jpg'),
+        },
+        {
+          label: 'Aysegul Ikna',
+          src: asset('rov/reel/aysegulikna.mp4'),
+          poster: asset('rov/reel/aysegulikna.jpg'),
+        },
+        {
+          label: 'The Bando ATL',
+          src: asset('rov/reel/thebandoatl.mp4'),
+          poster: asset('rov/reel/thebandoatl.jpg'),
+        },
+      ],
       linksNote: 'click here to check out our projects firsthand!',
       links: [
         {

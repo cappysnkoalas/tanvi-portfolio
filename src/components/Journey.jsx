@@ -297,7 +297,7 @@ function FeatureStop({ item, index }) {
         </div>
       )}
 
-      {(album.links || album.videoSoon) && (
+      {(album.links || album.reel) && (
         // Everything here sits inside the reel: the note and arrow have to be
         // siblings of the tiles, not of the grid row above, or the taller copy
         // block on the left sets where they land and they float far too high.
@@ -338,15 +338,7 @@ function FeatureStop({ item, index }) {
               ))}
             </ul>
           )}
-          {album.videoSoon && (
-            <div className="j-video-soon">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <circle cx="12" cy="12" r="9.2" />
-                <path d="M10 8.4 16 12l-6 3.6z" />
-              </svg>
-              <span>video coming soon</span>
-            </div>
-          )}
+          {album.reel && <ReelPlayer clips={album.reel} />}
           </div>
         </div>
       )}
@@ -374,6 +366,108 @@ function FeatureStop({ item, index }) {
       )}
 
     </li>
+  );
+}
+
+// The three site walkthroughs read as one reel: when a clip ends the next one
+// loads and plays straight away, and after the last it wraps back to the first,
+// so leaving it alone loops all three forever. The arrows step either way by
+// hand and the dots say which one is on.
+function ReelPlayer({ clips }) {
+  const rootRef = useRef(null);
+  const videoRef = useRef(null);
+  const [current, setCurrent] = useState(0);
+  const [inView, setInView] = useState(false);
+
+  const clip = clips[current];
+  const count = clips.length;
+
+  // Wraps at both ends, so the arrows never dead-end.
+  const step = useCallback((by) => setCurrent((i) => (i + by + count) % count), [count]);
+
+  // Autoplay only once the reel is actually on screen, and pause when it leaves:
+  // otherwise all three clips would burn through while the visitor is still
+  // reading the stops above it.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.5,
+    });
+    io.observe(root);
+    return () => io.disconnect();
+  }, []);
+
+  // The video remounts per clip (keyed on src), so this runs against the fresh
+  // element. Muted is what lets browsers allow the play call without a click.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (!inView) {
+      video.pause();
+      return;
+    }
+    const attempt = video.play();
+    // A refused autoplay just leaves the poster up with controls; that is fine.
+    if (attempt && typeof attempt.catch === 'function') attempt.catch(() => {});
+  }, [current, inView]);
+
+  return (
+    <div className="j-reel-player" ref={rootRef}>
+      <video
+        ref={videoRef}
+        className="j-video j-reel-video"
+        key={clip.src}
+        src={clip.src}
+        poster={clip.poster}
+        controls
+        muted
+        playsInline
+        preload="auto"
+        onEnded={() => step(1)}
+      />
+
+      <button
+        type="button"
+        className="j-reel-arrow j-reel-prev"
+        onClick={() => step(-1)}
+        aria-label={`Previous walkthrough: ${clips[(current - 1 + count) % count].label}`}
+        title={clips[(current - 1 + count) % count].label}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M15 5.5 8 12l7 6.5" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        className="j-reel-arrow j-reel-next"
+        onClick={() => step(1)}
+        aria-label={`Next walkthrough: ${clips[(current + 1) % count].label}`}
+        title={clips[(current + 1) % count].label}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M9 5.5 16 12l-7 6.5" />
+        </svg>
+      </button>
+
+      <div className="j-reel-dots" role="tablist" aria-label="Walkthroughs">
+        {clips.map((item, i) => (
+          <button
+            key={item.src}
+            type="button"
+            role="tab"
+            aria-selected={i === current}
+            aria-label={item.label}
+            title={item.label}
+            className={`j-reel-dot${i === current ? ' is-on' : ''}`}
+            onClick={() => setCurrent(i)}
+          />
+        ))}
+      </div>
+
+      <p className="j-reel-caption">{clip.label}</p>
+    </div>
   );
 }
 
