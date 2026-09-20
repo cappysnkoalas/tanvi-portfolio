@@ -291,76 +291,81 @@ export const journey = [
   },
 ];
 
-// Eight cards, numbered in order, laid out four across. Each one keeps its
-// tools tucked away until the card is hovered or focused — `domain` is only
-// there to pull the tool's favicon, so swapping a tool means swapping a
-// domain. Placeholder groupings for now: say the word and I'll redo them.
+// Eight cards, numbered in order, laid out four across. Each keeps its
+// contents hidden until the card is hovered or focused, then scatters them:
+// `traits` are the plain-text chips, `tools` the ones carrying an icon.
+// `domain` exists only to pull that tool's favicon, so swapping a tool is a
+// matter of swapping a domain. A card may have traits and no tools.
 export const skills = [
   {
-    title: 'Agentic AI',
-    tools: [
-      { name: 'n8n', domain: 'n8n.io' },
-      { name: 'Claude', domain: 'claude.ai' },
-      { name: 'Cursor', domain: 'cursor.com' },
-      { name: 'LangChain', domain: 'langchain.com' },
-    ],
-  },
-  {
-    title: 'CAD & Modelling',
-    tools: [
-      { name: 'SolidWorks', domain: 'solidworks.com' },
-      { name: 'Fusion 360', domain: 'autodesk.com' },
-      { name: 'AutoCAD', domain: 'autocad.com' },
-    ],
-  },
-  {
-    title: 'Simulation',
+    title: 'CAD & Simulation',
+    // Not "SolidWorks CSWP Certified": the pair are the widest chips on the
+    // card and push the ends of both arcs off its edge. SolidWorks is already
+    // named by its own tool chip here, so the prefix is doing no work.
+    traits: ['CSWP Certified', 'CSWA Certified'],
     tools: [
       { name: 'ANSYS', domain: 'ansys.com' },
+      { name: 'HyperMesh', domain: 'altair.com' },
+      { name: 'SolidWorks', domain: 'solidworks.com' },
+      { name: 'CATIA', domain: '3ds.com' },
+      { name: 'Fusion 360', domain: 'autodesk.com' },
       { name: 'MATLAB', domain: 'mathworks.com' },
-      { name: 'Simulink', domain: 'mathworks.com' },
     ],
   },
   {
-    title: 'Development',
+    title: 'Program Management',
+    traits: ['Organized', 'Deadline-driven', 'Cross-functional', 'Decisive'],
     tools: [
-      { name: 'GitHub', domain: 'github.com' },
-      { name: 'Docker', domain: 'docker.com' },
-      { name: 'React', domain: 'react.dev' },
-      { name: 'VS Code', domain: 'code.visualstudio.com' },
-    ],
-  },
-  {
-    title: 'Data & Backend',
-    tools: [
-      { name: 'Supabase', domain: 'supabase.com' },
-      { name: 'PostgreSQL', domain: 'postgresql.org' },
-      { name: 'Python', domain: 'python.org' },
-    ],
-  },
-  {
-    title: 'Design & Brand',
-    tools: [
-      { name: 'Figma', domain: 'figma.com' },
-      { name: 'Canva', domain: 'canva.com' },
-      { name: 'Photoshop', domain: 'adobe.com' },
-    ],
-  },
-  {
-    title: 'Content & PR',
-    tools: [
-      { name: 'Instagram', domain: 'instagram.com' },
       { name: 'Notion', domain: 'notion.so' },
-      { name: 'Lightroom', domain: 'adobe.com' },
+      { name: 'Discord', domain: 'discord.com' },
+      { name: 'Google Calendar', domain: 'calendar.google.com' },
+      { name: 'Excel', domain: 'microsoft.com' },
+      { name: 'Google Sheets', domain: 'google.com' },
     ],
   },
   {
     title: 'Leadership & Ops',
+    traits: ['Accountable', 'Motivating', 'Hands-on', 'Scalable', 'Empowering', 'Decisive'],
+    tools: [],
+  },
+  {
+    title: 'Public Speaking & Communication',
+    traits: ['Articulate', 'Persuasive', 'Confident', 'Engaging', 'Charismatic', 'Expressive'],
+    tools: [{ name: 'Canva Presentations', domain: 'canva.com' }],
+  },
+  {
+    title: 'Technical & Content Writing',
+    traits: ['Clear', 'Versatile', 'Compelling', 'Structured'],
     tools: [
-      { name: 'Notion', domain: 'notion.so' },
-      { name: 'Slack', domain: 'slack.com' },
-      { name: 'Sheets', domain: 'google.com' },
+      { name: 'Substack', domain: 'substack.com' },
+      { name: 'Instagram', domain: 'instagram.com' },
+    ],
+  },
+  {
+    title: 'Agentic AI & Systems Design',
+    traits: ['Innovative', 'Architected', 'Data-driven', 'Automated Systems'],
+    tools: [
+      { name: 'n8n', domain: 'n8n.io' },
+      { name: 'Python', domain: 'python.org' },
+      { name: 'GitHub', domain: 'github.com' },
+      { name: 'Supabase', domain: 'supabase.com' },
+      { name: 'Klaviyo', domain: 'klaviyo.com' },
+    ],
+  },
+  {
+    title: 'Academic Excellence & Fast Learning',
+    traits: ['9.37 CGPA', 'Quick learner', 'Curious', 'Sharp'],
+    tools: [],
+  },
+  {
+    title: 'Design & Editing',
+    traits: ['Creative', 'Detail-oriented', 'Visual', 'Polished'],
+    tools: [
+      { name: 'Figma', domain: 'figma.com' },
+      { name: 'Premiere Pro', domain: 'adobe.com' },
+      { name: 'Canva', domain: 'canva.com' },
+      { name: 'VN', domain: 'vlognow.me' },
+      { name: 'Hyperframes', domain: 'hyperframes.app' },
     ],
   },
 ];
-

@@ -1,4 +1,8 @@
-.skills{ position:relative; overflow:hidden; background:var(--bg-2); }
+/* No overflow clip: the chip ring reaches past the cards in the outer
+   columns, and clipping here would lop it off at the section's edge. The
+   background video can't overflow anyway — it is inset to the section and
+   cropped by object-fit — and body already blocks sideways scroll. */
+.skills{ position:relative; background:var(--bg-2); }
 .skills-bg{
   position:absolute; inset:0;
   width:100%; height:100%;
@@ -35,7 +39,7 @@
    cuts straight through them at this size. */
 .skills-underline{
   text-decoration: underline;
-  text-decoration-color: rgba(244,188,69,0.85);
+  text-decoration-color: rgba(247,230,166,0.85);
   text-decoration-thickness: 3.5px;
   text-underline-offset: 13px;
 }
@@ -61,25 +65,40 @@
   display:grid;
   grid-template-columns: repeat(4, 1fr);
   gap:18px;
+  /* The vanishing point the cards lean into. Set on the grid rather than each
+     card so they all tip towards the same point and read as one surface. */
+  perspective:900px;
 }
 
 .skill-card{
   position:relative;
   z-index:0;
-  min-height:172px;
+  /* The wording sits centred in the card so the chips have room to ring it on
+     every side. Tall enough to hold an arc of chips above and below without
+     either running off the card. */
+  min-height:250px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
   padding:26px 24px;
   /* Same 2px at rest as on hover — only the colour changes between the two,
      so the card never shifts by a pixel when it opens. Rose at low alpha so
      the resting outline reads as the same pink line, just quieter. */
-  border:2px solid rgba(206,156,161,0.28);
+  border:2px solid rgba(206,156,161,0.4);
   border-radius:18px;
   background:
     linear-gradient(135deg, rgba(243,234,216,0.07), transparent 38%),
     var(--bg);
-  box-shadow: 0 16px 32px -18px rgba(0,0,0,0.7);
+  /* A rose halo sits on the card at rest, not only when it opens, so the
+     grid carries the pink rather than switching it on under the cursor. */
+  box-shadow:
+    0 16px 32px -18px rgba(0,0,0,0.7),
+    0 0 30px -10px rgba(206,156,161,0.34);
   cursor:pointer;
   outline:none;
-  transition: border-color .3s ease, box-shadow .3s ease, opacity .3s ease, transform .3s ease;
+  transition: border-color .3s ease, box-shadow .3s ease, opacity .3s ease, transform .22s ease;
 }
 /* The open card has to sit above its neighbours, or the tools that spill past
    its edge slide under the next card along. */
@@ -87,9 +106,17 @@
 .skill-card:focus-visible,
 .skill-card:focus-within{
   z-index:30;
-  transform:translateY(-3px);
+  /* One fixed angle about the vertical axis, after the reference: the left
+     edge swings towards the viewer and the right edge falls away behind it,
+     which is what a positive rotateY does. No rotateX — that was the backward
+     lean. */
+  transform:
+    rotateY(12deg)
+    translateY(-3px);
   border-color:var(--rose);
-  box-shadow: 0 28px 60px -22px rgba(0,0,0,0.8), 0 0 46px -14px rgba(206,156,161,0.45);
+  box-shadow:
+    0 28px 60px -22px rgba(0,0,0,0.8),
+    0 0 58px -12px rgba(206,156,161,0.75);
 }
 .skill-card:focus-visible{ outline:2px solid var(--rose); outline-offset:3px; }
 /* Everything else steps back while one card is open, so the eye has one place
@@ -115,6 +142,9 @@
   line-height:1.2;
   color:var(--ivory);
   transition:color .25s ease;
+  /* Held to a known width: the chip ring is worked out against half of this
+     (TITLE_HALF_W in Skills.jsx), so the two have to move together. */
+  max-width:224px;
 }
 .skill-card:hover .skill-title,
 .skill-card:focus-within .skill-title{ color:var(--rose); }
@@ -142,22 +172,25 @@
   list-style:none;
   pointer-events:none;
 }
+/* Amber on near-black inside a thin amber pill, after the reference: the ring
+   colour carries the section's accent rather than competing with it. */
 .skill-tool{
   position:absolute;
   left:50%; top:50%;
   display:inline-flex;
   align-items:center;
-  gap:6px;
-  padding:5px 11px;
+  gap:7px;
+  padding:6px 12px;
   white-space:nowrap;
-  border:1px solid rgba(243,234,216,0.16);
+  border:1.5px solid rgba(247,230,166,0.52);
   border-radius:999px;
-  background:rgba(22,7,9,0.92);
+  background:rgba(18,9,6,0.9);
   backdrop-filter:blur(4px);
-  box-shadow:0 6px 18px -6px rgba(0,0,0,0.8);
-  font-size:12px;
-  font-weight:500;
-  color:var(--ivory);
+  box-shadow:0 6px 18px -6px rgba(0,0,0,0.85);
+  font-family:'Poppins', sans-serif;
+  font-size:13px;
+  font-weight:600;
+  color:var(--amber);
   opacity:0;
   transform: translate(-50%,-50%) scale(0.3);
   transition: opacity .32s ease, transform .32s cubic-bezier(.34,1.4,.5,1);
@@ -166,9 +199,23 @@
 .skill-card:focus-within .skill-tool{
   opacity:1;
   /* The -50% pair keeps the chip centred on its own point; --tx/--ty carry it
-     out from there. Staggered so they fan out rather than snap as one. */
-  transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1);
+     out from there, scaled by --scatter so a narrow card can pull the whole
+     arrangement in without the chips themselves shrinking. Staggered so they
+     fan out rather than snap as one. */
+  transform:
+    translate(
+      calc(-50% + var(--tx) * var(--scatter, 1)),
+      calc(-50% + var(--ty) * var(--scatter, 1))
+    )
+    scale(1);
   transition-delay: var(--delay);
+}
+/* A word carries no icon, so it is set a step down from the tools rather than
+   in another colour — the ring stays one family. */
+.skill-tool.is-trait{
+  padding:5px 11px;
+  font-size:12px;
+  border-color:rgba(247,230,166,0.36);
 }
 .skill-tool img{
   width:16px; height:16px;
@@ -180,13 +227,21 @@
 @media (max-width:1100px){
   .skills-grid{ grid-template-columns: repeat(2, 1fr); }
 }
+/* One column rather than two below this: the outer orbit needs roughly 420px
+   of card to stay on top of its own card, and a half-width column here is
+   nowhere near that — the chips would open across the card beside it. */
+@media (max-width:760px){
+  .skills-grid{ grid-template-columns: 1fr; }
+}
 @media (max-width:560px){
-  .skill-card{ min-height:150px; padding:22px 18px; }
+  .skill-card{ min-height:225px; padding:22px 18px; }
   .skill-title{ font-size:18px; }
 }
 /* The travel is decoration; the tools still have to arrive. Keep the layout,
    drop the flight. */
 @media (prefers-reduced-motion: reduce){
   .skill-card, .skill-tool, .skill-title, .skill-hint{ transition:none; }
+  /* No lean either: the tilt is the largest movement on the page. */
+  .skills-grid{ perspective:none; }
   .skill-card:hover, .skill-card:focus-within{ transform:none; }
 }

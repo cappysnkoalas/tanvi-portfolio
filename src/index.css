@@ -10,9 +10,9 @@
   --pink:#EAC7C9;
   --olive:#93A067;
   --gold:#D9A441;
-  /* Warm yellow with orange in it — bright enough to pick words out of a
-     paragraph on the dark ground without tipping into the flat yellow. */
-  --amber:#F4BC45;
+  /* Pale, near-white yellow. Deep enough to still read as yellow against the
+     dark ground, light enough not to sit as a heavy gold on it. */
+  --amber:#F7E6A6;
   --bright-yellow:#FFDE59;
   --trail-yellow:#F0BC2E;
   --paper:#F3E6D0;
