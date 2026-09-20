@@ -1,10 +1,7 @@
-import { navLinks } from '../data/content';
+import { contact, navLinks } from '../data/content';
 import './Footer.css';
 
-// The address already published in the resume PDF that this site hands out,
-// so the footer is not exposing anything the download does not.
-const EMAIL = 'tanvivipin23@gmail.com';
-const LINKEDIN = 'https://www.linkedin.com/in/tanvi-vipin/';
+const { email: EMAIL, linkedin: LINKEDIN } = contact;
 
 export default function Footer() {
   return (

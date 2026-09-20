@@ -2,6 +2,14 @@
 
 const asset = (file) => `${import.meta.env.BASE_URL}${file}`;
 
+// The two ways to reach her, kept here so the contact button and the footer
+// cannot drift apart. The address is the one already published in the resume
+// PDF this site hands out.
+export const contact = {
+  email: 'tanvivipin23@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/tanvi-vipin/',
+};
+
 export const tickerWords = [
   { text: 'DESIGNER', color: 'c-rose' },
   { text: 'ENGINEER', color: 'c-olive' },

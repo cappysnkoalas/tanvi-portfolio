@@ -1,3 +1,4 @@
+import { contact } from '../data/content';
 import './Contact.css';
 
 const asset = (file) => `${import.meta.env.BASE_URL}${file}`;
@@ -23,7 +24,16 @@ export default function Contact() {
         <div className="kicker">Get in touch</div>
         <h2 className="section-title">Let's build <em>something</em>.</h2>
         <p>I'd love to connect and talk more :) If you liked what you saw, I'm looking for an opportunity to create real impact!</p>
-        <a href="#" className="contact-btn">LET'S CONNECT</a>
+        {/* Opens in its own tab, since it leaves the site; noreferrer keeps
+            the new tab from reaching back into this one. */}
+        <a
+          className="contact-btn"
+          href={contact.linkedin}
+          target="_blank"
+          rel="noreferrer"
+        >
+          LET'S CONNECT
+        </a>
       </div>
     </section>
   );
