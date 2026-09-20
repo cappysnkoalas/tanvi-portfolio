@@ -1,9 +1,170 @@
 .skills{ background:var(--bg-2); }
-.skills-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:1px; margin-top:44px; background:rgba(243,234,216,0.12); }
-.skill-card{ background:var(--bg-2); padding:30px 26px; transition: background .25s; }
-.skill-card:hover{ background:var(--burgundy); }
-.skill-card h3{ font-size:18px; color:var(--rose); font-weight:600; margin-bottom:10px; }
-.skill-card ul{ list-style:none; }
-.skill-card li{ font-size:13px; color:var(--ivory-dim); padding:4px 0; }
-@media (max-width:860px){ .skills-grid{ grid-template-columns:1fr 1fr; } }
-@media (max-width:600px){ .skills-grid{ grid-template-columns:1fr; } }
+
+/* This header runs a step larger than the other sections'. Scoped to .skills
+   so the shared .kicker and .section-title sizes stay put elsewhere. */
+.skills .kicker{ font-size:13px; }
+/* Playfair's italic is loaded at 600, so the heading gets the real cut rather
+   than a synthesised slant. */
+.skills-title{
+  font-style:italic;
+  font-size: clamp(29px,4vw,47px);
+}
+/* Sat well clear of the descenders in "How" and the full stop, or the rule
+   cuts straight through them at this size. */
+.skills-underline{
+  text-decoration: underline;
+  text-decoration-color: rgba(244,188,69,0.85);
+  text-decoration-thickness: 3.5px;
+  text-underline-offset: 13px;
+}
+/* No max-width: the line is meant to run unbroken, and the 720px cap the
+   other copy uses was folding "where it counts" onto a second row. It still
+   wraps on its own once the viewport is genuinely too narrow for it. */
+.skills-lead{
+  margin-top:22px;
+  font-size: clamp(16px,1.5vw,19px);
+  line-height:1.65;
+  color:var(--ivory-dim);
+}
+/* Colour on the words alone — no block behind them. */
+.skills-lead .hl{
+  color:var(--amber);
+  font-weight:600;
+}
+
+/* Four across, two down — the eight cards read as one block. Two columns
+   below the breakpoint rather than one, so it stays a grid on a phone. */
+.skills-grid{
+  margin-top:44px;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:18px;
+}
+
+.skill-card{
+  position:relative;
+  z-index:0;
+  min-height:172px;
+  padding:26px 24px;
+  /* Same 2px at rest as on hover — only the colour changes between the two,
+     so the card never shifts by a pixel when it opens. Rose at low alpha so
+     the resting outline reads as the same pink line, just quieter. */
+  border:2px solid rgba(206,156,161,0.28);
+  border-radius:18px;
+  background:
+    linear-gradient(135deg, rgba(243,234,216,0.07), transparent 38%),
+    var(--bg);
+  box-shadow: 0 16px 32px -18px rgba(0,0,0,0.7);
+  cursor:pointer;
+  outline:none;
+  transition: border-color .3s ease, box-shadow .3s ease, opacity .3s ease, transform .3s ease;
+}
+/* The open card has to sit above its neighbours, or the tools that spill past
+   its edge slide under the next card along. */
+.skill-card:hover,
+.skill-card:focus-visible,
+.skill-card:focus-within{
+  z-index:30;
+  transform:translateY(-3px);
+  border-color:var(--rose);
+  box-shadow: 0 28px 60px -22px rgba(0,0,0,0.8), 0 0 46px -14px rgba(206,156,161,0.45);
+}
+.skill-card:focus-visible{ outline:2px solid var(--rose); outline-offset:3px; }
+/* Everything else steps back while one card is open, so the eye has one place
+   to be. :has is what lets a card dim its siblings. */
+.skills-grid:has(.skill-card:hover) .skill-card:not(:hover),
+.skills-grid:has(.skill-card:focus-within) .skill-card:not(:focus-within){
+  opacity:0.4;
+}
+
+.skill-num{
+  position:relative;
+  font-family:'Playfair Display', serif;
+  font-size:14px;
+  font-variant-numeric: tabular-nums;
+  color:var(--rose);
+}
+.skill-title{
+  position:relative;
+  margin-top:6px;
+  font-family:'Playfair Display', serif;
+  font-size:21px;
+  font-weight:600;
+  line-height:1.2;
+  color:var(--ivory);
+  transition:color .25s ease;
+}
+.skill-card:hover .skill-title,
+.skill-card:focus-within .skill-title{ color:var(--rose); }
+
+/* Steps aside once the tools are out — it has done its job by then. */
+.skill-hint{
+  position:relative;
+  display:inline-block;
+  margin-top:16px;
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:rgba(243,234,216,0.4);
+  transition:opacity .2s ease;
+}
+.skill-card:hover .skill-hint,
+.skill-card:focus-within .skill-hint{ opacity:0; }
+
+/* The tools sit stacked at the middle of the card and stay there, collapsed
+   and invisible, until it opens — then each one travels out to its own spot. */
+.skill-tools{
+  position:absolute;
+  inset:0;
+  list-style:none;
+  pointer-events:none;
+}
+.skill-tool{
+  position:absolute;
+  left:50%; top:50%;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 11px;
+  white-space:nowrap;
+  border:1px solid rgba(243,234,216,0.16);
+  border-radius:999px;
+  background:rgba(22,7,9,0.92);
+  backdrop-filter:blur(4px);
+  box-shadow:0 6px 18px -6px rgba(0,0,0,0.8);
+  font-size:12px;
+  font-weight:500;
+  color:var(--ivory);
+  opacity:0;
+  transform: translate(-50%,-50%) scale(0.3);
+  transition: opacity .32s ease, transform .32s cubic-bezier(.34,1.4,.5,1);
+}
+.skill-card:hover .skill-tool,
+.skill-card:focus-within .skill-tool{
+  opacity:1;
+  /* The -50% pair keeps the chip centred on its own point; --tx/--ty carry it
+     out from there. Staggered so they fan out rather than snap as one. */
+  transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1);
+  transition-delay: var(--delay);
+}
+.skill-tool img{
+  width:16px; height:16px;
+  border-radius:4px;
+  object-fit:contain;
+  flex-shrink:0;
+}
+
+@media (max-width:1100px){
+  .skills-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width:560px){
+  .skill-card{ min-height:150px; padding:22px 18px; }
+  .skill-title{ font-size:18px; }
+}
+/* The travel is decoration; the tools still have to arrive. Keep the layout,
+   drop the flight. */
+@media (prefers-reduced-motion: reduce){
+  .skill-card, .skill-tool, .skill-title, .skill-hint{ transition:none; }
+  .skill-card:hover, .skill-card:focus-within{ transform:none; }
+}

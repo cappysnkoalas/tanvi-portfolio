@@ -67,10 +67,17 @@ function useMeasuredTrail(trackRef) {
           keepOutY = box.top - trackBox.top - RIBBON_REACH;
         }
       });
+      // The track stops at the last stop, but the section runs on past it for
+      // its bottom padding. Measure that gap and hand it to the ribbon so the
+      // road carries on to the end of the section instead of cutting out.
+      const section = track.closest('.journey');
+      const tailRun = section
+        ? Math.max(0, section.getBoundingClientRect().bottom - trackBox.bottom)
+        : 0;
       setTrail({
         width: trackBox.width,
-        height: trackBox.height,
-        path: buildRibbon(centres, trackBox.height, keepOutX, keepOutY),
+        height: trackBox.height + tailRun,
+        path: buildRibbon(centres, trackBox.height, keepOutX, keepOutY, tailRun),
       });
     };
 
@@ -78,6 +85,10 @@ function useMeasuredTrail(trackRef) {
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(track);
+    // The section's padding is what the tail spans, and it moves with the
+    // viewport independently of the track, so watch it too.
+    const section = track.closest('.journey');
+    if (section) observer.observe(section);
     // The title is set in a webfont, so its width changes when that swaps in;
     // measuring only before then leaves the ribbon clearing a narrower title.
     document.fonts?.ready.then(() => live && measure()).catch(() => {});
@@ -202,7 +213,9 @@ function StorySheet({ album, id, onClose }) {
         <div className="j-sheet">
           <div className="j-sheet-surface" />
           <div className="j-sheet-body">
-            <div className="j-sheet-kicker">my journey at</div>
+            {/* Reads right for the stops that are places, wrong for the ones
+                that are projects — those opt out with noKicker. */}
+            {!album.noKicker && <div className="j-sheet-kicker">my journey at</div>}
             <h3 className="j-sheet-title" id={`${id}-title`}>{album.name}</h3>
             {album.story.map((paragraph, n) => (
               <p key={n}>{paragraph}</p>
@@ -496,13 +509,14 @@ export default function Journey() {
       <GooFilterDefs />
       <div className="wrap">
         <div className="kicker">Experience &amp; journey</div>
-        <h2 className="section-title">Five stops on the way <em>here</em>.</h2>
+        <h2 className="section-title">My <em>experiences</em>.</h2>
 
         <div className="journey-track" ref={trackRef}>
           {trail && (
             <svg
               className="j-trail"
               viewBox={`0 0 ${trail.width} ${trail.height}`}
+              style={{ height: `${trail.height}px` }}
               preserveAspectRatio="none"
               aria-hidden="true"
             >

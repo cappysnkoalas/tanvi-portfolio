@@ -10,6 +10,9 @@
   --pink:#EAC7C9;
   --olive:#93A067;
   --gold:#D9A441;
+  /* Warm yellow with orange in it — bright enough to pick words out of a
+     paragraph on the dark ground without tipping into the flat yellow. */
+  --amber:#F4BC45;
   --bright-yellow:#FFDE59;
   --trail-yellow:#F0BC2E;
   --paper:#F3E6D0;
@@ -40,6 +43,9 @@ a{ color:inherit; text-decoration:none; }
 .doodle{ position:absolute; pointer-events:none; user-select:none; z-index:4; }
 
 /* ---------- SECTION HEADERS ---------- */
+/* The nav now stays on screen for the whole page, so an anchor jump has to
+   stop short of it — landing flush at the top would tuck the heading under. */
+section[id]{ scroll-margin-top: 92px; }
 .section-pad{ padding: clamp(60px,9vw,110px) 0; }
 .kicker{ font-size:12px; letter-spacing:0.14em; color:var(--rose); margin-bottom:14px; }
 .section-title{ font-size: clamp(26px,3.6vw,42px); font-weight:600; color:var(--ivory); max-width:760px; line-height:1.15; }

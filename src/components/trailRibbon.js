@@ -29,7 +29,9 @@ function catmullRom(p0, p1, p2, p3, t) {
 
 // `keepOutX`/`keepOutY` are the point the lead-in has to clear — the right edge
 // and bottom of the first stop's title — measured from the live DOM by caller.
-export function buildRibbon(centres, trackHeight, keepOutX = 0, keepOutY = 0) {
+// `tailRun` is how far the section carries on below the track — the ribbon
+// runs the whole way down it so the road reaches the end of the section.
+export function buildRibbon(centres, trackHeight, keepOutX = 0, keepOutY = 0, tailRun = 0) {
   const first = centres[0];
   const last = centres[centres.length - 1];
   // Run the ribbon off the top and bottom edges so it reads as passing
@@ -80,7 +82,9 @@ export function buildRibbon(centres, trackHeight, keepOutX = 0, keepOutY = 0) {
   });
   knots.push({
     x: last.x + (last.x - centres[centres.length - 2].x) * 0.12,
-    y: last.y + overshoot,
+    // Past the bottom edge of the box, so the end cap is cropped off and the
+    // road reads as running on rather than stopping in a rounded point.
+    y: Math.max(last.y + overshoot, trackHeight + tailRun + 24),
   });
 
   const spine = [];

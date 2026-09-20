@@ -253,6 +253,9 @@ export const journey = [
       name: 'AGENTIC AI FOR ESG COMPLIANCE',
       cta: 'What I am building',
       accent: 'pink',
+      // A project rather than somewhere I worked, so the sheet drops the
+      // "my journey at" line the other stops carry.
+      noKicker: true,
       story: [
         'While my academic roots lie in mechanical engineering, I have never wanted to stay confined to a traditional mechanical path. Industry demands are rapidly evolving, and my passion centers on staying ahead of emerging technical curves by actively mastering how to design and build autonomous, agentic AI systems. Rather than restricting myself to conventional domain boundaries, I am expanding my software engineering toolkit to bridge physical operations with modern intelligence. I am actively working with and learning tools like n8n for orchestration, Claude Code for AI accelerated development, Supabase for scalable database backends, GitHub for version control, Docker for containerization, and Cursor for intelligent coding workflows.',
         'This technical foundation drives my ongoing project, Agentic AI for ESG Compliance in Supply Chains. The initiative targets modern procurement and sourcing challenges by embedding Environmental, Social, and Governance benchmarks directly into autonomous agent workflows. By integrating live APIs, the system automates supplier onboarding, risk screening, and sustainability scoring across complex operations. Using n8n and Supabase alongside custom logic, the agent actively screens suppliers against public sanctions or deforestation watchlists, flags single region supply concentration risks, and parses compliance paperwork before certificates expire.',
@@ -288,38 +291,76 @@ export const journey = [
   },
 ];
 
+// Eight cards, numbered in order, laid out four across. Each one keeps its
+// tools tucked away until the card is hovered or focused — `domain` is only
+// there to pull the tool's favicon, so swapping a tool means swapping a
+// domain. Placeholder groupings for now: say the word and I'll redo them.
 export const skills = [
   {
-    title: 'Engineering',
-    items: ['[CAD tool — e.g. SolidWorks]', '[Simulation / FEA]', '[Manufacturing / production planning]'],
+    title: 'Agentic AI',
+    tools: [
+      { name: 'n8n', domain: 'n8n.io' },
+      { name: 'Claude', domain: 'claude.ai' },
+      { name: 'Cursor', domain: 'cursor.com' },
+      { name: 'LangChain', domain: 'langchain.com' },
+    ],
   },
   {
-    title: 'Design',
-    items: ['[Visual identity]', '[Figma / Adobe suite]', '[Brand & campaign design]'],
+    title: 'CAD & Modelling',
+    tools: [
+      { name: 'SolidWorks', domain: 'solidworks.com' },
+      { name: 'Fusion 360', domain: 'autodesk.com' },
+      { name: 'AutoCAD', domain: 'autocad.com' },
+    ],
   },
   {
-    title: 'Tools',
-    items: ['[Programming language]', '[Data / analysis tool]', '[Project management tool]'],
+    title: 'Simulation',
+    tools: [
+      { name: 'ANSYS', domain: 'ansys.com' },
+      { name: 'MATLAB', domain: 'mathworks.com' },
+      { name: 'Simulink', domain: 'mathworks.com' },
+    ],
+  },
+  {
+    title: 'Development',
+    tools: [
+      { name: 'GitHub', domain: 'github.com' },
+      { name: 'Docker', domain: 'docker.com' },
+      { name: 'React', domain: 'react.dev' },
+      { name: 'VS Code', domain: 'code.visualstudio.com' },
+    ],
+  },
+  {
+    title: 'Data & Backend',
+    tools: [
+      { name: 'Supabase', domain: 'supabase.com' },
+      { name: 'PostgreSQL', domain: 'postgresql.org' },
+      { name: 'Python', domain: 'python.org' },
+    ],
+  },
+  {
+    title: 'Design & Brand',
+    tools: [
+      { name: 'Figma', domain: 'figma.com' },
+      { name: 'Canva', domain: 'canva.com' },
+      { name: 'Photoshop', domain: 'adobe.com' },
+    ],
+  },
+  {
+    title: 'Content & PR',
+    tools: [
+      { name: 'Instagram', domain: 'instagram.com' },
+      { name: 'Notion', domain: 'notion.so' },
+      { name: 'Lightroom', domain: 'adobe.com' },
+    ],
+  },
+  {
+    title: 'Leadership & Ops',
+    tools: [
+      { name: 'Notion', domain: 'notion.so' },
+      { name: 'Slack', domain: 'slack.com' },
+      { name: 'Sheets', domain: 'google.com' },
+    ],
   },
 ];
 
-export const work = [
-  {
-    year: '[Year]',
-    title: '[Project name — e.g. Team Kshatriya, BAJA SAE]',
-    note: "Tell me what to say about this one and I'll write it.",
-    outcome: '[One-line result or outcome]',
-  },
-  {
-    year: '[Year]',
-    title: '[Project name — e.g. ESG compliance system]',
-    note: "Tell me what to say about this one and I'll write it.",
-    outcome: '[One-line result or outcome]',
-  },
-  {
-    year: '[Year]',
-    title: '[Project name — e.g. design studio work]',
-    note: "Tell me what to say about this one and I'll write it.",
-    outcome: '[One-line result or outcome]',
-  },
-];
