@@ -1,4 +1,26 @@
-.skills{ background:var(--bg-2); }
+.skills{ position:relative; overflow:hidden; background:var(--bg-2); }
+.skills-bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  /* Cover crops the top and bottom of a wide frame; anchoring toward the top
+     of the footage pushes the picture down, so the roundabout sits behind the
+     cards instead of the heading. */
+  object-position:center 20%;
+}
+/* Burgundy wash keeps the heading and lead legible over the brighter
+   headlights, and the top and bottom fade into the page background so the
+   footage has no hard seam against the sections either side. */
+.skills-scrim{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(var(--bg-2) 0%, transparent 16%, transparent 84%, var(--bg-2) 100%),
+    linear-gradient(rgba(31,12,16,0.55), rgba(31,12,16,0.55));
+}
+.skills-inner{ position:relative; }
+.skills-inner .kicker,
+.skills-title,
+.skills-lead{ text-shadow:0 1px 14px rgba(22,7,9,0.9); }
 
 /* This header runs a step larger than the other sections'. Scoped to .skills
    so the shared .kicker and .section-title sizes stay put elsewhere. */

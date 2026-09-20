@@ -1,6 +1,8 @@
 import { skills } from '../data/content';
 import './Skills.css';
 
+const asset = (file) => `${import.meta.env.BASE_URL}${file}`;
+
 // Where each tool lands once its card opens, measured from the middle of the
 // card. Fixed rather than random so a card scatters the same way every time,
 // and ordered so the first few tools take the roomiest corners.
@@ -15,7 +17,21 @@ const SCATTER = [
 export default function Skills() {
   return (
     <section className="skills section-pad" id="skills">
-      <div className="wrap">
+      {/* Decorative loop behind the cards: muted so it may autoplay, and hidden
+          from assistive tech since it carries no information. */}
+      <video
+        className="skills-bg"
+        src={asset('skills/skills-bg.mp4')}
+        poster={asset('skills/skills-bg.jpg')}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
+      <div className="skills-scrim" aria-hidden="true" />
+      <div className="wrap skills-inner">
         <div className="kicker">Skills</div>
         {/* The rule sits under the words only — the full stop hangs past it. */}
         <h2 className="section-title skills-title">
