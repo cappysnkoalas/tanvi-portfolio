@@ -22,8 +22,8 @@ export default function Contact() {
       <div className="wrap contact-inner">
         <div className="kicker">Get in touch</div>
         <h2 className="section-title">Let's build <em>something</em>.</h2>
-        <p>[Placeholder — one line inviting people to reach out, plus your email or a way to book time.]</p>
-        <a href="#" className="contact-btn">SAY HELLO</a>
+        <p>I'd love to connect and talk more :) If you liked what you saw, I'm looking for an opportunity to create real impact!</p>
+        <a href="#" className="contact-btn">LET'S CONNECT</a>
       </div>
     </section>
   );

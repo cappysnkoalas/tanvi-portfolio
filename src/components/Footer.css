@@ -1,0 +1,135 @@
+/* A slim pale-pink band closing the page off, after the reference: rounded at
+   the top only, so it reads as a card sliding up from the bottom edge rather
+   than a full-bleed strip. Ink on pink, which inverts the rest of the site. */
+.footer{
+  position:relative;
+  background:var(--pink);
+  color:var(--ink);
+  border-radius:26px 26px 0 0;
+  padding:24px 0 16px;
+  font-family:'Jost', sans-serif;
+  text-align:left;
+}
+/* One row: name at the left, links through the middle, address at the right.
+   Wraps rather than shrinks, so nothing is squeezed on a narrow window. */
+.footer-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  flex-wrap:wrap;
+}
+/* Name over role, stacked and left-aligned — the role is a caption to the
+   name, so it hangs directly beneath it rather than sitting beside it. */
+.footer-brand{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.footer-name{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-family:'Playfair Display', serif;
+  font-style:italic;
+  font-weight:600;
+  font-size:23px;
+  letter-spacing:0.01em;
+}
+/* Set small, in caps, and indented by the dot plus its gap so it starts flush
+   with the T of the name rather than with the dot. */
+.footer-role{
+  padding-left:16px;
+  font-size:10.5px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.14em;
+  color:var(--ink-dim);
+}
+/* Echoes the dot beside the name in the nav bar, in burgundy rather than gold
+   because gold disappears against this pink. */
+.footer-dot{
+  width:7px; height:7px;
+  border-radius:50%;
+  background:var(--burgundy);
+}
+.footer-links{
+  display:flex;
+  gap:clamp(16px,2.4vw,34px);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.09em;
+  text-transform:uppercase;
+}
+.footer-links a{ transition:color .2s; }
+.footer-links a:hover{ color:var(--burgundy); }
+/* No rule under these — the label beside each one already marks it as a
+   contact detail, so the underline was only adding weight. Colour alone
+   carries the hover. */
+.footer-mail{
+  font-size:14px;
+  font-weight:600;
+  transition:color .2s;
+}
+.footer-mail:hover{ color:var(--burgundy); }
+/* The two ways to reach her, one per row, each behind its own label. Aligned
+   to the right so both rows end on the same edge as the rest of the footer
+   rather than starting on a ragged left. */
+.footer-reach{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:7px;
+}
+.footer-reach-row{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+}
+/* Small caps in dimmed ink: the label names the row, the value carries it. */
+.footer-reach-label{
+  font-size:10.5px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--ink-dim);
+}
+/* The small print, set off by a hairline rule at a fraction of the ink. */
+.footer-base{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px solid rgba(58,22,32,0.18);
+  font-size:11.5px;
+  letter-spacing:0.04em;
+  color:var(--ink-dim);
+}
+/* The middle line carries the most, so it is set above the rest of the small
+   print and in caps — wide-tracked, since capitals lose the word shape that
+   ascenders and descenders give and close up without it. */
+.footer-note{
+  font-size:13.5px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:var(--ink);
+}
+.footer-top{ transition:color .2s; }
+.footer-top:hover{ color:var(--burgundy); }
+
+/* Centred and stacked once the row can no longer hold its three parts side by
+   side — left-aligned wrapping leaves a ragged block on a phone. */
+@media (max-width:760px){
+  .footer{ text-align:center; }
+  .footer-inner,
+  .footer-base{ justify-content:center; }
+  .footer-links{ order:3; }
+  .footer-brand{ align-items:center; }
+  .footer-role{ padding-left:0; }
+  .footer-reach{ align-items:center; }
+  .footer-note{ display:none; }
+}

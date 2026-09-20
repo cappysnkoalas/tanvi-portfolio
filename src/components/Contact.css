@@ -16,10 +16,27 @@
 }
 .contact-inner{ position:relative; text-shadow:0 1px 14px rgba(22,7,9,0.85); }
 .contact .section-title{ margin:0 auto 20px; }
-.contact p{ color:var(--ivory-dim); max-width:44ch; margin:0 auto 34px; font-size:15.5px; }
-.contact-btn{
-  display:inline-block; padding:16px 40px; border:1.5px solid var(--rose); border-radius:40px;
-  font-size:13px; letter-spacing:0.08em; color:var(--rose); transition: all .25s;
+/* Bold and pale pink at a size that holds up over the footage — the dimmed
+   ivory at 15.5px this used to be was swallowed by the bright frames behind
+   it. The measure is wide enough to keep the line to two rows on a desktop. */
+.contact p{
+  max-width:56ch;
+  margin:0 auto 34px;
+  font-size: clamp(19px,1.9vw,25px);
+  font-weight:600;
+  line-height:1.5;
+  color:var(--pink);
 }
-.contact-btn:hover{ background:var(--rose); color:var(--bg); }
-footer{ text-align:center; padding:30px; font-size:12px; letter-spacing:0.04em; color:var(--ivory-dim); background:var(--bg); }
+/* Filled at rest, not only on hover: the pale rose pill against the dark ink
+   is the resting state now. */
+.contact-btn{
+  display:inline-block; padding:16px 40px; border:1.5px solid var(--pink); border-radius:40px;
+  font-size:13px; letter-spacing:0.08em;
+  background:var(--pink); color:var(--ink); transition: all .25s;
+}
+/* Still has somewhere to go on hover — a touch brighter, and the halo lifts,
+   so the button does not look inert under the cursor. */
+.contact-btn:hover{
+  background:#F4DCDE; border-color:#F4DCDE;
+  box-shadow:0 0 26px -6px rgba(234,199,201,0.7);
+}
