@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import useLiteMedia from '../lib/useLiteMedia';
 import { skills } from '../data/content';
 import './Skills.css';
 
@@ -141,21 +143,31 @@ function chipsFor(skill) {
 }
 
 export default function Skills() {
+  // Hover does not exist on a touch screen, so a card also opens on a tap.
+  // One at a time: opening a second closes the first.
+  const [openTitle, setOpenTitle] = useState(null);
+  const lite = useLiteMedia();
+
   return (
     <section className="skills section-pad" id="skills">
       {/* Decorative loop behind the cards: muted so it may autoplay, and hidden
-          from assistive tech since it carries no information. */}
-      <video
-        className="skills-bg"
-        src={asset('skills/skills-bg.mp4')}
-        poster={asset('skills/skills-bg.jpg')}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-      />
+          from assistive tech since it carries no information. On a phone the
+          poster stands in for it — see useLiteMedia. */}
+      {lite ? (
+        <img className="skills-bg" src={asset('skills/skills-bg.jpg')} alt="" aria-hidden="true" />
+      ) : (
+        <video
+          className="skills-bg"
+          src={asset('skills/skills-bg.mp4')}
+          poster={asset('skills/skills-bg.jpg')}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        />
+      )}
       <div className="skills-scrim" aria-hidden="true" />
       <div className="wrap skills-inner">
         <div className="kicker">Skills</div>
@@ -173,13 +185,30 @@ export default function Skills() {
           {skills.map((skill, index) => {
             const chips = chipsFor(skill);
             const spots = scatterPositions(chips, skill.title);
+            const isOpen = openTitle === skill.title;
             return (
-              // Focusable so the chips are reachable without a mouse: the card
-              // opens on focus exactly as it does on hover.
-              <article className="skill-card" key={skill.title} tabIndex={0}>
+              // A button in all but name: it opens something, so it is
+              // focusable, answers Enter and Space, and says whether it is
+              // open. Hover opens it too, for a pointer.
+              <article
+                className={`skill-card${isOpen ? ' is-open' : ''}`}
+                key={skill.title}
+                tabIndex={0}
+                role="button"
+                aria-expanded={isOpen}
+                onClick={() => setOpenTitle(isOpen ? null : skill.title)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    setOpenTitle(isOpen ? null : skill.title);
+                  }
+                }}
+              >
                 <span className="skill-num">{String(index + 1).padStart(2, '0')}</span>
                 <h3 className="skill-title">{skill.title}</h3>
-                <span className="skill-hint">Hover to open</span>
+                {/* The wording differs between a pointer and a touch screen,
+                    so it is set in CSS rather than here. */}
+                <span className="skill-hint" aria-hidden="true" />
 
                 <ul className="skill-tools">
                   {chips.map((chip, n) => (

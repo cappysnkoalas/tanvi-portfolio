@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { journey } from '../data/content';
+import useLiteMedia from '../lib/useLiteMedia';
 import { BLOB_PATHS, BLOB_COLORS } from './blobShapes';
 import { buildRibbon } from './trailRibbon';
 import PaperClip from './PaperClip';
@@ -253,7 +254,7 @@ function FeatureStop({ item, index }) {
             {/* A stop for something with no mark of its own — a project rather
                 than an organisation — carries no logo, so the name stands alone. */}
             {album.logo && (
-              <img className="j-feature-logo" src={album.logo} alt={`${album.name} logo`} />
+              <img className="j-feature-logo" src={album.logo} alt={`${album.name} logo`} loading="lazy" />
             )}
           </span>
           <h3 className="j-feature-title">
@@ -391,12 +392,34 @@ function ReelPlayer({ clips }) {
   const videoRef = useRef(null);
   const [current, setCurrent] = useState(0);
   const [inView, setInView] = useState(false);
+  const lite = useLiteMedia();
 
   const clip = clips[current];
   const count = clips.length;
 
   // Wraps at both ends, so the arrows never dead-end.
   const step = useCallback((by) => setCurrent((i) => (i + by + count) % count), [count]);
+
+  // A swipe steps the reel too. On a phone the arrows are a small target and
+  // a swipe is the gesture people reach for first. Nothing calls
+  // preventDefault: a drag that is mostly vertical has to stay a page scroll,
+  // so it is judged only once the finger lifts.
+  const swipeFrom = useRef(null);
+  const onTouchStart = (event) => {
+    const touch = event.changedTouches[0];
+    swipeFrom.current = { x: touch.clientX, y: touch.clientY };
+  };
+  const onTouchEnd = (event) => {
+    const from = swipeFrom.current;
+    if (!from) return;
+    swipeFrom.current = null;
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - from.x;
+    const dy = touch.clientY - from.y;
+    // Far enough to be deliberate, and clearly more sideways than up or down.
+    if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    step(dx < 0 ? 1 : -1);
+  };
 
   // Autoplay only once the reel is actually on screen, and pause when it leaves:
   // otherwise all three clips would burn through while the visitor is still
@@ -426,7 +449,14 @@ function ReelPlayer({ clips }) {
   }, [current, inView]);
 
   return (
-    <div className="j-reel-player" ref={rootRef}>
+    <div
+      className="j-reel-player"
+      ref={rootRef}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      {/* Each clip is 2MB, so on a phone it is fetched once the reel is
+          reached and played rather than while the page is still loading. */}
       <video
         ref={videoRef}
         className="j-video j-reel-video"
@@ -436,7 +466,7 @@ function ReelPlayer({ clips }) {
         controls
         muted
         playsInline
-        preload="auto"
+        preload={lite ? 'metadata' : 'auto'}
         onEnded={() => step(1)}
       />
 

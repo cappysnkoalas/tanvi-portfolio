@@ -40,3 +40,10 @@
   background:#F4DCDE; border-color:#F4DCDE;
   box-shadow:0 0 26px -6px rgba(234,199,201,0.7);
 }
+
+@media (max-width:760px){
+  /* The button is the one thing on this screen anyone is meant to press, so
+     it gets a full thumb's height and a wider tap area than the copy needs. */
+  .contact-btn{ padding:16px 32px; font-size:14px; }
+  .contact p{ margin-bottom:28px; }
+}

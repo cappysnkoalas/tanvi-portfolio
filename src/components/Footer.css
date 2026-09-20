@@ -123,13 +123,23 @@
 
 /* Centred and stacked once the row can no longer hold its three parts side by
    side — left-aligned wrapping leaves a ragged block on a phone. */
-@media (max-width:760px){
-  .footer{ text-align:center; }
+@media (max-width:860px){
+  .footer{ text-align:center; padding:26px 0 18px; }
   .footer-inner,
   .footer-base{ justify-content:center; }
-  .footer-links{ order:3; }
+  .footer-inner{ gap:18px; }
+  .footer-links{ order:3; gap:4px; flex-wrap:wrap; }
+  /* Padded out to a thumb-sized row rather than a 18px-tall line of text. */
+  .footer-links a{ padding:12px; }
   .footer-brand{ align-items:center; }
-  .footer-role{ padding-left:0; }
-  .footer-reach{ align-items:center; }
-  .footer-note{ display:none; }
+  .footer-role{ padding-left:0; font-size:12px; }
+  .footer-reach{ align-items:center; gap:10px; }
+  .footer-reach-row{ flex-wrap:wrap; justify-content:center; }
+  .footer-reach-label{ font-size:12px; }
+  .footer-mail{ padding:10px 0; }
+  /* Kept, not hidden: it was dropped to stop the row going ragged, but the
+     footer centres here anyway, so it can have a line of its own. */
+  .footer-note{ display:block; order:-1; font-size:12.5px; }
+  .footer-base{ flex-direction:column; gap:8px; font-size:12.5px; }
+  .footer-top{ padding:11px 12px; }
 }

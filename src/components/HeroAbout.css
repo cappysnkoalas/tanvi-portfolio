@@ -7,7 +7,7 @@
 .hero-about-grid{ display:grid; grid-template-columns: 1.15fr 1fr; gap:clamp(28px,4vw,52px); align-items:stretch; }
 
 .left-col{ display:flex; flex-direction:column; position:relative; }
-.eyebrow{ font-size:11.5px; letter-spacing:0.14em; color:var(--ivory-dim); margin-bottom:6px; }
+.eyebrow{ font-size:12.5px; letter-spacing:0.14em; color:var(--ivory-dim); margin-bottom:6px; }
 
 .name-block{ margin-bottom: clamp(8px,1.4vw,16px); }
 .big-name{
@@ -135,4 +135,16 @@
   .name-block{ margin-top: 22px; }
   .dd-star{ display:none; }
   .hero-photo{ -webkit-mask-image:none; mask-image:none; }
+  /* The paper hung a clear 60px past the page on both sides so it could tuck
+     under the name on a wide screen. On a phone there is nothing to tuck
+     under, and the overhang was carrying 70px of the text off the right edge.
+     The inset leaves room for the corners the slight rotation throws out. */
+  .about-box{
+    margin-left:0;
+    margin-right:0;
+    width: calc(100% - 20px);
+    margin-inline:auto;
+    transform: rotate(-1deg);
+  }
+  .about-content{ padding: clamp(26px,6vw,38px) clamp(20px,5vw,30px); }
 }

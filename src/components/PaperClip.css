@@ -37,5 +37,7 @@
 }
 
 @media (max-width: 860px){
-  .paper-clip{ left: 72px; top: -12px; }
+  /* Follows the paper in: the 72px offset was measured against the old
+     padding, and would now sit on the first line of the copy. */
+  .paper-clip{ left: 16px; top: -12px; }
 }

@@ -28,3 +28,74 @@
 }
 .resume-btn:hover{ border-color:var(--rose); color:var(--rose); }
 .resume-btn svg{ width:16px; height:16px; }
+
+/* ---------- MOBILE ---------- */
+/* The toggle only exists below the breakpoint, where the links come out of
+   the bar. Sized past the 44px a fingertip needs. */
+.nav-toggle{
+  display:none;
+  width:44px; height:44px;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:0;
+  border:none;
+  background:none;
+  cursor:pointer;
+}
+.nav-bar{
+  display:block;
+  width:22px; height:2px;
+  border-radius:2px;
+  background:var(--ivory);
+  transition: transform .22s ease, opacity .18s ease;
+}
+/* The outer two swing into a cross and the middle one drops out, so the
+   control reads as a close button while the panel is open. */
+.nav.is-open .nav-bar:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+.nav.is-open .nav-bar:nth-child(2){ opacity:0; }
+.nav.is-open .nav-bar:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+.nav-menu{ display:none; }
+
+@media (max-width:860px){
+  /* Two columns rather than three: the name at the left, the buttons at the
+     right. The middle column only existed to centre the links. */
+  .nav-inner{ grid-template-columns: 1fr auto; padding:12px clamp(16px,5vw,64px); }
+  /* Held on one line — wrapped, it was pushing the bar to 85px tall and
+     costing a tenth of the screen on every scroll. */
+  .nav-name{ font-size:17px; white-space:nowrap; }
+  .nav-actions{ gap:10px; }
+  .nav-toggle{ display:flex; }
+  .resume-btn{ padding:11px 16px; font-size:13px; }
+
+  /* The panel the links move into. Full width under the bar, one link per
+     row at a height a thumb can hit. */
+  .nav-menu{
+    display:flex;
+    flex-direction:column;
+    padding: 6px clamp(16px,5vw,64px) 14px;
+    border-top:1px solid rgba(243,234,216,0.1);
+  }
+  .nav-menu[hidden]{ display:none; }
+  .nav-menu a{
+    padding:14px 2px;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ivory);
+    border-bottom:1px solid rgba(243,234,216,0.07);
+  }
+  .nav-menu a:last-child{ border-bottom:none; }
+}
+/* Below this the word beside the arrow is what pushes the bar over; the icon
+   alone still reads as a download. */
+@media (max-width:420px){
+  .resume-label{ display:none; }
+  .resume-btn{ padding:12px; min-height:40px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .nav-bar{ transition:none; }
+}

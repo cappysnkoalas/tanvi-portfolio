@@ -939,5 +939,69 @@
   .journey-item:nth-child(even) .j-blurb{ margin-left:auto; margin-right:auto; }
   /* The rotated tag hangs below the blob; keep it off the copy underneath. */
   .j-marker{ margin-bottom:14px; }
+  /* Same trap as .is-flipped: .no-wall pins four columns at a higher
+     specificity than the single-column rule above, so the ROV stop kept its
+     410px first column and carried the title 44px off the screen. */
+  .journey-feature.no-wall{ grid-template-columns:1fr; }
+  .journey-feature.no-wall .j-head{ grid-column:1; grid-row:2; text-align:center; }
+  .journey-feature.no-wall .j-media{ grid-column:1; grid-row:1; justify-self:center; }
+  .journey-feature.no-wall .j-reel{ grid-column:1; grid-row:3; justify-self:center; }
+  /* The tiles and the video sit side by side on a wide screen. At this width
+     there is no room for both, so the row becomes a column. */
+  .j-links-row{ flex-direction:column; align-items:center; gap:18px; }
+  .j-reel--links{ max-width:100%; }
+  /* Was absolutely placed beside the arrow and held to one line, which threw
+     it 79px past the edge. In the stack it just sits above, and wraps. */
+  .j-links-note{
+    position:static;
+    margin:0 auto 14px;
+    white-space:normal;
+    text-align:center;
+    font-size:20px;
+  }
   .j-trail{ display:none; }
+}
+
+/* ---------- TOUCH SIZING ---------- */
+/* These controls are laid out for a cursor, which can hit a 9px dot. A
+   fingertip cannot, so each one gets an invisible hit area around it — the
+   dots, the stop's title and the site link keep their exact look. */
+@media (max-width:860px), (hover: none){
+  .j-reel-dots{ gap:16px; margin-top:16px; }
+  /* Above the caption underneath it: the hit area reaches into the caption's
+     box, and without this the later sibling wins the tap. */
+  .j-reel-dot{ position:relative; z-index:2; width:11px; height:11px; }
+  .j-reel-dot.is-on{ width:26px; border-radius:6px; }
+  .j-reel-dot::after{
+    content:'';
+    position:absolute;
+    left:50%; top:50%;
+    width:calc(100% + 16px); height:38px;
+    transform:translate(-50%,-50%);
+  }
+  .j-feature-toggle{ position:relative; }
+  .j-feature-toggle::after{
+    content:'';
+    position:absolute;
+    inset:-10px -8px;
+  }
+  .j-site{ position:relative; }
+  /* Reaches past the underline rather than padding the element, which would
+     push the rule off the baseline of the text. */
+  .j-site::after{
+    content:'';
+    position:absolute;
+    inset:-11px -8px;
+  }
+  /* Was the smallest text in the section at 11.5px. */
+  .j-reel-caption{ font-size:12.5px; }
+}
+
+/* The badge and its arrow are placed as a percentage of the collage, and both
+   run past its right edge on purpose — there is dark page to spill onto on a
+   wide screen. On a phone the collage is the page, so they are pulled inside
+   it. */
+@media (max-width:860px){
+  .col-badge{ left:72%; width:26%; }
+  .col-badge-arrow{ left:80%; width:14%; }
 }

@@ -52,3 +52,9 @@ section[id]{ scroll-margin-top: 92px; }
 .section-title em{ font-style:italic; color:var(--rose); }
 
 @media (prefers-reduced-motion: reduce){ * { scroll-behavior:auto !important; } }
+
+/* The nav bar is shorter below the breakpoint, so an anchor jump needs less
+   room left for it — 92px would drop the heading into the middle of the page. */
+@media (max-width:860px){
+  section[id]{ scroll-margin-top: 72px; }
+}
