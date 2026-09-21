@@ -280,11 +280,14 @@
     margin-top:16px;
   }
   .skill-card.is-open .skill-tools{ display:flex; }
-  /* Back in the flow: no absolute placement, no travel, nothing to stagger. */
-  .skill-tool,
-  .skill-card:hover .skill-tool,
-  .skill-card:focus-within .skill-tool,
-  .skill-card.is-open .skill-tool{
+  /* Back in the flow: no absolute placement, no travel, nothing to stagger.
+     The selectors mirror the scatter rules above them exactly, including the
+     :not(:has(...)) prefix — those count for six classes, and anything shorter
+     loses to them however far down the file it sits. */
+  .skills-grid .skill-tool,
+  .skills-grid .skill-card:hover .skill-tool,
+  .skills-grid:not(:has(.skill-card:hover)) .skill-card:focus-within .skill-tool,
+  .skills-grid:not(:has(.skill-card:hover)) .skill-card.is-open .skill-tool{
     position:static;
     transform:none;
     opacity:1;
@@ -322,4 +325,52 @@
     border-radius:14px;
   }
   .skill-tool img{ width:13px; height:13px; }
+}
+
+/* ---------- TOUCH: A LIST, NOT PILLS ---------- */
+/* Pills earn their outline when they are scattered around a card and each one
+   has to read as its own object. Stacked in a column they are just a list, and
+   eight outlines in a narrow card is a lot of ruling for eight short words. So
+   the chrome comes off and each line takes a marker instead: a tool's own icon
+   where there is one, a dot where there is not. */
+@media (max-width:760px), (hover: none){
+  .skill-tools{
+    flex-direction:column;
+    align-items:flex-start;
+    align-self:stretch;
+    gap:7px;
+    margin-top:14px;
+    padding-left:2px;
+    text-align:left;
+  }
+  .skill-tool,
+  .skill-tool.is-trait,
+  .skill-card:hover .skill-tool,
+  .skill-card:focus-within .skill-tool,
+  .skill-card.is-open .skill-tool{
+    padding:0;
+    border:none;
+    border-radius:0;
+    background:none;
+    backdrop-filter:none;
+    box-shadow:none;
+    justify-content:flex-start;
+    text-align:left;
+    font-size:12.5px;
+    font-weight:500;
+    line-height:1.35;
+    gap:8px;
+  }
+  /* Every line, icon or not: the favicons come off a third-party service and
+     a row whose icon never arrives would otherwise lose its marker and hang
+     out of line with the rest. */
+  .skill-tool::before{
+    content:'';
+    flex:none;
+    width:4px; height:4px;
+    margin-left:5px;
+    border-radius:50%;
+    background:var(--amber);
+    opacity:0.7;
+  }
 }
