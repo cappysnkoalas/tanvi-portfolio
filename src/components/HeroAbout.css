@@ -1,6 +1,10 @@
 /* ---------- HERO + ABOUT (combined so photo bottom = box bottom) ---------- */
 .hero-about{
   position:relative;
+  /* The note is rotated and runs wider than the screen, so it overhangs by a
+     few pixels either side. Clipped here, on the section that owns it, rather
+     than on the body: clipping the body costs the sticky nav. */
+  overflow-x:clip;
   padding: clamp(10px,1.6vw,18px) 0 clamp(14px,2vw,22px);
 }
 .hero-about .wrap{ max-width:none; }
@@ -135,4 +139,84 @@
   .name-block{ margin-top: 22px; }
   .dd-star{ display:none; }
   .hero-photo{ -webkit-mask-image:none; mask-image:none; }
+}
+
+/* ---------- PHONE ---------- */
+/* Stacked full width, the portrait ate a whole screen before the name even
+   appeared. Here it becomes a print pinned to the top right: it sits beside
+   the name and dips over the note's corner, so the three pieces read as one
+   arrangement rather than three stacked bands. */
+@media (max-width:640px){
+  .hero-about{ padding:4px 0 8px; }
+  .hero-about-grid{ position:relative; }
+
+  /* Out of flow, so the name and note below run the full width and the print
+     can hang over the seam between them. Right is offset by the gutter because
+     an absolute box resolves against the padding edge, not the content. */
+  .photo-col{
+    position:absolute;
+    top:0; right:var(--pad-x);
+    width:42%; height:auto;
+    z-index:6;
+    transform:rotate(2.8deg);
+  }
+  .hero-photo{
+    /* A set height rather than an aspect ratio: it keeps the overlap onto the
+       note identical at every phone width, which is what lets the reserve
+       below be a single number instead of one that has to track the width. */
+    height:196px;
+    border:6px solid var(--paper);
+    border-radius:3px;
+    box-shadow:0 16px 30px rgba(0,0,0,0.55);
+  }
+  .hero-photo img{ object-position:center 18%; }
+
+  /* Kept clear of the print. The name breaks over two lines at this width,
+     which is what gives the column its height. */
+  /* Narrow enough that the name always breaks over two lines, at every phone
+     width. Left to fit on one at the wider end, the column shrank, the note
+     started higher, and the print then overlapped more copy than the reserve
+     below it accounts for. */
+  .eyebrow, .name-block{ max-width:46%; }
+  .eyebrow{ font-size:10px; letter-spacing:0.12em; }
+  .name-block{ margin-top:14px; margin-bottom:0; }
+  .big-name{ font-size:31px; line-height:0.95; }
+  /* Tracking pulled in so the role still holds one line at 360px. */
+  .name-sub{ margin-top:8px; font-size:9px; letter-spacing:0.1em; gap:7px; }
+  .name-sub .rule{ width:18px; }
+
+  /* Runs the full width of the screen instead of hanging off the left edge:
+     at this size the overhang ate the text rather than reading as a bleed. */
+  .about-box{
+    margin:12px 0 0 calc(-1 * var(--pad-x));
+    width:calc(100% + var(--pad-x) * 2);
+    transform:rotate(-1.3deg);
+  }
+  /* The left inset no longer has an overhang to clear, but it still has to
+     clear the punch holes and red margin line printed on the paper texture:
+     those sit in the leftmost ~12% of the image, which is about 46px once the
+     texture is scaled to a screen this wide. */
+  /* Block, not flex: a float is ignored inside a flex container, and the
+     wrap below is the whole point. Vertical centring is moot here anyway
+     because the note is sized by its copy. */
+  .about-content{ display:block; padding:16px 15px 16px 48px; }
+  /* Reserves the corner the print hangs over, so the opening lines wrap around
+     it instead of running underneath. Floated rather than padded so only the
+     lines level with the print lose width. */
+  .about-content::before{
+    content:'';
+    float:right;
+    /* Wider than the print itself: the print is rotated, so its lowest-left
+       corner reaches further in than its box does, and the reserve has to
+       clear that corner rather than the untransformed width. */
+    width:54%;
+    height:70px;
+    margin:0 0 5px 11px;
+  }
+  .about-kicker{ font-size:13px; margin-bottom:6px; }
+  .intro-body p{ font-size:12.4px; line-height:1.28; margin-bottom:4px; }
+  .intro-body p.emph{ font-size:12.8px; }
+  .chip{ text-decoration-thickness:2px; text-underline-offset:3px; }
+  .intro-triad{ margin-top:8px; font-size:11.5px; line-height:1.4; }
+  .intro-triad .lead{ font-size:12.3px; margin-bottom:6px; line-height:1.32; }
 }

@@ -39,3 +39,9 @@
 @media (max-width: 860px){
   .paper-clip{ left: 72px; top: -12px; }
 }
+
+/* The paper now only bleeds a gutter's width past the edge, so the clip comes
+   in to sit on the margin line rather than on top of the opening line. */
+@media (max-width: 640px){
+  .paper-clip{ left: 24px; top: -10px; width: 24px; }
+}
