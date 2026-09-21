@@ -69,6 +69,10 @@ export const journey = [
           caption: 'On stage at Kalaa 3.0',
           // Only photo with a `note`, so only this one opens a label on click.
           note: 'organised Kalaa 3.0, our flagship event <3',
+          // Dropped from the phone row, where four prints leave each one too
+          // small for a wide stage shot to read. The pile on a wide screen
+          // still has it.
+          phoneHide: true,
         },
         {
           src: asset('anokha/childrens-home.jpg'),
@@ -87,6 +91,15 @@ export const journey = [
       { text: 'Nothing beats the rush of watching pixels turn into an actual fully built ATV.' },
       { text: 'My time with Team Kshatriya built the foundation of how I engineer today.' },
     ],
+    // Phone-only stand-in for the lines above. The long copy reads well beside
+    // the photos on a wide screen; on a phone every stop stacks, and these
+    // lines are most of what makes each one a screenful. Both sets ship and the
+    // stylesheet picks one, so a stop without this keeps its long copy on every
+    // screen — which is why Anokha has none.
+    rolesShort: [
+      { text: 'CAD & ANSYS Engineer.', strong: true },
+      { text: 'Breathing life into digital wireframes to build high performance electric ATVs from the ground up.' },
+    ],
     album: {
       name: 'TEAM KSHATRIYA',
       logo: asset('kshatriya/kshatriya-logo.jpg'),
@@ -99,6 +112,9 @@ export const journey = [
       accent: 'green',
       glimpse:
         'Designed on screens, tested in the mud: the dirt, sweat, and grind of BAJA SAE 2026!',
+      // On a phone the long line ran to two, above a row of thumbnails it was
+      // twice the size of; this is the part of it that matters.
+      glimpseShort: 'BAJA SAE 2026!',
       // Sits in the empty pocket bottom-right of the pile, with an arrow drawn
       // from it up to the photos.
       badge: {
@@ -120,6 +136,12 @@ export const journey = [
         {
           src: asset('kshatriya/cad-model.jpg'),
           alt: 'SolidWorks model of the BAJA ATV showing the roll cage, driver position and suspension',
+          // The render carries a wide band of empty white either side of the
+          // vehicle, which at thumbnail size is most of the print. On a phone
+          // it is shown at this ratio instead and the sides are cropped away.
+          // 1.05 against the file's own 1.32 takes 10% off each edge, inside
+          // the ~13% that is empty.
+          phoneRatio: 1.05,
         },
         {
           src: asset('kshatriya/ebaja-e86.jpg'),
@@ -128,10 +150,14 @@ export const journey = [
         {
           src: asset('kshatriya/hbaja-h18.jpg'),
           alt: 'The hBAJA car, H18, on the course below the BAJA 2026 hill sign',
+          phoneHide: true,
         },
         {
           src: asset('kshatriya/team-crew.jpg'),
           alt: 'Part of the Team Kshatriya crew at the BAJA SAEINDIA event',
+          // Out of the phone row so the four that remain can be larger. The
+          // pile on a wide screen still has it.
+          phoneHide: true,
         },
         {
           src: asset('kshatriya/acceleration-award.jpg'),
@@ -152,6 +178,10 @@ export const journey = [
       {
         text: 'My time at ROV built the foundation of how I design, organize, and lead projects today!',
       },
+    ],
+    rolesShort: [
+      { text: 'Operations Head', strong: true },
+      { text: 'Transforming creative brands while building the operational engine that keeps a studio moving.' },
     ],
     album: {
       name: 'RANGE OF VIEW STUDIOS',
@@ -218,6 +248,10 @@ export const journey = [
         text: 'My time at Zero21 Autos shaped how I analyze engineering workflows, document complex processes, and understand real world factory environments today!',
       },
     ],
+    rolesShort: [
+      { text: 'Industrial Intern', strong: true },
+      { text: 'Learned how to translate lean manufacturing into actual factory speed on an active assembly line.' },
+    ],
     album: {
       name: 'ZERO21 AUTOS',
       logo: asset('zero21/zero21-logo.png'),
@@ -235,6 +269,7 @@ export const journey = [
         {
           src: asset('zero21/ecargo.jpg'),
           alt: 'The Zero21 eCargo electric three wheeler',
+          phoneHide: true,
         },
         {
           src: asset('zero21/user-manual.jpg'),
@@ -256,6 +291,10 @@ export const journey = [
       {
         text: 'Rooted in mechanical engineering but driven by modern tech, I refuse to stay in a traditional lane. As industry rapidly evolves, I am channeling my engineering mindset into building autonomous, agentic AI systems that solve real world operational challenges.',
       },
+    ],
+    rolesShort: [
+      { text: 'Ongoing project', strong: true },
+      { text: 'Merging mechanical engineering roots with autonomous AI to tackle complex real world challenges.' },
     ],
     album: {
       name: 'AGENTIC AI FOR ESG COMPLIANCE',
@@ -288,10 +327,14 @@ export const journey = [
           src: asset('esg/objectives.png'),
           alt: 'Project slide titled Objectives, setting out three goals: automate the checks, screen every supplier, bring every insight into one score',
           note: 'Three goals, one scorecard',
+          phoneHide: true,
         },
         {
           src: asset('esg/stage-flow.png'),
           alt: 'Supply chain stage flow across five phases, with sourcing and procurement in focus',
+          // First in the phone row: it is the one slide that reads at thumbnail
+          // size, so it is the one worth leading with.
+          phoneFirst: true,
           note: 'Five phases, with sourcing and procurement in focus',
         },
       ],

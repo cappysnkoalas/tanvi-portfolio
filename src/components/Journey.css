@@ -1393,3 +1393,298 @@
     backdrop-filter:none;
   }
 }
+
+/* ---------- PHONE COPY ---------- */
+/* Each stop carries two sets of lines under its title. The long ones read well
+   beside the photos on a wide screen; on a phone every stop stacks and they are
+   most of what makes each one a screenful, so the short set stands in below the
+   phone breakpoint. display:none rather than a visual trick, so a screen reader
+   is read one set and not both. */
+.j-feature-roles--short{ display:none; }
+.j-glimpse--short{ display:none; }
+@media (max-width:640px){
+  .j-feature-roles--long{ display:none; }
+  .j-feature-roles--short{ display:block; }
+  .j-glimpse--long{ display:none; }
+  .j-glimpse--short{ display:block; }
+}
+
+/* ---------- PHONE: THE STOP AS ONE BLOCK ---------- */
+/* Centred and stacked, a stop ran to a screen and a half: blob, then name,
+   then copy, then a button as wide as the page, then a pile of photos. Here
+   the blob moves to the left with the name beside it and the copy under the
+   name, so the head reads as one block, and the photos line up in a single
+   row beneath it.
+   Several of the rules below repeat their selector for .is-flipped and
+   .no-wall: those variants are pinned at two and three classes further up, so
+   a shorter selector here loses to them however late it sits. */
+@media (max-width:640px){
+  .journey-item,
+  .journey-feature,
+  .journey-feature.is-flipped,
+  .journey-feature.no-wall{
+    grid-template-columns: auto minmax(0,1fr);
+    justify-items:stretch;
+    align-items:start;
+    text-align:left;
+    gap:10px;
+    /* Weighted to the bottom: the gap that has to read as a break is the one
+       between the end of a stop's photos and the next stop's year, and a
+       stop's own head sits tight under its blob either way. */
+    padding:14px 0 42px;
+  }
+  /* The blob, at the left of the head rather than centred above it. */
+  .j-media,
+  .journey-item:nth-child(even) .j-media,
+  .journey-feature .j-media,
+  .journey-feature.is-flipped .j-media,
+  .journey-feature.no-wall .j-media{
+    grid-column:1; grid-row:1;
+    justify-self:start;
+    align-self:start;
+    margin:0;
+  }
+  .j-blob{ width:66px; }
+  .j-num{ font-size:24px; }
+  .j-marker{ margin-bottom:0; }
+  /* The rotated tag hangs off the blob's edge, which at this size means over
+     the name beside it. The year says the same thing a line down. */
+  .j-label{ display:none; }
+
+  /* Name, year, copy and button, all in the second column. */
+  /* Odd stops read from the left, even ones are mirrored below — the same
+     alternation the wide layout uses to zig-zag down the trail. */
+  .journey-feature .j-head,
+  .journey-feature.is-flipped .j-head,
+  .journey-feature.no-wall .j-head{
+    grid-column:2; grid-row:1;
+    text-align:left;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    justify-content:flex-start;
+    column-gap:7px;
+  }
+  /* The year, the name, then the copy — each on its own line. flex-basis:100%
+     is what breaks the line after the year and after the copy; without it the
+     year would sit alongside the name on whatever space was left. */
+  .j-feature-name{ order:2; justify-content:flex-start; flex-wrap:nowrap; gap:7px; }
+  .j-year{ order:1; flex-basis:100%; margin-bottom:3px; font-size:11px; letter-spacing:0.08em; }
+  .j-feature-roles{ order:3; flex-basis:100%; margin-top:5px; font-size:12.5px; line-height:1.45; }
+  /* The bare domain under the role. It is a line of small print on a phone,
+     and the CTA below it goes to the same work. */
+  .j-site{ display:none; }
+  .goo-btn{ order:5; }
+  .j-feature-logo{ width:30px; }
+  .j-feature-title{ font-size:18px; letter-spacing:0.02em; line-height:1.12; }
+
+  /* A thin pill rather than the slab the desktop button is: the padding on
+     the label is what sets the pill's size, and the padding on the button
+     itself is only the room the hover blob needs to bulge into. */
+  .goo-btn{ margin-top:9px; padding:12px 10px; --goo-pad: 6px 15px; }
+  /* The pill is pinned to the button with the same numbers as its padding,
+     hard-coded rather than derived, so shrinking one without the other left
+     the pill with a negative height and nothing painted at all. */
+  .goo-btn-pill{ left:10px; right:10px; top:12px; bottom:12px; }
+  /* One line, whatever the label. The longest of them broke over two and made
+     the pill twice as deep as the rest. The size scales with the screen, so it
+     still fits the column on a narrow phone rather than running under the blob
+     beside it. */
+  .goo-btn-label{ font-size: clamp(9px,2.7vw,11px); gap:6px; white-space:nowrap; }
+  .goo-btn-blob{ width:34px; height:34px; }
+
+  /* Everything under the head spans both columns. */
+  .journey-feature .j-glimpse,
+  .journey-feature.is-flipped .j-glimpse,
+  .journey-feature.no-wall .j-glimpse{ grid-column:1 / -1; grid-row:2; }
+  /* Held to two lines at the longest of them — the BAJA one, which ran to
+     three and left the photo row sitting a line lower than the others. */
+  .j-glimpse{ font-size:14px; line-height:1.25; margin:2px 0 8px; text-align:center; }
+  /* Run out to the screen's own edges rather than stopping at the section's
+     gutter: the negative margins give the row the 2 x --pad-x the wrap holds
+     back, which is a print's worth of width at this size. It cannot overflow,
+     because it is exactly the padding it is cancelling. */
+  .journey-feature .j-wall,
+  .journey-feature.is-flipped .j-wall{
+    grid-column:1 / -1; grid-row:3;
+    width: calc(100% + var(--pad-x) * 2);
+    margin-inline: calc(var(--pad-x) * -1);
+    justify-self:stretch;
+  }
+  .journey-feature .j-reel{ grid-column:1 / -1; grid-row:4; width:100%; justify-self:stretch; }
+  .journey-feature.no-wall .j-reel{ grid-column:1 / -1; grid-row:3; width:100%; justify-self:stretch; }
+
+  /* The pile becomes a row. The prints are placed by percentage inside a box
+     with a fixed ratio; taking them out of that box is enough to undo it,
+     because left and top mean nothing to a static element and flex-basis
+     settles the width ahead of the width each one carries. */
+  .j-wall .collage{
+    display:flex;
+    align-items:flex-start;
+    /* Centred, so a row that does not fill the width sits with an even gap
+       either side rather than against the left edge. */
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:5px;
+    aspect-ratio:auto;
+  }
+  .collage.count-3,
+  .collage.count-4,
+  .collage.count-5,
+  .j-wall--slides .collage.count-4{ aspect-ratio:auto; }
+  /* Equal widths would leave a tall certificate towering over a wide group
+     shot beside it. Growing each print by its own aspect ratio instead lands
+     them all on one height, with nothing cropped to get there — a wider photo
+     simply takes more of the row. --ar is set from the file itself, in
+     measurePrint; the 1 is the fallback until it loads. */
+  .col-pic{
+    position:static;
+    flex: var(--ar, 1) 1 0;
+    /* A ceiling on how tall a print gets, expressed as a width because that is
+       what the row shares out: ratio x height is the width at that height,
+       plus the 6px of white frame, which is outside the picture and the same
+       on every print — leave it out and a tall print lands a few pixels short
+       of a wide one beside it. A
+       stop down to two prints would otherwise hand each one half the screen
+       and stand them taller than the copy above them. Rows with more prints
+       never reach it and are unaffected. */
+    max-width: calc(var(--ar, 1) * 140px + 6px);
+    min-width:0;
+    transform:none;
+    border-width:3px;
+    box-shadow:0 5px 12px rgba(0,0,0,0.45);
+  }
+  /* Scaled, not cropped: each print keeps its own proportions and simply
+     arrives smaller, so a tall certificate stays a tall certificate. The row
+     is ragged along the bottom as a result, which is what a row of different
+     photographs looks like.*/
+  .col-pic img{ height:auto; }
+  /* A print can opt out of the row. Four across leaves each one narrow, and
+     a wide shot at that size reads as a smudge. */
+  .col-pic--phone-hide{ display:none; }
+  /* Shown at a ratio of its own rather than the file's, with the picture
+     filling that box and the excess cropped off the sides. The same figure
+     still has to share the row on the same terms as the others, so its grow
+     and its ceiling are restated from the cropped ratio. */
+  .col-pic--phone-crop{
+    flex-grow: var(--ar-phone);
+    max-width: calc(var(--ar-phone) * 140px + 6px);
+    aspect-ratio: var(--ar-phone);
+  }
+  .col-pic--phone-crop img{ width:100%; height:100%; object-fit:cover; }
+  /* A line of its own above the rest, rather than a quarter of one: this is a
+     wide slide, and shared four ways it came out 37px tall. order pulls it in
+     front of the prints that precede it in the data, where the desktop pile
+     still wants it, and the full basis makes the others wrap under it. */
+  .col-pic--phone-first{ order:-1; flex-basis:100%; max-width:100%; }
+  /* The Instagram link is built long and low, stretched by a 360px floor with
+     the label taking up the slack. At this width that floor is the whole
+     screen, so the pill spans the page. Dropping the floor lets it shrink to
+     its own text, and the label stops flexing so it hugs it. */
+  .ig-btn{
+    min-width:0;
+    margin:14px auto 0;
+    padding:3px 15px 3px 3px;
+    gap:9px;
+    border-width:2px;
+  }
+  .ig-btn-label{ flex:0 0 auto; font-size:13px; }
+  .ig-btn-badge{ width:27px; height:27px; border-width:1.5px; }
+  .ig-btn-glyph{ width:15px; height:15px; }
+
+  /* --- every second stop mirrored --- */
+  /* Stops 2 and 4 face the other way, so the column alternates down the page
+     instead of running as one left-hand rail — the same zig-zag the wide
+     layout gets from the trail. These selectors carry a class and a
+     pseudo-class, which ties with the .is-flipped and .no-wall rules further
+     up; they win on being later, not on being more specific. */
+  .journey-item:nth-child(even){
+    grid-template-columns: minmax(0,1fr) auto;
+  }
+  .journey-item:nth-child(even) .j-media{
+    grid-column:2;
+    justify-self:end;
+  }
+  .journey-item:nth-child(even) .j-head{
+    grid-column:1;
+    text-align:right;
+    justify-content:flex-end;
+  }
+  /* row-reverse puts the logo after the name, at the outer edge beside the
+     blob. Its main axis runs right to left, so flex-start is the right edge —
+     which is where the row has to pack. */
+  .journey-item:nth-child(even) .j-feature-name{
+    flex-direction:row-reverse;
+    justify-content:flex-start;
+  }
+  /* The button is a flex line of its own, so it is pushed over rather than
+     carried by the container's justify-content. */
+  .journey-item:nth-child(even) .goo-btn{ margin-left:auto; }
+
+  /* The three brand tiles and the line inviting a tap on them. Stacked on a
+     phone they are three logos in a column with nothing around them to say
+     what they are, and the walkthrough reel directly under them shows the same
+     work moving. Both go; the reel carries the stop on its own. */
+  .j-links,
+  .j-links-note{ display:none; }
+
+  /* The washi tape reads as tape when a print is tilted and pinned in a pile.
+     Lined up square in a row it just sits as a bar across the top of every
+     photo, so it comes off here. It stays on the desktop pile. */
+  .col-pic::before{ display:none; }
+  /* Both sit in the pile's empty pockets, which a row does not have. */
+  .col-badge,
+  .col-badge-arrow{ display:none; }
+  /* Under the row rather than above it: the row is too short to hold a note
+     above it without the note leaving the section. */
+  .col-note{
+    top:100%; left:0; right:auto;
+    max-width:100%;
+    margin:8px 0 0;
+    transform:none;
+  }
+}
+
+/* ---------- A PRINT AT FULL SIZE ---------- */
+/* Opened by a tap on a phone, where the prints in the row are barely a
+   thumbnail. Fixed to the viewport rather than placed in the row, so the whole
+   photo is shown at whatever size the screen allows instead of being scaled up
+   inside a box it cannot fit. */
+.col-zoom{
+  all:unset;
+  position:fixed;
+  inset:0;
+  z-index:1200;
+  display:grid;
+  place-items:center;
+  gap:14px;
+  padding:20px;
+  background:rgba(8,3,4,0.94);
+  cursor:zoom-out;
+}
+/* Bounded on both axes: a tall certificate is held by the height and a wide
+   photo by the width, and neither is cropped to fit. */
+.col-zoom-img{
+  display:block;
+  max-width:100%;
+  max-height:78vh;
+  width:auto;
+  height:auto;
+  border:5px solid #FCF8F1;
+  border-radius:3px;
+  box-shadow:0 18px 40px rgba(0,0,0,0.6);
+}
+/* The hover blow-up is what a pointer gets instead of the full-size view, and
+   on a touch screen it is worse than nothing: the tap leaves the print stuck
+   at 2.15x inside a row that cannot hold it, cropped against the screen. The
+   tap opens the print properly now, so the scale goes. */
+@media (hover: none){
+  .col-pic:hover,
+  .col-pic:focus-visible,
+  .collage .col-pic:hover,
+  .collage .col-pic:focus-visible,
+  .j-wall--slides .count-4 .col-pic:hover,
+  .j-wall--slides .count-4 .col-pic:focus-visible{
+    transform:none;
+  }
+}

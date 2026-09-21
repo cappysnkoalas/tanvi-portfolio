@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { createPortal } from 'react-dom';
 import { journey } from '../data/content';
 import useLiteMedia from '../lib/useLiteMedia';
+import usePhone from '../lib/usePhone';
 import { BLOB_PATHS, BLOB_COLORS } from './blobShapes';
 import { buildRibbon } from './trailRibbon';
 import PaperClip from './PaperClip';
@@ -139,11 +140,74 @@ function BadgeArrow() {
   );
 }
 
+// Records each print's own proportions on its figure, as --ar. The phone row
+// grows every print in proportion to that, which is what makes them all come
+// out the same height without a single one being cropped to get there. It is
+// only known once the file has loaded, and a cached image is already loaded by
+// the time the ref runs, so both cases are covered.
+function measurePrint(img) {
+  if (!img) return;
+  const record = () => {
+    if (!img.naturalHeight || !img.parentElement) return;
+    img.parentElement.style.setProperty('--ar', (img.naturalWidth / img.naturalHeight).toFixed(3));
+  };
+  if (img.complete) record();
+  else img.addEventListener('load', record, { once: true });
+}
+
+// The print at full size, over the page. Everything closes it — the backdrop,
+// the print itself and Escape — because it exists only to be looked at, and a
+// second tap is what the print's own tap is expected to undo.
+function PhotoZoom({ photo, onClose }) {
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <button type="button" className="col-zoom" onClick={onClose} aria-label="Close photo">
+      <img className="col-zoom-img" src={photo.src} alt={photo.alt} />
+    </button>,
+    document.body
+  );
+}
+
 function Collage({ photos, badge, tape }) {
   // Only a print given a `note` in the data is clickable — the rest are just
   // photos, and stay plain.
   const [open, setOpen] = useState(null);
   const toggle = (n) => setOpen((current) => (current === n ? null : n));
+  // On a phone a print is barely 110px tall, and the hover zoom a pointer gets
+  // has nowhere to grow into — a tap used to scale it up inside the row and
+  // crop it against the screen. So a tap opens it full size instead, and a
+  // second tap puts it back. A pointer keeps the note behaviour it had.
+  const phone = usePhone();
+  const [zoom, setZoom] = useState(null);
+  const press = (n) => {
+    if (phone) setZoom((current) => (current === n ? null : n));
+    else if (photos[n].note) toggle(n);
+  };
+  const pressable = (n) => (phone || photos[n].note
+    ? {
+        role: 'button',
+        'aria-pressed': phone ? zoom === n : open === n,
+        onClick: () => press(n),
+        onKeyDown: (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            press(n);
+          }
+        },
+      }
+    : null);
 
   return (
     <div
@@ -152,25 +216,14 @@ function Collage({ photos, badge, tape }) {
     >
       {photos.map((photo, n) => (
         <figure
-          className={`col-pic pic-${n}`}
+          className={`col-pic pic-${n}${photo.phoneHide ? ' col-pic--phone-hide' : ''}${photo.phoneFirst ? ' col-pic--phone-first' : ''}${photo.phoneRatio ? ' col-pic--phone-crop' : ''}`}
           key={photo.src || n}
+          style={photo.phoneRatio ? { '--ar-phone': photo.phoneRatio } : undefined}
           tabIndex={0}
-          {...(photo.note
-            ? {
-                role: 'button',
-                'aria-pressed': open === n,
-                onClick: () => toggle(n),
-                onKeyDown: (event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    toggle(n);
-                  }
-                },
-              }
-            : null)}
+          {...pressable(n)}
         >
           {photo.src ? (
-            <img src={photo.src} alt={photo.alt} loading="lazy" />
+            <img ref={measurePrint} src={photo.src} alt={photo.alt} loading="lazy" />
           ) : (
             // Slot held open until the photo arrives; an <img> with no src
             // would render as a broken image instead.
@@ -180,6 +233,9 @@ function Collage({ photos, badge, tape }) {
       ))}
       {open !== null && photos[open].note && (
         <p className="col-note">{photos[open].note}</p>
+      )}
+      {zoom !== null && (
+        <PhotoZoom photo={photos[zoom]} onClose={() => setZoom(null)} />
       )}
       {badge && (
         <>
@@ -277,13 +333,27 @@ function FeatureStop({ item, index }) {
             {album.siteLabel || album.site}
           </a>
         )}
-        <p className="j-feature-roles">
+        {/* Both sets of copy ship and the stylesheet shows one: swapping them
+            in JS would mean measuring the viewport on every render and a flash
+            of the wrong one on load. The long copy is only marked --long when
+            there is a short set to replace it, so a stop without one is left
+            showing its long copy at every width. */}
+        <p className={`j-feature-roles${item.rolesShort ? ' j-feature-roles--long' : ''}`}>
           {item.roles.map((line, n) => (
             <span key={n} className={line.strong ? 'j-role-strong' : undefined}>
               {line.text}
             </span>
           ))}
         </p>
+        {item.rolesShort && (
+          <p className="j-feature-roles j-feature-roles--short">
+            {item.rolesShort.map((line, n) => (
+              <span key={n} className={line.strong ? 'j-role-strong' : undefined}>
+                {line.text}
+              </span>
+            ))}
+          </p>
+        )}
         <GooButton
           className={album.accent ? `goo-btn--${album.accent}` : ''}
           onClick={() => setOpen(true)}
@@ -299,9 +369,25 @@ function FeatureStop({ item, index }) {
         <Marker index={index} />
       </div>
 
+      {/* Both lines ship where a stop has a short one, and the stylesheet shows
+          whichever the screen has room for — the same arrangement the stop's
+          roles use. A stop without a short line keeps its long one everywhere. */}
       {album.glimpse && (
-        <p className={`j-glimpse${album.accent === 'green' ? ' j-glimpse--green' : ''}`}>
+        <p
+          className={`j-glimpse${album.accent === 'green' ? ' j-glimpse--green' : ''}${
+            album.glimpseShort ? ' j-glimpse--long' : ''
+          }`}
+        >
           {album.glimpse}
+        </p>
+      )}
+      {album.glimpseShort && (
+        <p
+          className={`j-glimpse j-glimpse--short${
+            album.accent === 'green' ? ' j-glimpse--green' : ''
+          }`}
+        >
+          {album.glimpseShort}
         </p>
       )}
 
