@@ -555,6 +555,368 @@
   box-shadow: 0 14px 26px rgba(0,0,0,0.6);
   outline:none;
 }
+/* The note is set nowrap and placed absolutely, so at phone width it ran off
+   the right edge and widened the page itself — far enough that the browser
+   zoomed the whole site out to fit it. In the flow and allowed to wrap it
+   costs nothing and stays on screen. */
+@media (max-width:860px){
+  .j-links-note{
+    position:static;
+    left:auto;
+    margin:0 0 10px;
+    white-space:normal;
+    text-align:center;
+    font-size:18px;
+  }
+  /* Drawn to reach from where the note used to sit down onto the first tile.
+     With the note centred in the flow it points at nothing. */
+  .j-links-arrow{ display:none; }
+}
+
+@media (prefers-reduced-motion: reduce){ .j-links a{ transition:none; } }
+
+/* With no photo pile the collage column would collapse to nothing, putting the
+   reel — and the tiles now standing at its left — straight into the space the
+   trail descends through. Hold that column open as a gutter instead. */
+.journey-feature.no-wall{
+  grid-template-columns: 410px auto minmax(130px,auto) minmax(0,1fr);
+}
+
+/* The three site walkthroughs, played as one reel. Relative so the arrow can
+   sit on the video without the dots underneath moving. */
+.j-reel-player{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.j-reel-video{
+  width:100%;
+  aspect-ratio: 16 / 9;
+  border-radius:14px;
+  /* Same panel the placeholder used, so an unloaded clip still reads as part
+     of the page rather than a black hole. */
+  background: linear-gradient(150deg, #3A1620, #1C0A0E);
+  object-fit:cover;
+}
+/* Vertically centred, so it clears the native control bar along the bottom. */
+.j-reel-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:42px; height:42px;
+  display:flex; align-items:center; justify-content:center;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:rgba(28,10,14,0.62);
+  color:var(--rose);
+  cursor:pointer;
+  /* Always on. A hover-reveal hides the control outright on touch, where there
+     is no hover at all — and the arrow is the only cue that the reel steps.
+     The ring keeps it legible against a bright frame of the walkthrough. */
+  opacity:1;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.45), 0 0 0 1px rgba(206,156,161,0.22);
+  transition: background 180ms ease, transform 180ms ease;
+}
+.j-reel-next{ right:14px; }
+.j-reel-prev{ left:14px; }
+.j-reel-arrow:hover{ background:rgba(28,10,14,0.85); transform:translateY(-50%) scale(1.08); }
+.j-reel-arrow:focus-visible{ outline:2px solid var(--rose); outline-offset:3px; }
+.j-reel-arrow svg{
+  width:22px; height:22px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+/* Under the video rather than over it: across the bottom edge they would land
+   on the scrubber the moment the native controls appear. */
+.j-reel-dots{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-top:13px;
+}
+.j-reel-dot{
+  width:9px; height:9px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:rgba(206,156,161,0.32);
+  cursor:pointer;
+  transition: background 180ms ease, transform 180ms ease;
+}
+.j-reel-dot:hover{ background:rgba(206,156,161,0.6); }
+.j-reel-dot.is-on{
+  background:var(--rose);
+  /* Widened rather than enlarged, so the row keeps its baseline. */
+  width:22px;
+  border-radius:5px;
+}
+.j-reel-dot:focus-visible{ outline:2px solid var(--rose); outline-offset:3px; }
+.j-reel-caption{
+  margin:7px 0 0;
+  font-family:'Poppins', sans-serif;
+  font-size:11.5px; font-weight:600;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--rose);
+  opacity:0.72;
+}
+
+/* A stop can tape its prints in its own colour rather than the default
+   lavender, so each pile reads with the rest of its stop. */
+.collage--tape-green .col-pic::before{
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 3px, transparent 3px 8px),
+    rgba(126,199,105,0.88);
+}
+/* The stripe flips dark here — a white highlight over white tape is invisible. */
+.collage--tape-white .col-pic::before{
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.055) 0 3px, transparent 3px 8px),
+    rgba(244,242,237,0.88);
+}
+
+/* Rose pink, deep enough to hold against the cream edges of the slides it is
+   taped across. Its stripe runs dark for the same reason the white tape's
+   does — a white highlight over a pale tape is invisible. */
+.collage--tape-pink .col-pic::before{
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.055) 0 3px, transparent 3px 8px),
+    rgba(223,163,172,0.88);
+}
+
+/* Certificates run bigger than the photos so the text on them is legible. */
+.count-4 .col-pic.pic-0{ --r:-6deg;  left:0%;  top:2%;  width:50%; z-index:1; }
+.count-4 .col-pic.pic-2{ --r:5deg;   left:54%; top:24%; width:39%; z-index:2; }
+.count-4 .col-pic.pic-3{ --r:-8deg;  left:4%;  top:66%; width:41%; z-index:3; }
+.count-4 .col-pic.pic-1{ --r:6deg;   left:45%; top:50%; width:52%; z-index:4; }
+
+/* Slides, not prints: wide, text-heavy captures that need far more width than
+   a photo pile before the type on them reads. A stop with no reel beside the
+   wall leaves the last column empty, so the pile takes that room and settles
+   against the right edge of the row. Below 1380px the wall is restacked into
+   its own column anyway, and those rules win on specificity. */
+/* Qualified by .journey-feature to outrank the `grid-column:3` that pins every
+   other wall to its own column — without that the span below is dropped and
+   the pile stops short of the empty last column. */
+.journey-feature .j-wall--slides{
+  grid-column: 3 / -1;
+  /* Centred across the two columns, not pinned to either edge: the last column
+     is empty on this stop, so anchoring right threw the pile against the page
+     edge and left the hole on the other side instead. */
+  justify-self: center;
+  width: clamp(320px, 42vw, 660px);
+}
+/* Landscape captures stack shorter than portrait prints, so the box is wider
+   than the four-print default or it ends in a band of dead space. */
+.j-wall--slides .collage.count-4{ aspect-ratio: 100 / 80; }
+/* Two loose columns rather than a single cascade: the problem and the strip
+   down the left, the objectives and the workflow down the right, each pair
+   overlapping its neighbour by a corner only. Stacked any tighter and the
+   widest slide buries the two behind it. */
+.j-wall--slides .count-4 .col-pic.pic-0{ --r:-4deg; left:2%;  top:0%;  width:58%; z-index:1; }
+.j-wall--slides .count-4 .col-pic.pic-2{ --r:2deg;  left:46%; top:18%; width:52%; z-index:2; }
+/* Lifted clear of the workflow card's top edge and stacked over it, so the
+   strip reads as laid on top of the pile rather than slipped behind it. */
+.j-wall--slides .count-4 .col-pic.pic-3{ --r:-5deg; left:0%;  top:45%; width:48%; z-index:5; }
+/* The workflow canvas is the one worth reading, so it runs widest and sits on
+   top of the pile. */
+.j-wall--slides .count-4 .col-pic.pic-1{ --r:3deg;  left:32%; top:56%; width:66%; z-index:4; }
+
+/* An opened slide is held clear of the pile for as long as it stays open —
+   the hover lift lasts only while the pointer is on it, so moving away used to
+   drop the slide back under its neighbours. Straightened and enlarged like a
+   hover, but at a gentler scale: these are already the widest prints on the
+   pile, and a hover's 2.15 would throw them across the copy beside them.
+   Ranked above the per-print rules, which carry the same weight, by sitting
+   after them; below .col-note's 50 so the caption still reads. */
+/* The lift that frees a hovered print has to be restated for this pile. It is
+   written as `.collage .col-pic:hover` further down — three classes, which the
+   per-print rules above beat here because they carry a fourth. Without this the
+   blown-up slide stays pinned at its pile z-index and its neighbours draw over
+   the top of it. */
+.j-wall--slides .count-4 .col-pic:hover,
+.j-wall--slides .count-4 .col-pic:focus-visible,
+.j-wall--slides .count-4 .col-pic:focus-within{ z-index:40; }
+
+/* The pile fades as well as lifts here, so opacity joins the transition. */
+.j-wall--slides .col-pic{
+  transition: transform .3s ease, box-shadow .3s ease, opacity .25s ease;
+}
+.j-wall--slides .count-4 .col-pic[aria-pressed="true"]{
+  /* Same scale the hover lift uses, so clicking a slide that is already blown
+     up holds it at that size instead of shrinking it under the pointer. */
+  transform: rotate(0deg) scale(2.15);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.75);
+  z-index:45;
+}
+.j-wall--slides .count-4 .col-pic[aria-pressed="true"]::before{ opacity:0; }
+/* The rest of the pile recedes, so the open slide is read on its own. */
+.j-wall--slides .collage[data-open] .col-pic:not([aria-pressed="true"]){
+  opacity:0.15;
+}
+
+/* A mosaic of five: sizes vary, a few corners overlap, and the tilts run from
+   dead straight to a few degrees. Only widths are set — each print's height
+   follows its own photo, so the wide slots take the landscape shots and the
+   tall ones the portraits. */
+.count-5 .col-pic.pic-0{ --r:0deg;  left:20%; top:8%;  width:38%; z-index:2; } /* CAD, landscape */
+.count-5 .col-pic.pic-1{ --r:4deg;  left:0%;  top:2%;  width:22%; z-index:1; } /* E86, portrait */
+.count-5 .col-pic.pic-2{ --r:-1deg; left:57%; top:4%;  width:26%; z-index:3; } /* H18, portrait */
+.count-5 .col-pic.pic-3{ --r:5deg;  left:4%;  top:47%; width:28%; z-index:4; } /* crew, portrait */
+.count-5 .col-pic.pic-4{ --r:-3deg; left:31%; top:53%; width:43%; z-index:5; } /* award, landscape */
+
+/* Lift the hovered print clear of every other one. This has to out-rank the
+   per-print rules above: those carry three classes, so a plain `.col-pic:hover`
+   loses to them on specificity and the enlarged photo stays buried under its
+   neighbours however high its z-index is set. */
+.collage .col-pic:hover,
+.collage .col-pic:focus-visible,
+.collage .col-pic:focus-within{ z-index:40; }
+
+/* The prints on this pile's left edge sit against the page margin, so growing
+   from their centre would push half the photo off-screen, where the page's
+   overflow rule clips it. Grow them inward instead. */
+.count-5 .col-pic.pic-1,
+.count-5 .col-pic.pic-3{ transform-origin: left center; }
+
+/* Event badge, dropped into the empty pocket bottom-right of the pile, with an
+   arrow climbing from it back to the photos. */
+/* Both are placed in the collage's own coordinates, and both need a z-index
+   above the prints — those carry 1-5, and a positioned element without one
+   paints underneath them however late it comes in the markup. */
+.col-badge{
+  position:absolute;
+  /* Clear of the prints on its left: the tilt swings the flag corner out, so
+     the badge needs more room than its upright box suggests. */
+  left:81%; top:56%;
+  width:29%;
+  z-index:10;
+  display:block;
+  height:auto;
+  transform: rotate(-14deg);
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.55));
+  pointer-events:none;
+}
+/* Sits in the clear dark pocket to the right of the prints, not over them, so
+   the whole curve reads — tucked in among the photos most of it was hidden. */
+.col-badge-arrow{
+  position:absolute;
+  left:86%; top:26%;
+  width:15%;
+  height:auto;
+  z-index:10;
+  color: var(--trail-yellow);
+  opacity:0.9;
+  pointer-events:none;
+}
+
+/* Empty slot, so the pile reads correctly before the photos land. */
+.col-empty{
+  display:grid;
+  place-items:center;
+  aspect-ratio: 4 / 3;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(58,22,32,0.13) 0 7px,
+    rgba(58,22,32,0.05) 7px 14px
+  );
+}
+.col-empty::after{
+  content:'photo';
+  font-family:'Poppins', sans-serif;
+  font-size:10px; font-weight:700;
+  letter-spacing:0.16em; text-transform:uppercase;
+  color: rgba(58,22,32,0.5);
+}
+/* Hovering lifts a print off the pile and blows it up big enough to actually
+   read the certificate text. It straightens at the same time, so the type is
+   level rather than read at an angle. Keyboard users get the same on focus. */
+.col-pic:hover,
+.col-pic:focus-visible{
+  transform: rotate(0deg) scale(2.15);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.75);
+  z-index:20;
+  outline:none;
+}
+/* The tape would blow up with the print and sit over the image, so drop it. */
+.col-pic:hover::before,
+.col-pic:focus-visible::before{ opacity:0; }
+.col-pic::before{ transition: opacity .2s ease; }
+.col-pic{ cursor: zoom-in; }
+
+/* Note that opens above the stage print. It sits in the collage rather than
+   inside the figure, so the hover zoom doesn't blow the text up with the photo.
+   Right-anchored and capped at 44% wide: centred on the print it grew back
+   across the certificate to its left, which read as sitting ON the photos.
+   That keeps it inside the empty band above the print, clear of everything. */
+.col-note{
+  /* Above even a hovered print, so an open note is never buried. */
+  position:absolute;
+  z-index:50;
+  right:2%;
+  max-width:44%;
+  transform: translateY(-100%);
+  margin-top:-12px;
+  padding:6px 11px;
+  border-radius:13px;
+  background: rgba(20,6,8,0.95);
+  border:1px solid rgba(248,115,22,0.6);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.55);
+  font-family:'Poppins', sans-serif;
+  font-size:11px; font-weight:600;
+  line-height:1.35;
+  color:var(--ivory);
+  text-align:center;
+  pointer-events:none;
+}
+.collage[data-open="2"] .col-note{ top:24%; }
+
+/* The enlarged print needs to sit above the video and copy beside it, which
+   only works if nothing between here and the section makes its own stacking
+   context — so the collage itself must not be given a z-index. */
+.collage{ z-index:auto; }
+.j-note{
+  margin-top:10px;
+  font-family:'Caveat',cursive;
+  font-size: clamp(21px,2.1vw,28px);
+  line-height:1.15;
+  color:var(--rose);
+  text-align:center;
+  transform: rotate(-3deg);
+}
+
+/* Curved-looking tag riding the circle's edge. */
+.j-label{
+  position:absolute;
+  z-index:2;
+  right:-10px; bottom:12%;
+  transform: rotate(-38deg);
+  transform-origin: right center;
+  font-size:11px; letter-spacing:0.18em; font-weight:600;
+  color:var(--rose);
+  white-space:nowrap;
+}
+.journey-item:nth-child(even) .j-label{
+  right:auto; left:-10px;
+  transform: rotate(38deg);
+  transform-origin: left center;
+}
+
+/* Too narrow for title, photos and video side by side: tuck the video under
+   the collage so the copy column doesn't get squeezed. */
+@media (max-width: 1380px) and (min-width: 861px){
+  .journey-feature{ grid-template-columns: minmax(0,1fr) auto auto; }
+  /* Collage and video stack here, so the caption sits above both. */
+  .journey-feature .j-glimpse{ grid-column:3; grid-row:1; }
+  .journey-feature .j-wall{ grid-column:3; grid-row:2; }
+  .journey-feature .j-reel{ grid-column:3; grid-row:3; justify-self:center; margin-top:16px; width:clamp(250px,28vw,340px); }
+}
+
 @media (prefers-reduced-motion: reduce){ .j-links a{ transition:none; } }
 
 /* With no photo pile the collage column would collapse to nothing, putting the
@@ -900,8 +1262,14 @@
 }
 
 @media (max-width: 860px){
+  /* Grid and flex children default to min-width:auto, so a child that cannot
+     shrink below its own content pushes its whole column past the screen.
+     There is no room to spare at this width, so nothing gets that veto. */
+  .journey-item > *,
+  .j-head > *,
+  .j-text > *{ min-width:0; }
   .journey-item{
-    grid-template-columns:1fr;
+    grid-template-columns:minmax(0,1fr);
     gap:18px;
     justify-items:center;
     text-align:center;
@@ -917,16 +1285,26 @@
     flex-direction:column;
     gap:22px;
   }
-  .journey-feature{ grid-template-columns:1fr; }
+  .journey-feature{ grid-template-columns:minmax(0,1fr); }
+  /* The gutter this variant holds open is a hard 410px, set outside any media
+     query and more specific than the line above, so it survived into phone
+     widths and made the page wider than the screen on its own. */
+  .journey-feature.no-wall{ grid-template-columns:minmax(0,1fr); }
   .journey-feature .j-head{ grid-column:1; grid-row:2; text-align:center; }
-  .j-feature-name{ justify-content:center; }
+  /* Logo and title sit in a flex row. A flex item defaults to min-width:auto,
+     which is its content's minimum, so the title refused to go below the width
+     of its own longest line and pushed the row past the column. Zeroing that
+     lets the title wrap instead, and the row may break under the logo. */
+  .j-feature-name{ justify-content:center; flex-wrap:wrap; }
+  .j-feature-title{ min-width:0; }
+  .j-feature-toggle{ max-width:100%; }
   .journey-feature .j-media{ grid-column:1; grid-row:1; justify-self:center; }
   .journey-feature .j-glimpse{ grid-column:1; grid-row:3; }
   .journey-feature .j-wall{ grid-column:1; grid-row:4; width:min(330px,100%); justify-self:center; }
   .journey-feature .j-reel{ grid-column:1; grid-row:5; width:min(330px,100%); justify-self:center; margin-top:10px; }
   /* The flipped rules above are more specific than these single-column ones,
      so a mirrored stop needs its own collapse or it keeps three columns. */
-  .journey-feature.is-flipped{ grid-template-columns:1fr; }
+  .journey-feature.is-flipped{ grid-template-columns:minmax(0,1fr); }
   .journey-feature.is-flipped .j-media{ grid-column:1; grid-row:1; justify-self:center; }
   .journey-feature.is-flipped .j-head{ grid-column:1; grid-row:2; text-align:center; }
   .journey-feature.is-flipped .j-glimpse{ grid-column:1; grid-row:3; }

@@ -101,11 +101,15 @@
   transition: border-color .3s ease, box-shadow .3s ease, opacity .3s ease, transform .22s ease;
 }
 /* The open card has to sit above its neighbours, or the tools that spill past
-   its edge slide under the next card along. */
+   its edge slide under the next card along.
+   Hover always wins. A clicked card keeps focus, and it stays open after the
+   pointer leaves so a click can pin it, but only while nothing else is
+   hovered: the moment another card is, that one is the open one and the
+   pinned one steps back. Without that, the pinned card held the light and
+   dimmed the card actually under the pointer. */
 .skill-card:hover,
-.skill-card:focus-visible,
-.skill-card:focus-within,
-.skill-card.is-open{
+.skills-grid:not(:has(.skill-card:hover)) .skill-card:focus-within,
+.skills-grid:not(:has(.skill-card:hover)) .skill-card.is-open{
   z-index:30;
   /* One fixed angle about the vertical axis, after the reference: the left
      edge swings towards the viewer and the right edge falls away behind it,
@@ -121,10 +125,12 @@
 }
 .skill-card:focus-visible{ outline:2px solid var(--rose); outline-offset:3px; }
 /* Everything else steps back while one card is open, so the eye has one place
-   to be. :has is what lets a card dim its siblings. */
+   to be. :has is what lets a card dim its siblings. The focus half only applies
+   with nothing hovered, or the hovered card would be dimmed for not being the
+   focused one. */
 .skills-grid:has(.skill-card:hover) .skill-card:not(:hover),
-.skills-grid:has(.skill-card:focus-within) .skill-card:not(:focus-within),
-.skills-grid:has(.skill-card.is-open) .skill-card:not(.is-open){
+.skills-grid:not(:has(.skill-card:hover)):has(.skill-card:focus-within) .skill-card:not(:focus-within):not(.is-open),
+.skills-grid:not(:has(.skill-card:hover)):has(.skill-card.is-open) .skill-card:not(.is-open):not(:focus-within){
   opacity:0.4;
 }
 
@@ -149,8 +155,8 @@
   max-width:224px;
 }
 .skill-card:hover .skill-title,
-.skill-card:focus-within .skill-title,
-.skill-card.is-open .skill-title{ color:var(--rose); }
+.skills-grid:not(:has(.skill-card:hover)) .skill-card:focus-within .skill-title,
+.skills-grid:not(:has(.skill-card:hover)) .skill-card.is-open .skill-title{ color:var(--rose); }
 
 /* Steps aside once the tools are out — it has done its job by then. */
 .skill-hint{
@@ -171,8 +177,8 @@
   .skill-hint::after{ content:"Tap to open"; }
 }
 .skill-card:hover .skill-hint,
-.skill-card:focus-within .skill-hint,
-.skill-card.is-open .skill-hint{ opacity:0; }
+.skills-grid:not(:has(.skill-card:hover)) .skill-card:focus-within .skill-hint,
+.skills-grid:not(:has(.skill-card:hover)) .skill-card.is-open .skill-hint{ opacity:0; }
 
 /* The tools sit stacked at the middle of the card and stay there, collapsed
    and invisible, until it opens — then each one travels out to its own spot. */
@@ -206,8 +212,8 @@
   transition: opacity .32s ease, transform .32s cubic-bezier(.34,1.4,.5,1);
 }
 .skill-card:hover .skill-tool,
-.skill-card:focus-within .skill-tool,
-.skill-card.is-open .skill-tool{
+.skills-grid:not(:has(.skill-card:hover)) .skill-card:focus-within .skill-tool,
+.skills-grid:not(:has(.skill-card:hover)) .skill-card.is-open .skill-tool{
   opacity:1;
   /* The -50% pair keeps the chip centred on its own point; --tx/--ty carry it
      out from there, scaled by --scatter so a narrow card can pull the whole
@@ -238,18 +244,6 @@
 @media (max-width:1100px){
   .skills-grid{ grid-template-columns: repeat(2, 1fr); }
 }
-/* One column rather than two below this: the outer orbit needs roughly 420px
-   of card to stay on top of its own card, and a half-width column here is
-   nowhere near that — the chips would open across the card beside it. */
-@media (max-width:760px){
-  .skills-grid{ grid-template-columns: 1fr; }
-}
-@media (max-width:560px){
-  .skill-card{ min-height:225px; padding:22px 18px; }
-  .skill-title{ font-size:18px; }
-}
-/* The travel is decoration; the tools still have to arrive. Keep the layout,
-   drop the flight. */
 @media (prefers-reduced-motion: reduce){
   .skill-card, .skill-tool, .skill-title, .skill-hint{ transition:none; }
   /* No lean either: the tilt is the largest movement on the page. */
@@ -301,4 +295,31 @@
   .skill-tool{ font-size:13px; padding:7px 13px; }
   .skill-tool.is-trait{ font-size:12.5px; padding:6px 12px; }
   .skill-hint{ font-size:11.5px; }
+}
+
+/* ---------- PHONE: TWO ACROSS ---------- */
+/* Layered over the touch rules above rather than replacing them: those decide
+   when a card opens and how its chips flow, this only fits two cards to a row.
+   The chips hold the 12px floor, so they are allowed to wrap onto a second
+   line; a long label with an icon runs wider than half a phone otherwise. */
+@media (max-width:760px){
+  /* minmax(0,1fr), not 1fr: a bare 1fr track will grow to fit its widest
+     content and push the grid past the screen. */
+  .skills-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
+  .skill-card{ padding:16px 10px; border-radius:14px; justify-content:flex-start; }
+  .skill-num{ font-size:12px; }
+  .skill-title{ margin-top:4px; font-size:15px; line-height:1.25; max-width:none; }
+  .skill-hint{ margin-top:9px; }
+  .skill-tools{ gap:5px; margin-top:12px; }
+  .skill-tool,
+  .skill-tool.is-trait{
+    max-width:100%;
+    white-space:normal;
+    text-align:center;
+    font-size:12px;
+    padding:5px 9px;
+    gap:5px;
+    border-radius:14px;
+  }
+  .skill-tool img{ width:13px; height:13px; }
 }

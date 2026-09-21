@@ -4,6 +4,9 @@ import './Nav.css';
 
 const RESUME_URL = `${import.meta.env.BASE_URL}Tanvi_Vipin_Resume.pdf`;
 
+// Above this the links sit in the bar and the menu has no reason to exist.
+const WIDE = '(min-width: 861px)';
+
 function DownloadIcon() {
   return (
     <svg
@@ -23,29 +26,34 @@ function DownloadIcon() {
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
 
-  // Escape closes the panel, and a resize past the breakpoint closes it too —
-  // otherwise turning a phone landscape leaves an open menu over a nav that
-  // already shows its links.
+  // Escape closes it, and so does growing past the breakpoint: rotate the
+  // phone to landscape and the sheet would otherwise be stranded open over a
+  // bar that has its links back.
   useEffect(() => {
-    if (!open) return undefined;
-    const onKey = (event) => {
-      if (event.key === 'Escape') setOpen(false);
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpen(false);
     };
-    const wide = window.matchMedia('(min-width: 861px)');
-    const onWide = (event) => {
-      if (event.matches) setOpen(false);
+    const mq = window.matchMedia(WIDE);
+    const onWide = () => {
+      if (mq.matches) setOpen(false);
     };
     window.addEventListener('keydown', onKey);
-    wide.addEventListener('change', onWide);
+    mq.addEventListener('change', onWide);
     return () => {
       window.removeEventListener('keydown', onKey);
-      wide.removeEventListener('change', onWide);
+      mq.removeEventListener('change', onWide);
     };
   }, [open]);
 
   return (
-    <nav className={`nav${open ? ' is-open' : ''}`}>
+    <>
+    {/* Fixed rather than sticky. Sticky is only as reliable as every ancestor
+        it sits under: any of them clipping or scrolling drops it, and it did
+        drop on iOS. Fixed answers to the viewport alone. */}
+    <header className={`nav${open ? ' is-open' : ''}`}>
       <div className="nav-inner">
         <div className="nav-name">
           <span className="dot" />
@@ -61,35 +69,49 @@ export default function Nav() {
           </div>
           <a className="resume-btn" href={RESUME_URL} download="Tanvi_Vipin_Resume.pdf">
             <DownloadIcon />
-            <span className="resume-label">Resume</span>
+            Resume
           </a>
-          {/* Only shown once the links are too wide to sit in the bar. The
-              three bars fold into a cross when the panel is open, so the same
-              control both opens and closes it. */}
+          {/* The links are out of the bar on a phone, so this is the only way
+              to reach them. */}
           <button
             type="button"
-            className="nav-toggle"
+            className="nav-burger"
+            onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
-            aria-controls="nav-menu"
+            aria-controls="nav-sheet"
             aria-label={open ? 'Close menu' : 'Open menu'}
-            onClick={() => setOpen((was) => !was)}
           >
-            <span className="nav-bar" />
-            <span className="nav-bar" />
-            <span className="nav-bar" />
+            <span />
+            <span />
+            <span />
           </button>
         </div>
       </div>
 
-      {/* Left in the markup when closed so the links stay in the document
-          order they belong in; `hidden` keeps them out of the tab ring. */}
-      <div className="nav-menu" id="nav-menu" hidden={!open}>
-        {navLinks.map((link) => (
-          <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
-            {link.label}
-          </a>
-        ))}
+      {/* Kept in the tree rather than unmounted so opening and closing can be
+          animated; `inert` takes it off the tab order while it is shut. */}
+      <div className="nav-sheet" id="nav-sheet" inert={!open || undefined}>
+        <nav aria-label="Menu">
+          {navLinks.map((link) => (
+            <a key={link.href} href={link.href} onClick={close}>
+              {link.label}
+            </a>
+          ))}
+        </nav>
       </div>
-    </nav>
+    </header>
+
+    {/* Tap anywhere off the sheet to dismiss it. A sibling of the bar, not a
+        child: the bar's backdrop blur makes it the containing block for any
+        fixed element inside it, which sized this against the 56px bar rather
+        than the screen and left it zero pixels tall. */}
+    <button
+      type="button"
+      className={`nav-scrim${open ? ' is-open' : ''}`}
+      aria-hidden="true"
+      tabIndex={-1}
+      onClick={close}
+    />
+    </>
   );
 }

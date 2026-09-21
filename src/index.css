@@ -20,6 +20,9 @@
   --ink:#3A1620;
   --ink-dim: rgba(58,22,32,0.72);
   --pad-x: clamp(24px,4vw,56px);
+  /* The bar is fixed, so it takes no room in the flow: the page is pushed
+     down by exactly this much and anchors stop this far short of the top. */
+  --nav-h: 72px;
   --ivory:#F3EAD8;
   --ivory-dim: rgba(243,234,216,0.68);
   --blob-orange:#E8814A;
@@ -29,13 +32,25 @@
   --blob-violet:#A98BC9;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
+html{
+  scroll-behavior:smooth;
+  /* The backstop. Anything that overspills sideways would otherwise widen the
+     page, and a page wider than the screen makes the browser zoom the whole
+     site out to fit and lets you drag past the edge of it. Safe on the root
+     because the nav is fixed, not sticky: fixed answers to the viewport, so
+     a scroll container here cannot strand it. */
+  overflow-x:hidden;
+}
 body{
   background:var(--bg);
   color:var(--ivory);
   font-family:'Jost', sans-serif;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  padding-top:var(--nav-h);
+  /* No overflow of any kind here. `hidden` makes the body a scroll container
+     and `clip` makes it a clip context, and WebKit stops the sticky nav
+     sticking to the viewport under either. Whatever overspills is clipped by
+     the section it belongs to instead, none of which contain the nav. */
 }
 h1,h2,h3,.serif{ font-family:'Playfair Display', serif; }
 a{ color:inherit; text-decoration:none; }
@@ -45,11 +60,30 @@ a{ color:inherit; text-decoration:none; }
 /* ---------- SECTION HEADERS ---------- */
 /* The nav now stays on screen for the whole page, so an anchor jump has to
    stop short of it — landing flush at the top would tuck the heading under. */
-section[id]{ scroll-margin-top: 92px; }
+section[id]{ scroll-margin-top: calc(var(--nav-h) + 20px); }
 .section-pad{ padding: clamp(60px,9vw,110px) 0; }
 .kicker{ font-size:12px; letter-spacing:0.14em; color:var(--rose); margin-bottom:14px; }
 .section-title{ font-size: clamp(26px,3.6vw,42px); font-weight:600; color:var(--ivory); max-width:760px; line-height:1.15; }
 .section-title em{ font-style:italic; color:var(--rose); }
+
+/* The bar drops to one row once its links move into the menu. */
+@media (max-width:860px){
+  :root{ --nav-h: 56px; }
+}
+
+/* ---------- PHONE ---------- */
+/* One place to pull the shared rhythm in: the gutter, the vertical space
+   between sections and the section headings. Everything sized against these
+   comes down with them. */
+@media (max-width:640px){
+  :root{ --pad-x:18px; }
+  /* Less lead-in than trailing space: a section's heading then clears the
+     fold sooner, so the next one is already reading as you finish the last. */
+  .section-pad{ padding:28px 0 40px; }
+  .kicker{ font-size:10.5px; letter-spacing:0.12em; margin-bottom:8px; }
+  .section-title{ font-size:25px; line-height:1.18; }
+  section[id]{ scroll-margin-top: calc(var(--nav-h) + 8px); }
+}
 
 @media (prefers-reduced-motion: reduce){ * { scroll-behavior:auto !important; } }
 

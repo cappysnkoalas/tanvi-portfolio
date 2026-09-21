@@ -41,3 +41,9 @@
      padding, and would now sit on the first line of the copy. */
   .paper-clip{ left: 16px; top: -12px; }
 }
+
+/* The paper now only bleeds a gutter's width past the edge, so the clip comes
+   in to sit on the margin line rather than on top of the opening line. */
+@media (max-width: 640px){
+  .paper-clip{ left: 24px; top: -10px; width: 24px; }
+}
