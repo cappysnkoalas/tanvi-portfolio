@@ -144,3 +144,20 @@
   .nav-sheet a:hover,
   .nav-sheet a:active{ color:var(--rose); }
 }
+
+/* A backdrop blur on a bar that is fixed to the viewport is the one effect
+   iOS Safari handles badly, and this bar has already been seen misbehaving
+   under it: hence the layer promotion above, added after the bar dropped out
+   mid-scroll. The black rectangle under it on a phone is the same fault in its
+   other form — the blur fails to sample the page behind and the layer is
+   painted opaque instead.
+   So a touch device gets a solid bar. The blur is decoration; a black box over
+   the name is not a trade worth making for it, and a pointer device, where the
+   effect is reliable, still gets it. */
+@media (hover: none){
+  .nav{
+    background:var(--bg);
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+}

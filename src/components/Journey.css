@@ -1383,3 +1383,13 @@
   .col-badge{ left:72%; width:26%; }
   .col-badge-arrow{ left:80%; width:14%; }
 }
+
+/* The same iOS fault as the nav bar: a blur behind a fixed, full-screen layer
+   can paint as a black sheet instead of a blurred page. The scrim underneath
+   it is what actually darkens the page, so on touch the blur just goes. */
+@media (hover: none){
+  .j-sheet-backdrop{
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+}
